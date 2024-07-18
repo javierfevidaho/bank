@@ -2,6 +2,10 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
+import stripe
+
+stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
+
 # Load environment variables from .env file
 load_dotenv()
 
