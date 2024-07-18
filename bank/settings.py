@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1,uneven-idalina-cyberlotto-62107c4f.koyeb.app,ltd-brandea-cyberlottobank-7684fb46.koyeb.app').split(',')
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'uneven-idalina-cyberlotto-62107c4f.koyeb.app', 'ltd-brandea-cyberlottobank-7684fb46.koyeb.app']
 
 # Application definition
 INSTALLED_APPS = [
@@ -115,3 +115,4 @@ STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET', 'your-default-stripe-
 # Coinbase settings
 COINBASE_COMMERCE_API_KEY = os.getenv('COINBASE_COMMERCE_API_KEY', 'your-default-coinbase-api-key')
 COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET = os.getenv('COINBASE_COMMERCE_API_SECRET', 'your-default-coinbase-webhook-secret')
+# Temporary change to force git commit
