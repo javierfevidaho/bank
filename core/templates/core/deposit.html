@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="deposit-container">
+    <div class="deposit-frame">
+        <img src="{% static 'core/images/coinbase-logo.png' %}" class="img-fluid mb-3 icon" alt="Coinbase">
+        <h2>Coinbase Integration</h2>
+        <p>Connect your account with Coinbase for seamless transactions.</p>
+        <a class="btn btn-primary" href="{% url 'coinbase_payment' %}">Pay with Coinbase</a>
+    </div>
+    <div class="deposit-frame">
+        <img src="{% static 'core/images/stripe-logo.png' %}" class="img-fluid mb-3 icon" alt="Stripe">
+        <h2>Stripe Integration</h2>
+        <p>Use Stripe for secure and fast transactions.</p>
+        <a class="btn btn-primary" href="#">Connect Stripe</a>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load qr_code %}
+
+{% block content %}
+<div class="frame p-3">
+    <h2>Dashboard</h2>
+    <h3>Your Purchased Tickets</h3>
+    {% if tickets %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Ticket Number</th>
+                    <th>Numbers</th>
+                    <th>Bonus Number</th>
+                    <th>Purchase Date</th>
+                    <th>Price</th>
+                    <th>QR Code</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in tickets %}
+                    <tr>
+                        <td>{{ ticket.ticket_number }}</td>
+                        <td>{{ ticket.numbers }}</td>
+                        <td>{{ ticket.bonus_number }}</td>
+                        <td>{{ ticket.purchase_date }}</td>
+                        <td>${{ ticket.price }}</td>
+                        <td>
+                            {% qr_from_text ticket.ticket_number size="T" %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You haven't purchased any tickets yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="frame">
+        <h2>Your Cart</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Ticket Number</th>
+                    <th>Numbers</th>
+                    <th>Bonus</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>{{ item.ticket.ticket_number }}</td>
+                    <td>{{ item.ticket.numbers }}</td>
+                    <td>{{ item.ticket.bonus }}</td>
+                    <td>${{ item.ticket.price }}</td>
+                    <td>
+                        <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-danger">Remove</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h3>Total Cost: ${{ total_cost }}</h3>
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        <form method="post" action="{% url 'checkout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Checkout</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

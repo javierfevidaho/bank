@@ -1,0 +1,10 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Pay with Coinbase</h2>
+    <p>Click the button below to complete your payment:</p>
+    <a href="{{ charge.hosted_url }}" class="btn btn-primary">Complete Payment</a>
+</div>
+{% endblock %}

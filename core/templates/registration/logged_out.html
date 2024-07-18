@@ -1,0 +1,8 @@
+<!-- core/templates/registration/logged_out.html -->
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="alert alert-success" role="alert">
+    You have successfully logged out. <a href="{% url 'login' %}">Log in again</a>.
+</div>
+{% endblock %}
