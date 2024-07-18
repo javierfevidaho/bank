@@ -115,4 +115,4 @@ STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET', 'your-default-stripe-
 # Coinbase settings
 COINBASE_COMMERCE_API_KEY = os.getenv('COINBASE_COMMERCE_API_KEY', 'your-default-coinbase-api-key')
 COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET = os.getenv('COINBASE_COMMERCE_API_SECRET', 'your-default-coinbase-webhook-secret')
-# Temporary change to force git commit
+
