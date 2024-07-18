@@ -8,7 +8,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security
-SECRET_KEY = os.getenv('SECRET_KEY', 'your-default-secret-key')
+SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1,uneven-idalina-cyberlotto-62107c4f.koyeb.app,ltd-brandea-cyberlottobank-7684fb46.koyeb.app').split(',')
 
