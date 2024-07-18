@@ -7,11 +7,74 @@ from decimal import Decimal
 from django.http import JsonResponse
 from coinbase_commerce.client import Client
 from django.conf import settings
+import six
+import stripe
+from django.views.decorators.csrf import csrf_exempt
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 @login_required
 def dashboard(request):
     tickets = Ticket.objects.filter(user=request.user, is_purchased=True)
-    return render(request, 'core/dashboard.html', {'tickets': tickets})
+    account, created = Account.objects.get_or_create(user=request.user)
+    return render(request, 'core/dashboard.html', {'tickets': tickets, 'account': account})
+
+@login_required
+def create_checkout_session(request):
+    if request.method == 'POST':
+        try:
+            checkout_session = stripe.checkout.Session.create(
+                payment_method_types=['card'],
+                line_items=[{
+                    'price_data': {
+                        'currency': 'usd',
+                        'product_data': {
+                            'name': 'Lottery Ticket',
+                        },
+                        'unit_amount': 100,
+                    },
+                    'quantity': 1,
+                }],
+                mode='payment',
+                success_url=request.build_absolute_uri('/success/'),
+                cancel_url=request.build_absolute_uri('/cancel/'),
+            )
+            return JsonResponse({'id': checkout_session.id})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+
+@csrf_exempt
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
+        )
+    except ValueError as e:
+        return JsonResponse({'status': 'invalid payload'}, status=400)
+    except stripe.error.SignatureVerificationError as e:
+        return JsonResponse({'status': 'invalid signature'}, status=400)
+
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+        handle_checkout_session(session)
+
+    return JsonResponse({'status': 'success'})
+
+def handle_checkout_session(session):
+    # Manejar el evento de sesión completada
+    pass
+
+@login_required
+def success(request):
+    return render(request, 'core/success.html')
+
+@login_required
+def cancel(request):
+    return render(request, 'core/cancel.html')
 
 @login_required
 def deposit(request):
@@ -133,3 +196,15 @@ def coinbase_payment(request):
     return render(request, 'core/coinbase_payment.html', {
         'charge': charge,
     })
+
+@login_required
+def payment(request):
+    return render(request, 'core/payment.html', {
+        'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY
+    })
+
+try:
+    import stripe
+except ImportError:
+    stripe = None
+    print("Stripe module not found. Some functionality may be limited.")

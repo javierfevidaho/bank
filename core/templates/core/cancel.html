@@ -1,0 +1,9 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="frame">
+  <h2>Payment Cancelled</h2>
+  <p>Your payment was cancelled. Please try again.</p>
+  <a href="{% url 'deposit' %}" class="btn btn-primary">Return to Deposit</a>
+</div>
+{% endblock %}

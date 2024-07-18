@@ -1,10 +1,18 @@
 {% extends "base_generic.html" %}
 {% load static %}
+{% load l10n %}
+{% load humanize %}
 {% load qr_code %}
 
 {% block content %}
 <div class="frame p-3">
-    <h2>Dashboard</h2>
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Dashboard</h2>
+        <div class="text-right" style="text-align: right;">
+            <h4>Welcome, {{ user.username }}</h4>
+            <p>Your current balance is: ${{ account.balance|floatformat:2|intcomma }}</p>
+        </div>
+    </div>
     <h3>Your Purchased Tickets</h3>
     {% if tickets %}
         <table class="table table-striped">
@@ -23,9 +31,9 @@
                     <tr>
                         <td>{{ ticket.ticket_number }}</td>
                         <td>{{ ticket.numbers }}</td>
-                        <td>{{ ticket.bonus_number }}</td>
+                        <td>{{ ticket.bonus }}</td>
                         <td>{{ ticket.purchase_date }}</td>
-                        <td>${{ ticket.price }}</td>
+                        <td>${{ ticket.price|floatformat:2|intcomma }}</td>
                         <td>
                             {% qr_from_text ticket.ticket_number size="T" %}
                         </td>

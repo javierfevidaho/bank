@@ -141,7 +141,7 @@ nav {
 }
 
 .success-message {
-    color: var(--success);
+    color: var (--success);
 }
 
 .warning-message {
