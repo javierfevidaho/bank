@@ -22,13 +22,13 @@ def dashboard(request):
 @login_required
 def create_checkout_session(request):
     if request.method == 'POST':
-        if request.content_type == 'application/json':
-            data = json.loads(request.body)
-        else:
-            data = request.POST
-        
-        amount = int(data.get('amount', 0)) * 100  # Convert to cents
         try:
+            if request.content_type == 'application/json':
+                data = json.loads(request.body)
+            else:
+                data = request.POST
+            
+            amount = int(data.get('amount', 0)) * 100  # Convert to cents
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
                 line_items=[{

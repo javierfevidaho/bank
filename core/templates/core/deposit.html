@@ -5,23 +5,25 @@
 <div class="row text-center mt-5 deposit-container">
     <div class="col-md-3">
         <div class="frame deposit-frame">
+            <img src="{% static 'core/images/coinbase-logo.png' %}" class="img-fluid mb-3 icon" alt="Coinbase">
             <h2>Básica</h2>
             <p>Deposita $1</p>
             <form id="basic-form" action="{% url 'create_checkout_session' %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="amount" value="1">
-                <button type="submit" class="btn btn-primary">Depositar $1</button>
+                <button type="submit" class="btn btn-primary" id="basic-button">Depositar $1</button>
             </form>
         </div>
     </div>
     <div class="col-md-3">
         <div class="frame deposit-frame">
+            <img src="{% static 'core/images/stripe-logo.png' %}" class="img-fluid mb-3 icon" alt="Stripe">
             <h2>Bronce</h2>
             <p>Deposita $10</p>
             <form id="bronze-form" action="{% url 'create_checkout_session' %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="amount" value="10">
-                <button type="submit" class="btn btn-primary">Depositar $10</button>
+                <button type="submit" class="btn btn-primary" id="bronze-button">Depositar $10</button>
             </form>
         </div>
     </div>
@@ -32,7 +34,7 @@
             <form id="gold-form" action="{% url 'create_checkout_session' %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="amount" value="100">
-                <button type="submit" class="btn btn-primary">Depositar $100</button>
+                <button type="submit" class="btn btn-primary" id="gold-button">Depositar $100</button>
             </form>
         </div>
     </div>
@@ -43,7 +45,7 @@
             <form id="diamond-form" action="{% url 'create_checkout_session' %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="amount" value="1000">
-                <button type="submit" class="btn btn-primary">Depositar $1000</button>
+                <button type="submit" class="btn btn-primary" id="diamond-button">Depositar $1000</button>
             </form>
         </div>
     </div>
@@ -56,15 +58,16 @@
     document.querySelectorAll('form').forEach(function (form) {
         form.addEventListener('submit', function (e) {
             e.preventDefault();
-            var amount = form.querySelector('input[name="amount"]').value;
 
-            fetch("{% url 'create_checkout_session' %}", {
+            fetch(form.action, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
                 },
-                body: JSON.stringify({ amount: amount })
+                body: JSON.stringify({
+                    amount: form.querySelector('input[name="amount"]').value
+                })
             })
             .then(function (response) {
                 return response.json();
