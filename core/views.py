@@ -202,9 +202,3 @@ def payment(request):
     return render(request, 'core/payment.html', {
         'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY
     })
-
-try:
-    import stripe
-except ImportError:
-    stripe = None
-    print("Stripe module not found. Some functionality may be limited.")
