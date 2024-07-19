@@ -1,62 +1,39 @@
-{% extends "base_generic.html" %}
-{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment</title>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <button id="checkout-button">Pagar ahora</button>
 
-{% block content %}
-<div class="row text-center mt-5 deposit-container">
-    <div class="col-md-6">
-        <div class="frame deposit-frame">
-            <img src="{% static 'core/images/coinbase-logo.png' %}" class="img-fluid mb-3 icon" alt="Coinbase">
-            <h2>Coinbase Integration</h2>
-            <p>Connect your account with Coinbase for seamless transactions.</p>
-            <a class="btn btn-primary" href="{% url 'coinbase_payment' %}">Pay with Coinbase</a>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="frame deposit-frame">
-            <img src="{% static 'core/images/stripe-logo.png' %}" class="img-fluid mb-3 icon" alt="Stripe">
-            <h2>Stripe Integration</h2>
-            <p>Use Stripe for secure and fast transactions.</p>
-            <form id="stripe-form" action="{% url 'create_checkout_session' %}" method="POST">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-primary" id="stripe-button">Pay with Stripe</button>
-            </form>
-        </div>
-    </div>
-</div>
+    <script type="text/javascript">
+        var stripe = Stripe("{{ stripe_publishable_key }}");
 
-<script src="https://js.stripe.com/v3/"></script>
-<script>
-    var stripe = Stripe('{{ stripe_publishable_key }}');
-
-    document.getElementById('stripe-form').addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        fetch("{% url 'create_checkout_session' %}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token }}"
-            },
-            body: JSON.stringify({})
-        })
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            if (data.error) {
-                console.error('Error:', data.error);
-                alert(data.error);
-            } else {
-                stripe.redirectToCheckout({ sessionId: data.id }).then(function (result) {
-                    if (result.error) {
-                        alert(result.error.message);
-                    }
-                });
-            }
-        })
-        .catch(function (error) {
-            console.error("Error:", error);
+        document.getElementById("checkout-button").addEventListener("click", function () {
+            fetch("{% url 'create_checkout_session' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+            })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (sessionId) {
+                return stripe.redirectToCheckout({ sessionId: sessionId.id });
+            })
+            .then(function (result) {
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            })
+            .catch(function (error) {
+                console.error("Error:", error);
+            });
         });
-    });
-</script>
-{% endblock %}
+    </script>
+</body>
+</html>

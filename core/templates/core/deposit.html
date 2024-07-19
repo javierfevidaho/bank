@@ -5,7 +5,6 @@
 <div class="row text-center mt-5 deposit-container">
     <div class="col-md-3">
         <div class="frame deposit-frame">
-            <img src="{% static 'core/images/coinbase-logo.png' %}" class="img-fluid mb-3 icon" alt="Coinbase">
             <h2>Básica</h2>
             <p>Deposita $1</p>
             <form id="basic-form" action="{% url 'create_checkout_session' %}" method="POST">
@@ -17,7 +16,6 @@
     </div>
     <div class="col-md-3">
         <div class="frame deposit-frame">
-            <img src="{% static 'core/images/stripe-logo.png' %}" class="img-fluid mb-3 icon" alt="Stripe">
             <h2>Bronce</h2>
             <p>Deposita $10</p>
             <form id="bronze-form" action="{% url 'create_checkout_session' %}" method="POST">
@@ -77,11 +75,12 @@
                     console.error('Error:', data.error);
                     alert(data.error);
                 } else {
-                    stripe.redirectToCheckout({ sessionId: data.id }).then(function (result) {
-                        if (result.error) {
-                            alert(result.error.message);
-                        }
-                    });
+                    return stripe.redirectToCheckout({ sessionId: data.id });
+                }
+            })
+            .then(function (result) {
+                if (result && result.error) {
+                    alert(result.error.message);
                 }
             })
             .catch(function (error) {
