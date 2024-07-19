@@ -6,7 +6,6 @@ from django.contrib import messages
 from .models import Account, Ticket, Cart, CartItem
 from decimal import Decimal
 from django.http import JsonResponse
-from coinbase_commerce.client import Client
 from django.conf import settings
 import stripe
 from django.views.decorators.csrf import csrf_exempt
@@ -23,12 +22,9 @@ def dashboard(request):
 def create_checkout_session(request):
     if request.method == 'POST':
         try:
-            if request.content_type == 'application/json':
-                data = json.loads(request.body)
-            else:
-                data = request.POST
-            
+            data = json.loads(request.body)
             amount = int(data.get('amount', 0)) * 100  # Convert to cents
+
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
                 line_items=[{
@@ -54,7 +50,6 @@ def stripe_webhook(request):
     payload = request.body
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
     event = None
-
     try:
         event = stripe.Webhook.construct_event(
             payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
@@ -67,7 +62,6 @@ def stripe_webhook(request):
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
         handle_checkout_session(session)
-
     return JsonResponse({'status': 'success'})
 
 def handle_checkout_session(session):
@@ -124,7 +118,6 @@ def purchase_ticket(request):
         numbers = request.POST.getlist('numbers')
         bonus_number = request.POST.get('bonus')
         quantity = int(request.POST.get('quantity', 1))
-
         if len(numbers) != 5 or not bonus_number:
             messages.error(request, 'Please select 5 numbers and 1 bonus number.')
             return JsonResponse({'error': 'Please select 5 numbers and 1 bonus number.'}, status=400)
@@ -140,12 +133,10 @@ def purchase_ticket(request):
                 )
                 ticket.save()
                 CartItem.objects.create(cart=cart, ticket=ticket)
-
             messages.success(request, f'{quantity} ticket(s) added to cart successfully.')
             return JsonResponse({'success': f'{quantity} ticket(s) added to cart successfully.'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
-
     return render(request, 'core/purchase_ticket.html', context)
 
 @login_required
@@ -168,7 +159,6 @@ def checkout(request):
     cart_items = CartItem.objects.filter(cart=cart)
     account, created = Account.objects.get_or_create(user=request.user)
     total_cost = sum(item.ticket.price for item in cart_items)
-
     if account.balance >= total_cost:
         account.balance -= Decimal(total_cost)
         account.save()
@@ -198,19 +188,8 @@ def coinbase_payment(request):
         'cancel_url': domain_url + 'cancel/',
     }
     charge = client.charge.create(**product)
-
-    return render(request, 'core/coinbase_payment.html', {
-        'charge': charge,
-    })
+    return render(request, 'core/coinbase_payment.html', {'charge': charge})
 
 @login_required
 def payment(request):
-    return render(request, 'core/payment.html', {
-        'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY
-    })
-
-try:
-    import stripe
-except ImportError:
-    stripe = None
-    print("Stripe module not found. Some functionality may be limited.")
+    return render(request, 'core/payment.html', {'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY})
