@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
@@ -9,7 +10,6 @@ from coinbase_commerce.client import Client
 from django.conf import settings
 import stripe
 from django.views.decorators.csrf import csrf_exempt
-import json
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -22,7 +22,11 @@ def dashboard(request):
 @login_required
 def create_checkout_session(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
+        if request.content_type == 'application/json':
+            data = json.loads(request.body)
+        else:
+            data = request.POST
+        
         amount = int(data.get('amount', 0)) * 100  # Convert to cents
         try:
             checkout_session = stripe.checkout.Session.create(
@@ -82,15 +86,11 @@ def cancel(request):
 def deposit(request):
     if request.method == 'POST':
         amount = request.POST.get('amount')
-        if amount:
-            amount = Decimal(amount)
-            account, created = Account.objects.get_or_create(user=request.user)
-            account.balance += amount
-            account.save()
-            messages.success(request, f'Successfully deposited ${amount}')
-            return redirect('dashboard')
-        else:
-            messages.error(request, 'Please enter a valid amount.')
+        account, created = Account.objects.get_or_create(user=request.user)
+        account.balance += Decimal(amount)
+        account.save()
+        messages.success(request, f'Successfully deposited ${amount}')
+        return redirect('dashboard')
     return render(request, 'core/deposit.html')
 
 @login_required
@@ -208,3 +208,9 @@ def payment(request):
     return render(request, 'core/payment.html', {
         'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY
     })
+
+try:
+    import stripe
+except ImportError:
+    stripe = None
+    print("Stripe module not found. Some functionality may be limited.")
