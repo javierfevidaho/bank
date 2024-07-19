@@ -7,7 +7,6 @@ from decimal import Decimal
 from django.http import JsonResponse
 from coinbase_commerce.client import Client
 from django.conf import settings
-import six
 import stripe
 from django.views.decorators.csrf import csrf_exempt
 
@@ -22,6 +21,7 @@ def dashboard(request):
 @login_required
 def create_checkout_session(request):
     if request.method == 'POST':
+        amount = int(request.POST.get('amount')) * 100  # Convert to cents
         try:
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
@@ -29,9 +29,9 @@ def create_checkout_session(request):
                     'price_data': {
                         'currency': 'usd',
                         'product_data': {
-                            'name': 'Lottery Ticket',
+                            'name': 'Account Deposit',
                         },
-                        'unit_amount': 100,
+                        'unit_amount': amount,
                     },
                     'quantity': 1,
                 }],
@@ -65,8 +65,12 @@ def stripe_webhook(request):
     return JsonResponse({'status': 'success'})
 
 def handle_checkout_session(session):
-    # Manejar el evento de sesión completada
-    pass
+    user_email = session['customer_details']['email']
+    amount = session['amount_total'] / 100  # Convert from cents to dollars
+    user = get_object_or_404(User, email=user_email)
+    account, created = Account.objects.get_or_create(user=user)
+    account.balance += Decimal(amount)
+    account.save()
 
 @login_required
 def success(request):
@@ -80,11 +84,7 @@ def cancel(request):
 def deposit(request):
     if request.method == 'POST':
         amount = request.POST.get('amount')
-        account, created = Account.objects.get_or_create(user=request.user)
-        account.balance += Decimal(amount)
-        account.save()
-        messages.success(request, f'Successfully deposited ${amount}')
-        return redirect('dashboard')
+        return render(request, 'core/deposit.html', {'amount': amount})
     return render(request, 'core/deposit.html')
 
 @login_required

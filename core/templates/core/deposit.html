@@ -16,8 +16,9 @@
             <img src="{% static 'core/images/stripe-logo.png' %}" class="img-fluid mb-3 icon" alt="Stripe">
             <h2>Stripe Integration</h2>
             <p>Use Stripe for secure and fast transactions.</p>
-            <form id="stripe-form" method="POST">
+            <form id="stripe-form" action="{% url 'create_checkout_session' %}" method="POST">
                 {% csrf_token %}
+                <input type="number" name="amount" id="amount" class="form-control mb-3" placeholder="Enter amount to deposit" required>
                 <button type="submit" class="btn btn-primary" id="stripe-button">Pay with Stripe</button>
             </form>
         </div>
@@ -31,13 +32,15 @@
     document.getElementById('stripe-form').addEventListener('submit', function (e) {
         e.preventDefault();
 
+        var amount = document.getElementById('amount').value;
+
         fetch("{% url 'create_checkout_session' %}", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": "{{ csrf_token }}"
             },
-            body: JSON.stringify({})
+            body: JSON.stringify({ amount: amount })
         })
         .then(function (response) {
             return response.json();
