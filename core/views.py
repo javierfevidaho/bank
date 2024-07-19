@@ -23,7 +23,7 @@ def create_checkout_session(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            amount = int(data.get('amount', 0)) * 100  # Convert to cents
+            amount = int(data.get('amount', 0)) * 100  # Convertir a centavos
 
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],

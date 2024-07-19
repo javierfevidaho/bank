@@ -29,7 +29,12 @@
                 if (session.error) {
                     alert(session.error);
                 } else {
-                    stripe.redirectToCheckout({ sessionId: session.id });
+                    return stripe.redirectToCheckout({ sessionId: session.id });
+                }
+            })
+            .then(function (result) {
+                if (result.error) {
+                    alert(result.error.message);
                 }
             })
             .catch(function (error) {
