@@ -12,10 +12,11 @@
         var stripe = Stripe('{{ stripe_publishable_key }}');
 
         document.getElementById('checkout-button').addEventListener('click', function () {
-            fetch('/create-checkout-session/', {
+            fetch('{% url "create_checkout_session" %}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
                 },
                 body: JSON.stringify({
                     amount: 1000  // Ejemplo de cantidad, ajusta según sea necesario
