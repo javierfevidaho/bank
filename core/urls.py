@@ -1,5 +1,9 @@
 from django.urls import path
 from . import views
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
@@ -16,5 +20,6 @@ urlpatterns = [
     path('coinbase-payment/', views.coinbase_payment, name='coinbase_payment'),
     path('payment/', views.payment, name='payment'),
     path('stripe-webhook/', views.stripe_webhook, name='stripe_webhook'),
-    path('api-login/', views.api_login, name='api_login'),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

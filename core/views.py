@@ -5,12 +5,12 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib import messages
 from .models import Account, Ticket, Cart, CartItem
 from decimal import Decimal
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.conf import settings
 import stripe
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
+from rest_framework_simplejwt.tokens import RefreshToken
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -22,8 +22,8 @@ def api_login(request):
         password = data.get('password')
         user = authenticate(username=username, password=password)
         if user is not None:
-            token, created = Token.objects.get_or_create(user=user)
-            return JsonResponse({'token': token.key})
+            refresh = RefreshToken.for_user(user)
+            return JsonResponse({'refresh': str(refresh), 'access': str(refresh.access_token)})
         else:
             return JsonResponse({'error': 'Invalid credentials'}, status=400)
 
@@ -54,7 +54,7 @@ def create_checkout_session(request):
                 success_url=request.build_absolute_uri('/success/'),
                 cancel_url=request.build_absolute_uri('/cancel/'),
             )
-            return JsonResponse({'id': checkout_session.id})
+            return HttpResponseRedirect(checkout_session.url)
         except Exception as e:
             return JsonResponse({'error': str(e)})
 
