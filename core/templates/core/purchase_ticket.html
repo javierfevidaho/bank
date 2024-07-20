@@ -8,8 +8,9 @@
     <p>Your current balance is: ${{ balance|floatformat:2|intcomma }}</p>
     <p>Ticket Price: $1.00</p>
     <a href="{% url 'view_cart' %}" class="btn btn-info">View Cart (<span id="cart-count">{{ request.user.cart.cartitem_set.count }}</span>)</a>
-    <div id="tickets-container" class="d-flex flex-wrap">
-        <div class="ticket-frame p-3 mb-3">
+    
+    <div class="d-flex">
+        <div class="ticket-frame p-3 mb-3 mr-3">
             <form id="ticket-form" method="post" class="ticket-form">
                 {% csrf_token %}
                 <div class="form-group">
@@ -34,8 +35,16 @@
                         {% endfor %}
                     </div>
                 </div>
+                <button type="button" class="btn btn-primary" onclick="autoSelectNumbers(this)">Auto Select</button>
+                <button type="button" class="btn btn-success" onclick="addToCart()">Add to Cart</button>
+            </form>
+        </div>
+
+        <div class="quantity-frame p-3 mb-3">
+            <form id="quantity-form" method="post" class="quantity-form">
+                {% csrf_token %}
                 <div class="form-group">
-                    <label for="quantity">Select Quantity:</label>
+                    <label for="quantity">Select quantity:</label>
                     <select id="quantity" name="quantity" class="form-control">
                         <option value="1">1</option>
                         <option value="10">10</option>
@@ -48,7 +57,6 @@
                         <option value="500">500</option>
                     </select>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="autoSelectNumbers(this)">Auto Select</button>
                 <button type="button" class="btn btn-success" onclick="addToCart()">Add to Cart</button>
             </form>
         </div>
@@ -97,13 +105,14 @@
 
     window.addToCart = function() {
         const form = document.getElementById('ticket-form');
+        const quantityForm = document.getElementById('quantity-form');
         const formData = new FormData(form);
+        formData.append('quantity', quantityForm.querySelector('#quantity').value);
         fetch("{% url 'purchase_ticket' %}", {
             method: 'POST',
             body: formData,
             headers: {
                 'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-                'Authorization': 'Token ' + localStorage.getItem('authToken')
             },
         })
         .then(response => response.json())
@@ -112,6 +121,8 @@
                 alert(data.success);
                 updateCartCount();
                 form.reset();
+                quantityForm.reset();
+                window.location.href = "{% url 'payment_page' %}";
             } else if (data.error) {
                 alert(data.error);
             }
