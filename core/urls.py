@@ -22,4 +22,5 @@ urlpatterns = [
     path('stripe-webhook/', views.stripe_webhook, name='stripe_webhook'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('payment-page/', views.payment_page, name='payment_page'),  # Asegúrate de tener esta línea
 ]
