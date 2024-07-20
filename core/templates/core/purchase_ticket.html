@@ -122,7 +122,7 @@
                 updateCartCount();
                 form.reset();
                 quantityForm.reset();
-                window.location.href = "{% url 'payment_page' %}";
+                window.location.href = "{% url 'payment' %}";
             } else if (data.error) {
                 alert(data.error);
             }
