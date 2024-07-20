@@ -16,7 +16,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}'
+                    'X-CSRFToken': '{{ csrf_token }}',  // Agregar CSRF token
                 },
                 body: JSON.stringify({
                     amount: 1000  // Ejemplo de cantidad, ajusta según sea necesario
@@ -30,11 +30,6 @@
                     alert(session.error);
                 } else {
                     return stripe.redirectToCheckout({ sessionId: session.id });
-                }
-            })
-            .then(function (result) {
-                if (result.error) {
-                    alert(result.error.message);
                 }
             })
             .catch(function (error) {

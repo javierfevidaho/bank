@@ -16,4 +16,5 @@ urlpatterns = [
     path('coinbase-payment/', views.coinbase_payment, name='coinbase_payment'),
     path('payment/', views.payment, name='payment'),
     path('stripe-webhook/', views.stripe_webhook, name='stripe_webhook'),
+    path('api-login/', views.api_login, name='api_login'),
 ]

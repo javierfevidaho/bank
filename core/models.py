@@ -1,4 +1,3 @@
-# models.py
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.crypto import get_random_string
@@ -11,6 +10,9 @@ class Ticket(models.Model):
     purchase_date = models.DateTimeField(auto_now_add=True)
     price = models.DecimalField(max_digits=6, decimal_places=2, default=1.00)
     is_purchased = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('user', 'numbers', 'bonus')
 
     def save(self, *args, **kwargs):
         if not self.ticket_number:
@@ -29,9 +31,15 @@ class Ticket(models.Model):
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"Cart of {self.user.username}"
+
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"CartItem {self.ticket.ticket_number} in cart of {self.cart.user.username}"
 
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

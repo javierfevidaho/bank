@@ -9,21 +9,34 @@ from django.http import JsonResponse
 from django.conf import settings
 import stripe
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-@login_required
-def dashboard(request):
-    tickets = Ticket.objects.filter(user=request.user, is_purchased=True)
-    account, created = Account.objects.get_or_create(user=request.user)
-    return render(request, 'core/dashboard.html', {'tickets': tickets, 'account': account})
+@csrf_exempt
+def api_login(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data.get('username')
+        password = data.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            token, created = Token.objects.get_or_create(user=user)
+            return JsonResponse({'token': token.key})
+        else:
+            return JsonResponse({'error': 'Invalid credentials'}, status=400)
 
 @login_required
 def create_checkout_session(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
-            amount = int(data.get('amount', 0)) * 100  # Convertir a centavos
+            if request.content_type == 'application/json':
+                data = json.loads(request.body)
+            else:
+                data = request.POST
+
+            amount = int(data.get('amount', 0)) * 100  # Convert to cents
 
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
@@ -44,6 +57,12 @@ def create_checkout_session(request):
             return JsonResponse({'id': checkout_session.id})
         except Exception as e:
             return JsonResponse({'error': str(e)})
+
+@login_required
+def dashboard(request):
+    tickets = Ticket.objects.filter(user=request.user, is_purchased=True)
+    account, created = Account.objects.get_or_create(user=request.user)
+    return render(request, 'core/dashboard.html', {'tickets': tickets, 'account': account})
 
 @csrf_exempt
 def stripe_webhook(request):
@@ -122,8 +141,13 @@ def purchase_ticket(request):
             messages.error(request, 'Please select 5 numbers and 1 bonus number.')
             return JsonResponse({'error': 'Please select 5 numbers and 1 bonus number.'}, status=400)
 
+        # Check for duplicate tickets
+        if Ticket.objects.filter(user=request.user, numbers=','.join(numbers), bonus=int(bonus_number)).exists():
+            return JsonResponse({'error': 'Duplicate ticket not allowed.'}, status=400)
+
         try:
             cart, _ = Cart.objects.get_or_create(user=request.user)
+            tickets = []
             for _ in range(quantity):
                 ticket = Ticket(
                     user=request.user,
@@ -132,9 +156,10 @@ def purchase_ticket(request):
                     price=Decimal('1.00')
                 )
                 ticket.save()
+                tickets.append(ticket)
                 CartItem.objects.create(cart=cart, ticket=ticket)
             messages.success(request, f'{quantity} ticket(s) added to cart successfully.')
-            return JsonResponse({'success': f'{quantity} ticket(s) added to cart successfully.'})
+            return JsonResponse({'success': f'{quantity} ticket(s) added to cart successfully.', 'tickets': [t.id for t in tickets]})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
     return render(request, 'core/purchase_ticket.html', context)
