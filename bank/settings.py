@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'django.contrib.humanize',
     'rest_framework',
-    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
