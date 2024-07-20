@@ -1,3 +1,4 @@
+# models.py
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.crypto import get_random_string
@@ -22,6 +23,9 @@ class Ticket(models.Model):
             if not Ticket.objects.filter(ticket_number=ticket_number).exists():
                 return ticket_number
 
+    def __str__(self):
+        return f"Ticket {self.ticket_number} for {self.user.username}"
+
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -32,3 +36,6 @@ class CartItem(models.Model):
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    def __str__(self):
+        return f"Account of {self.user.username}"
