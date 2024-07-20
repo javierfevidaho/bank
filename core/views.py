@@ -53,7 +53,7 @@ def create_checkout_session(request):
                 }],
                 mode='payment',
                 success_url=request.build_absolute_uri('/success/'),
-                cancel_url=request.build_absolute_uri('/cancel/'),
+                cancel_url=request.build_absolute_uri('/canceled/'),
                 client_reference_id=request.user.id  # Añadir la referencia del cliente
             )
             return HttpResponseRedirect(checkout_session.url)
