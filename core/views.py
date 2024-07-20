@@ -11,6 +11,7 @@ import stripe
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.models import User
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -53,6 +54,7 @@ def create_checkout_session(request):
                 mode='payment',
                 success_url=request.build_absolute_uri('/success/'),
                 cancel_url=request.build_absolute_uri('/cancel/'),
+                client_reference_id=request.user.id  # Añadir la referencia del cliente
             )
             return HttpResponseRedirect(checkout_session.url)
         except Exception as e:
@@ -84,8 +86,18 @@ def stripe_webhook(request):
     return JsonResponse({'status': 'success'})
 
 def handle_checkout_session(session):
-    # Manejar el evento de sesión completada
-    pass
+    # Obtener el ID del cliente desde los metadatos de la sesión de pago
+    user_id = session.get('client_reference_id')
+    if user_id:
+        user = get_object_or_404(User, id=user_id)
+    
+        # Obtener el monto del pago
+        amount = Decimal(session['amount_total']) / 100
+
+        # Actualizar el saldo del usuario
+        account, created = Account.objects.get_or_create(user=user)
+        account.balance += amount
+        account.save()
 
 @login_required
 def success(request):
