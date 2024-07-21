@@ -1,14 +1,14 @@
 :root {
-    --primary-dark: #E0E0E0;   /* Light grey for main background */
-    --primary-light: #F5F5F5;  /* Lighter grey for secondary backgrounds */
-    --accent-1: #7BA6D8;       /* Lighter blue for accents */
-    --accent-2: #FF6F61;       /* Brighter red for highlights and calls-to-action */
-    --text-light: #2E3A59;     /* Dark blue for text on light backgrounds */
-    --text-dark: #FFFFFF;      /* White for text on dark backgrounds */
+    --primary-dark: #2E3A59;   /* Lighter dark blue for main background */
+    --primary-light: #F0F0F0;  /* Light grey for secondary backgrounds */
+    --accent-1: #5072A7;       /* Lighter deep blue for accents */
+    --accent-2: #CC3A3A;       /* Brighter red for highlights and calls-to-action */
+    --text-light: #FFFFFF;     /* White for text on dark backgrounds */
+    --text-dark: #2E3A59;      /* Lighter dark blue for text on light backgrounds */
     --success: #4CAF50;        /* Green for success messages */
     --warning: #FFC107;        /* Yellow for warnings */
-    --table-row-odd: #F0F0F0;  /* Light grey background color for odd rows */
-    --table-row-even: #FFFFFF; /* White background color for even rows */
+    --table-row-odd: #FFFFFF;  /* White background color for odd rows */
+    --table-row-even: #F0F0F0; /* Light grey background color for even rows */
 }
 
 body {
