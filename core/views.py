@@ -9,9 +9,10 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.conf import settings
 import stripe
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -224,3 +225,81 @@ def coinbase_payment(request):
 @login_required
 def payment(request):
     return render(request, 'core/payment.html', {'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY})
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('dashboard')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
+@login_required
+def purchase_ticket(request):
+    account, created = Account.objects.get_or_create(user=request.user)
+    context = {
+        'balance': account.balance,
+        'number_range': range(1, 36),
+        'bonus_range': range(1, 15),
+    }
+
+    if request.method == 'POST':
+        data = json.loads(request.body) if request.content_type == 'application/json' else request.POST
+        numbers = data.getlist('numbers')
+        bonus_number = data.get('bonus')
+        quantity = int(data.get('quantity', 1))
+        bulk = data.get('bulk', False)
+
+        if bulk:
+            tickets = generate_bulk_tickets(request.user, quantity)
+            messages.success(request, f'{quantity} tickets added to cart successfully.')
+            return JsonResponse({'success': f'{quantity} tickets added to cart successfully.'})
+        else:
+            if len(numbers) != 5 or not bonus_number:
+                messages.error(request, 'Please select 5 numbers and 1 bonus number.')
+                return JsonResponse({'error': 'Please select 5 numbers and 1 bonus number.'}, status=400)
+
+            if Ticket.objects.filter(user=request.user, numbers=','.join(numbers), bonus=int(bonus_number)).exists():
+                return JsonResponse({'error': 'Duplicate ticket not allowed.'}, status=400)
+
+            try:
+                cart, _ = Cart.objects.get_or_create(user=request.user)
+                tickets = []
+                for _ in range(quantity):
+                    ticket = Ticket(
+                        user=request.user,
+                        numbers=','.join(numbers),
+                        bonus=int(bonus_number),
+                        price=Decimal('1.00')
+                    )
+                    ticket.save()
+                    tickets.append(ticket)
+                    CartItem.objects.create(cart=cart, ticket=ticket)
+                messages.success(request, f'{quantity} ticket(s) added to cart successfully.')
+                return JsonResponse({'success': f'{quantity} ticket(s) added to cart successfully.', 'tickets': [t.id for t in tickets]})
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=500)
+
+    return render(request, 'core/purchase_ticket.html', context)
+
+def generate_bulk_tickets(user, quantity):
+    cart, _ = Cart.objects.get_or_create(user=user)
+    tickets = []
+    for _ in range(quantity):
+        numbers = generate_unique_numbers()
+        bonus_number = random.randint(1, 14)
+        ticket = Ticket(
+            user=user,
+            numbers=','.join(map(str, numbers)),
+            bonus=bonus_number,
+            price=Decimal('1.00')
+        )
+        ticket.save()
+        CartItem.objects.create(cart=cart, ticket=ticket)
+        tickets.append(ticket)
+    return tickets
+
+def generate_unique_numbers():
+    return random.sample(range(1, 36), 5)

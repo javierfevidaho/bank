@@ -8,8 +8,9 @@
     <p>Your current balance is: ${{ balance|floatformat:2|intcomma }}</p>
     <p>Ticket Price: $1.00</p>
     <a href="{% url 'view_cart' %}" class="btn btn-info">View Cart (<span id="cart-count">{{ request.user.cart.cartitem_set.count }}</span>)</a>
-    
+
     <div class="d-flex">
+        <!-- Single Ticket Purchase Frame -->
         <div class="ticket-frame p-3 mb-3 mr-3">
             <form id="ticket-form" method="post" class="ticket-form">
                 {% csrf_token %}
@@ -40,7 +41,8 @@
             </form>
         </div>
 
-        <div class="quantity-frame p-3 mb-3">
+        <!-- Wholesale Ticket Purchase Frame -->
+        <div class="ticket-frame p-3 mb-3">
             <form id="quantity-form" method="post" class="quantity-form">
                 {% csrf_token %}
                 <div class="form-group">
@@ -57,7 +59,7 @@
                         <option value="500">500</option>
                     </select>
                 </div>
-                <button type="button" class="btn btn-success" onclick="addToCart()">Add to Cart</button>
+                <button type="button" class="btn btn-success" onclick="addBulkToCart()">Add Bulk to Cart</button>
             </form>
         </div>
     </div>
@@ -122,6 +124,31 @@
                 updateCartCount();
                 form.reset();
                 quantityForm.reset();
+                window.location.href = "{% url 'payment' %}";
+            } else if (data.error) {
+                alert(data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    window.addBulkToCart = function() {
+        const quantity = document.getElementById('quantity').value;
+        fetch("{% url 'purchase_ticket' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({quantity: quantity, bulk: true})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.success);
+                updateCartCount();
                 window.location.href = "{% url 'payment' %}";
             } else if (data.error) {
                 alert(data.error);
