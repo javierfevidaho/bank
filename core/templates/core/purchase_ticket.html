@@ -8,10 +8,9 @@
     <p>Your current balance is: ${{ balance|floatformat:2|intcomma }}</p>
     <p>Ticket Price: $1.00</p>
     <a href="{% url 'view_cart' %}" class="btn btn-info">View Cart (<span id="cart-count">{{ request.user.cart.cartitem_set.count }}</span>)</a>
-
-    <div class="d-flex">
-        <!-- Single Ticket Purchase Frame -->
-        <div class="ticket-frame p-3 mb-3 mr-3">
+    
+    <div id="tickets-container">
+        <div class="ticket-frame">
             <form id="ticket-form" method="post" class="ticket-form">
                 {% csrf_token %}
                 <div class="form-group">
@@ -41,8 +40,7 @@
             </form>
         </div>
 
-        <!-- Wholesale Ticket Purchase Frame -->
-        <div class="ticket-frame p-3 mb-3">
+        <div class="quantity-frame">
             <form id="quantity-form" method="post" class="quantity-form">
                 {% csrf_token %}
                 <div class="form-group">
@@ -62,6 +60,15 @@
                 <button type="button" class="btn btn-success" onclick="addBulkToCart()">Add Bulk to Cart</button>
             </form>
         </div>
+    </div>
+</div>
+
+<div id="bulkModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Selected Numbers</h2>
+        <div id="bulk-numbers"></div>
+        <button id="confirm-bulk-add" class="btn btn-primary">Confirm</button>
     </div>
 </div>
 
@@ -107,9 +114,7 @@
 
     window.addToCart = function() {
         const form = document.getElementById('ticket-form');
-        const quantityForm = document.getElementById('quantity-form');
         const formData = new FormData(form);
-        formData.append('quantity', quantityForm.querySelector('#quantity').value);
         fetch("{% url 'purchase_ticket' %}", {
             method: 'POST',
             body: formData,
@@ -123,32 +128,6 @@
                 alert(data.success);
                 updateCartCount();
                 form.reset();
-                quantityForm.reset();
-                window.location.href = "{% url 'payment' %}";
-            } else if (data.error) {
-                alert(data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-
-    window.addBulkToCart = function() {
-        const quantity = document.getElementById('quantity').value;
-        fetch("{% url 'purchase_ticket' %}", {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({quantity: quantity, bulk: true})
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert(data.success);
-                updateCartCount();
                 window.location.href = "{% url 'payment' %}";
             } else if (data.error) {
                 alert(data.error);
@@ -168,6 +147,70 @@
             const cartCount = doc.querySelectorAll('.cart-item').length;
             document.getElementById('cart-count').textContent = cartCount;
         });
+    }
+
+    window.addBulkToCart = function() {
+        const quantity = parseInt(document.getElementById('quantity').value);
+        const bulkNumbers = [];
+        for (let i = 0; i < quantity; i++) {
+            let selectedNumbers = [];
+            while (selectedNumbers.length < 5) {
+                const randomNum = Math.floor(Math.random() * 35) + 1;
+                if (!selectedNumbers.includes(randomNum)) {
+                    selectedNumbers.push(randomNum);
+                }
+            }
+            const randomBonus = Math.floor(Math.random() * 14) + 1;
+            bulkNumbers.push({ numbers: selectedNumbers, bonus: randomBonus });
+        }
+
+        const bulkModal = document.getElementById('bulkModal');
+        const bulkNumbersDiv = document.getElementById('bulk-numbers');
+        bulkNumbersDiv.innerHTML = '';
+        bulkNumbers.forEach((ticket, index) => {
+            const ticketDiv = document.createElement('div');
+            ticketDiv.innerHTML = `<strong>Ticket ${index + 1}:</strong> Numbers: ${ticket.numbers.join(', ')}, Bonus: ${ticket.bonus}`;
+            bulkNumbersDiv.appendChild(ticketDiv);
+        });
+
+        bulkModal.style.display = 'block';
+
+        document.getElementById('confirm-bulk-add').onclick = function() {
+            fetch("{% url 'purchase_ticket' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                },
+                body: JSON.stringify({ bulk_tickets: bulkNumbers })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.success);
+                    updateCartCount();
+                    bulkModal.style.display = 'none';
+                } else if (data.error) {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    }
+
+    const modal = document.getElementById('bulkModal');
+    const span = document.getElementsByClassName('close')[0];
+
+    span.onclick = function() {
+        modal.style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
     }
 </script>
 {% endblock %}

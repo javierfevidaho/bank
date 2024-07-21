@@ -236,6 +236,7 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
+
 @login_required
 def purchase_ticket(request):
     account, created = Account.objects.get_or_create(user=request.user)
@@ -246,17 +247,32 @@ def purchase_ticket(request):
     }
 
     if request.method == 'POST':
-        data = json.loads(request.body) if request.content_type == 'application/json' else request.POST
-        numbers = data.getlist('numbers')
-        bonus_number = data.get('bonus')
-        quantity = int(data.get('quantity', 1))
-        bulk = data.get('bulk', False)
-
-        if bulk:
-            tickets = generate_bulk_tickets(request.user, quantity)
-            messages.success(request, f'{quantity} tickets added to cart successfully.')
-            return JsonResponse({'success': f'{quantity} tickets added to cart successfully.'})
+        if 'bulk_tickets' in request.body:
+            data = json.loads(request.body)
+            bulk_tickets = data.get('bulk_tickets', [])
+            try:
+                cart, _ = Cart.objects.get_or_create(user=request.user)
+                tickets = []
+                for ticket in bulk_tickets:
+                    ticket_numbers = ','.join(map(str, ticket['numbers']))
+                    ticket_bonus = int(ticket['bonus'])
+                    new_ticket = Ticket(
+                        user=request.user,
+                        numbers=ticket_numbers,
+                        bonus=ticket_bonus,
+                        price=Decimal('1.00')
+                    )
+                    new_ticket.save()
+                    tickets.append(new_ticket)
+                    CartItem.objects.create(cart=cart, ticket=new_ticket)
+                messages.success(request, f'{len(tickets)} ticket(s) added to cart successfully.')
+                return JsonResponse({'success': f'{len(tickets)} ticket(s) added to cart successfully.', 'tickets': [t.id for t in tickets]})
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=500)
         else:
+            numbers = request.POST.getlist('numbers')
+            bonus_number = request.POST.get('bonus')
+            quantity = int(request.POST.get('quantity', 1))
             if len(numbers) != 5 or not bonus_number:
                 messages.error(request, 'Please select 5 numbers and 1 bonus number.')
                 return JsonResponse({'error': 'Please select 5 numbers and 1 bonus number.'}, status=400)
@@ -281,25 +297,4 @@ def purchase_ticket(request):
                 return JsonResponse({'success': f'{quantity} ticket(s) added to cart successfully.', 'tickets': [t.id for t in tickets]})
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=500)
-
     return render(request, 'core/purchase_ticket.html', context)
-
-def generate_bulk_tickets(user, quantity):
-    cart, _ = Cart.objects.get_or_create(user=user)
-    tickets = []
-    for _ in range(quantity):
-        numbers = generate_unique_numbers()
-        bonus_number = random.randint(1, 14)
-        ticket = Ticket(
-            user=user,
-            numbers=','.join(map(str, numbers)),
-            bonus=bonus_number,
-            price=Decimal('1.00')
-        )
-        ticket.save()
-        CartItem.objects.create(cart=cart, ticket=ticket)
-        tickets.append(ticket)
-    return tickets
-
-def generate_unique_numbers():
-    return random.sample(range(1, 36), 5)
