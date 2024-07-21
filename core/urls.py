@@ -18,9 +18,8 @@ urlpatterns = [
     path('remove-from-cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('checkout/', views.checkout, name='checkout'),
     path('coinbase-payment/', views.coinbase_payment, name='coinbase_payment'),
-    path('payment/', views.payment, name='payment'),
+    path('payment/', views.payment_page, name='payment_page'),
     path('stripe-webhook/', views.stripe_webhook, name='stripe_webhook'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('payment-page/', views.payment_page, name='payment_page'),  # Asegúrate de tener esta línea
 ]

@@ -86,15 +86,10 @@ def stripe_webhook(request):
     return JsonResponse({'status': 'success'})
 
 def handle_checkout_session(session):
-    # Obtener el ID del cliente desde los metadatos de la sesión de pago
     user_id = session.get('client_reference_id')
     if user_id:
         user = get_object_or_404(User, id=user_id)
-    
-        # Obtener el monto del pago
         amount = Decimal(session['amount_total']) / 100
-
-        # Actualizar el saldo del usuario
         account, created = Account.objects.get_or_create(user=user)
         account.balance += amount
         account.save()
@@ -153,7 +148,6 @@ def purchase_ticket(request):
             messages.error(request, 'Please select 5 numbers and 1 bonus number.')
             return JsonResponse({'error': 'Please select 5 numbers and 1 bonus number.'}, status=400)
 
-        # Check for duplicate tickets
         if Ticket.objects.filter(user=request.user, numbers=','.join(numbers), bonus=int(bonus_number)).exists():
             return JsonResponse({'error': 'Duplicate ticket not allowed.'}, status=400)
 
@@ -228,5 +222,5 @@ def coinbase_payment(request):
     return render(request, 'core/coinbase_payment.html', {'charge': charge})
 
 @login_required
-def payment(request):
+def payment_page(request):
     return render(request, 'core/payment.html', {'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY})
