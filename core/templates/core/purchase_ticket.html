@@ -9,8 +9,8 @@
     <p>Ticket Price: $1.00</p>
     <a href="{% url 'view_cart' %}" class="btn btn-info">View Cart (<span id="cart-count">{{ request.user.cart.cartitem_set.count }}</span>)</a>
     
-    <div id="tickets-container">
-        <div class="ticket-frame">
+    <div class="d-flex justify-content-between">
+        <div class="ticket-frame p-3 mb-3">
             <form id="ticket-form" method="post" class="ticket-form">
                 {% csrf_token %}
                 <div class="form-group">
@@ -40,7 +40,7 @@
             </form>
         </div>
 
-        <div class="quantity-frame">
+        <div class="quantity-frame p-3 mb-3">
             <form id="quantity-form" method="post" class="quantity-form">
                 {% csrf_token %}
                 <div class="form-group">
