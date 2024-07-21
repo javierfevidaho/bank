@@ -3,7 +3,7 @@
     --primary-light: #F0F0F0;  /* Light grey for secondary backgrounds */
     --accent-1: #5072A7;       /* Lighter deep blue for accents */
     --accent-2: #CC3A3A;       /* Brighter red for highlights and calls-to-action */
-    --text-light: #FFFFFF;     /* White for text on dark backgrounds */
+    --text-light: #3b3838;     /* White for text on dark backgrounds */
     --text-dark: #2E3A59;      /* Lighter dark blue for text on light backgrounds */
     --success: #4CAF50;        /* Green for success messages */
     --warning: #FFC107;        /* Yellow for warnings */
@@ -81,12 +81,14 @@ nav {
 }
 
 .ticket-frame {
-    border: 1px solid var(--accent-2);
-    border-radius: 10px;
-    padding: 15px;
     background-color: var(--primary-light);
-    width: 30%;
-    margin: 5px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    text-align: center;
     color: var(--text-dark);
 }
 
@@ -127,12 +129,12 @@ nav {
 
 .number-label input:checked + span, .bonus-label input:checked + span {
     background-color: var(--accent-2);
-    color: var(--text-dark);
+    color: var(--text-light);
 }
 
 .btn {
     background-color: var(--accent-2);
-    color: var(--text-dark);
+    color: var(--text-light);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -217,7 +219,7 @@ nav {
 
 .profile-container .btn-primary {
     background-color: var(--accent-2);
-    color: var(--text-dark);
+    color: var(--text-light);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -264,7 +266,7 @@ nav {
 
 .deposit-frame .btn {
     background-color: var(--accent-2);
-    color: var(--text-dark);
+    color: var(--text-light);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -319,7 +321,7 @@ nav {
 
 .login-frame .btn-primary {
     background-color: var(--accent-2);
-    color: var(--text-dark);
+    color: var(--text-light);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
