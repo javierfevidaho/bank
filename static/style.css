@@ -1,14 +1,14 @@
 :root {
-    --primary-dark: #1A1A2E;   /* Dark blue for main background */
-    --primary-light: #16213E;  /* Lighter blue for secondary backgrounds */
-    --accent-1: #0F3460;       /* Deep blue for accents */
-    --accent-2: #410711;       /* Vibrant red for highlights and calls-to-action */
-    --text-light: #FFFFFF;     /* White for text on dark backgrounds */
-    --text-dark: #1A1A2E;      /* Dark blue for text on light backgrounds */
+    --primary-dark: #E0E0E0;   /* Light grey for main background */
+    --primary-light: #F5F5F5;  /* Lighter grey for secondary backgrounds */
+    --accent-1: #7BA6D8;       /* Lighter blue for accents */
+    --accent-2: #FF6F61;       /* Brighter red for highlights and calls-to-action */
+    --text-light: #2E3A59;     /* Dark blue for text on light backgrounds */
+    --text-dark: #FFFFFF;      /* White for text on dark backgrounds */
     --success: #4CAF50;        /* Green for success messages */
     --warning: #FFC107;        /* Yellow for warnings */
-    --table-row-odd: #2C2C54;  /* Background color for odd rows */
-    --table-row-even: #1A1A2E; /* Background color for even rows */
+    --table-row-odd: #F0F0F0;  /* Light grey background color for odd rows */
+    --table-row-even: #FFFFFF; /* White background color for even rows */
 }
 
 body {
@@ -67,11 +67,12 @@ nav {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     padding: 20px;
     margin: 20px;
+    color: var(--text-dark);
 }
 
 .footer {
     background-color: var(--primary-light);
-    color: var(--text-light);
+    color: var(--text-dark);
     text-align: center;
     padding: 10px;
     position: fixed;
@@ -86,6 +87,7 @@ nav {
     background-color: var(--primary-light);
     width: 30%;
     margin: 5px;
+    color: var(--text-dark);
 }
 
 #tickets-container {
@@ -106,6 +108,7 @@ nav {
     cursor: pointer;
     font-size: 14px;
     transition: all 0.3s ease;
+    color: var(--text-dark);
 }
 
 .number-label input, .bonus-label input {
@@ -119,16 +122,17 @@ nav {
     line-height: 40px;
     text-align: center;
     border-radius: 50%;
+    background-color: var(--primary-light);
 }
 
 .number-label input:checked + span, .bonus-label input:checked + span {
     background-color: var(--accent-2);
-    color: var(--text-light);
+    color: var(--text-dark);
 }
 
 .btn {
     background-color: var(--accent-2);
-    color: var(--text-light);
+    color: var(--text-dark);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -157,7 +161,8 @@ nav {
 .table th, .table td {
     padding: 12px;
     text-align: left;
-    border-bottom: 1px solid var(--primary-light);
+    border-bottom: 1px solid var(--primary-dark);
+    color: var(--text-dark);
 }
 
 .table tr:nth-child(odd) {
@@ -177,10 +182,11 @@ nav {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     padding: 20px;
     margin: 20px;
+    color: var(--text-dark);
 }
 
 .profile-container h2 {
-    color: var(--text-light);
+    color: var(--text-dark);
     margin-bottom: 20px;
 }
 
@@ -195,7 +201,7 @@ nav {
 
 .profile-container .form-group label {
     display: block;
-    color: var(--text-light);
+    color: var (--text-dark);
     font-weight: bold;
     margin-bottom: 5px;
 }
@@ -205,13 +211,13 @@ nav {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid var(--accent-1);
-    background-color: var(--primary-dark);
-    color: var(--text-light);
+    background-color: var(--primary-light);
+    color: var(--text-dark);
 }
 
 .profile-container .btn-primary {
     background-color: var(--accent-2);
-    color: var(--text-light);
+    color: var(--text-dark);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -222,8 +228,6 @@ nav {
 .profile-container .btn-primary:hover {
     background-color: var(--accent-1);
 }
-
-/* Añade esto a tu archivo CSS existente */
 
 .deposit-container {
     display: flex;
@@ -239,6 +243,7 @@ nav {
     margin: 10px;
     flex: 1;
     text-align: center;
+    color: var(--text-dark);
 }
 
 .deposit-frame img {
@@ -248,18 +253,18 @@ nav {
 }
 
 .deposit-frame h2 {
-    color: var(--text-light);
+    color: var(--text-dark);
     margin-bottom: 15px;
 }
 
 .deposit-frame p {
-    color: var(--text-light);
+    color: var(--text-dark);
     margin-bottom: 15px;
 }
 
 .deposit-frame .btn {
     background-color: var(--accent-2);
-    color: var(--text-light);
+    color: var(--text-dark);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -269,4 +274,73 @@ nav {
 
 .deposit-frame .btn:hover {
     background-color: var(--accent-1);
+}
+
+/* Login specific styles */
+.login-frame {
+    background-color: var(--primary-light);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+.login-frame h2 {
+    color: var(--text-dark);
+    margin-bottom: 20px;
+}
+
+.login-frame form {
+    width: 100%;
+}
+
+.login-frame .form-group {
+    margin-bottom: 20px;
+}
+
+.login-frame .form-group label {
+    display: block;
+    color: var(--text-dark);
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.login-frame .form-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--accent-1);
+    background-color: var(--primary-light);
+    color: var(--text-dark);
+}
+
+.login-frame .btn-primary {
+    background-color: var(--accent-2);
+    color: var(--text-dark);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-frame .btn-primary:hover {
+    background-color: var(--accent-1);
+}
+
+.login-frame .forgot-password,
+.login-frame .signup {
+    display: block;
+    margin-top: 10px;
+    color: var(--accent-2);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.login-frame .forgot-password:hover,
+.login-frame .signup:hover {
+    color: var(--accent-1);
 }
