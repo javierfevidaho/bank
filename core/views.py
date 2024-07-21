@@ -222,5 +222,5 @@ def coinbase_payment(request):
     return render(request, 'core/coinbase_payment.html', {'charge': charge})
 
 @login_required
-def payment_page(request):
+def payment(request):
     return render(request, 'core/payment.html', {'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY})
