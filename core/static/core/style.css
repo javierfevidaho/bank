@@ -8,7 +8,7 @@
     --success: #4CAF50;        /* Green for success messages */
     --warning: #FFC107;        /* Yellow for warnings */
     --table-row-odd: #FFFFFF;  /* White background color for odd rows */
-    --table-row-even: #F0F0F0; /* Light grey background color for even rows */
+    --table-row-even: #a89e9e; /* Light grey background color for even rows */
 }
 
 body {
