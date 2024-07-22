@@ -3,7 +3,7 @@
     --primary-light: #FEEAC6;  /* Light beige for secondary backgrounds */
     --accent-1: #E8690E;       /* Bright orange for accents */
     --accent-2: #FFA400;       /* Yellow-orange for highlights and calls-to-action */
-    --text-light: #999999;     /* White for text on dark backgrounds */
+    --text-light: #000000;     /* White for text on dark backgrounds */
     --text-dark: #8A2601;      /* Dark brown for text on light backgrounds */
     --success: #4CAF50;        /* Green for success messages */
     --warning: #FFA400;        /* Yellow-orange for warnings */
