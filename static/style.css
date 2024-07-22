@@ -11,7 +11,7 @@
     --table-row-even: #FEEAC6; /* Light beige background color for even rows */
 }
 
-bbody {
+body {
     font-family: 'Roboto', Arial, sans-serif;
     display: flex;
     flex-direction: column;
@@ -438,4 +438,8 @@ nav {
 .d-flex {
     display: flex;
     gap: 20px;
+}
+/* Small icon class */
+.small-icon {
+    width: 25%;
 }
