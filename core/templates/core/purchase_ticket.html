@@ -40,27 +40,66 @@
             </form>
         </div>
 
-        <div class="quantity-frame p-3 mb-3">
-            <form id="quantity-form" method="post" class="quantity-form">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="quantity">Select quantity:</label>
-                    <select id="quantity" name="quantity" class="form-control">
-                        <option value="1">1</option>
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="40">40</option>
-                        <option value="50">50</option>
-                        <option value="80">80</option>
-                        <option value="100">100</option>
-                        <option value="200">200</option>
-                        <option value="500">500</option>
-                    </select>
+        <div class="frame p-3">
+            <h2>Purchase Tickets</h2>
+            <p>Your current balance is: ${{ balance|floatformat:2|intcomma }}</p>
+            <p>Ticket Price: $1.00</p>
+            <a href="{% url 'view_cart' %}" class="btn btn-info">View Cart (<span id="cart-count">{{ request.user.cart.cartitem_set.count }}</span>)</a>
+        
+            <div class="d-flex">
+                <div class="ticket-frame p-3 mb-3">
+                    <form id="ticket-form" method="post" class="ticket-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="numbers">Select 5 numbers:</label>
+                            <div id="numbers" class="number-grid">
+                                {% for i in number_range %}
+                                    <label class="number-label">
+                                        <input type="checkbox" name="numbers" value="{{ i }}" onchange="handleNumberSelection(this)">
+                                        <span>{{ i }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bonus">Select 1 bonus number:</label>
+                            <div id="bonus" class="number-grid">
+                                {% for i in bonus_range %}
+                                    <label class="bonus-label">
+                                        <input type="radio" name="bonus" value="{{ i }}">
+                                        <span>{{ i }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="autoSelectNumbers(this)">Auto Select</button>
+                        <button type="button" class="btn btn-success" onclick="addToCart()">Add to Cart</button>
+                    </form>
                 </div>
-                <button type="button" class="btn btn-success" onclick="addBulkToCart()">Add Bulk to Cart</button>
-            </form>
+        
+                <div class="quantity-frame p-3 mb-3">
+                    <form id="quantity-form" method="post" class="quantity-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="quantity">Select quantity:</label>
+                            <select id="quantity" name="quantity" class="form-control">
+                                <option value="1">1</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="40">40</option>
+                                <option value="50">50</option>
+                                <option value="80">80</option>
+                                <option value="100">100</option>
+                                <option value="200">200</option>
+                                <option value="500">500</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-success" onclick="addBulkToCart()">Add Bulk to Cart</button>
+                    </form>
+                </div>
+            </div>
         </div>
-    </div>
+        
 
     <div id="bulkModal" class="modal">
         <div class="modal-content">

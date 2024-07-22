@@ -20,6 +20,7 @@ body {
     color: var(--text-light);
     margin: 0;
     padding: 0;
+
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -339,4 +340,220 @@ nav {
     padding: 2px 6px;
     font-size: 12px;
 }
- /* Highlight color */ /* Highlight color */ /* Highlight color */ /* Highlight color */ /* Highlight color */ /* Highlight color */
+ 
+/* Center the frame in the middle of the page */
+.frame {
+    background-color: var(--primary-light);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+/* Style the form elements */
+.frame h2 {
+    color: var(--text-dark);
+    margin-bottom: 20px;
+}
+
+.frame form {
+    width: 100%;
+}
+
+.frame .form-group {
+    margin-bottom: 20px;
+}
+
+.frame .form-group label {
+    display: block;
+    color: var(--text-dark);
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.frame .form-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--accent-1);
+    background-color: var(--primary-light);
+    color: var(--text-dark);
+}
+
+.frame .btn-primary {
+    background-color: var(--accent-2);
+    color: var(--text-dark);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.frame .btn-primary:hover {
+    background-color: var(--accent-1);
+}
+
+.frame .forgot-password,
+.frame .signup {
+    display: block;
+    margin-top: 10px;
+    color: var(--accent-2);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.frame .forgot-password:hover,
+.frame .signup:hover {
+    color: var(--accent-1);
+}
+
+/* Background and body styles */
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--primary-dark);
+    color: var(--text-light);
+    margin: 0;
+    padding: 0;
+    justify-content: center; /* Center the frame vertically */
+}
+
+.d-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Adjust alignment as needed */
+}
+
+.ticket-frame, .quantity-frame {
+    flex: 1;
+    margin-right: 10px; /* Add some space between the frames */
+}
+
+.quantity-frame {
+    margin-right: 0; /* Remove margin from the last frame */
+}
+
+.frame {
+    background-color: var(--primary-light);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin: 20px;
+    color: var(--text-dark);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-dark);
+    font-weight: bold;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--accent-1);
+    background-color: var(--primary-light);
+    color: var(--text-dark);
+}
+
+.btn {
+    background-color: var(--accent-2);
+    color: var(--text-dark);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: var(--accent-1);
+}
+
+/* Add this to your CSS file */
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.frame {
+    width: 100%;
+    max-width: 400px;
+    background-color: var(--primary-light);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    text-align: center;
+}
+
+.lock-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: none; /* Hide the label */
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--accent-1);
+    background-color: var(--primary-light);
+    color: var(--text-dark);
+}
+
+.form-group input::placeholder {
+    color: var(--text-dark);
+    opacity: 0.5;
+}
+
+.form-group input:focus::placeholder {
+    opacity: 0; /* Hide placeholder on focus */
+}
+
+.btn {
+    background-color: var(--accent-2);
+    color: var(--text-dark);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: var(--accent-1);
+}
+
+.forgot-password,
+.signup {
+    display: block;
+    margin-top: 10px;
+    color: var(--accent-2);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.forgot-password:hover,
+.signup:hover {
+    color: var(--accent-1);
+}

@@ -11,16 +11,16 @@
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
-                <label for="username">Username</label>
+                {{ form.username.label_tag }}
                 {{ form.username }}
             </div>
             <div class="form-group">
-                <label for="password">Password</label>
+                {{ form.password.label_tag }}
                 {{ form.password }}
             </div>
             <div class="form-group form-check">
                 {{ form.remember_me }}
-                <label class="form-check-label" for="remember_me">Remember me</label>
+                {{ form.remember_me.label_tag }}
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
         </form>

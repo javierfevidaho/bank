@@ -7,12 +7,15 @@ from .models import Account, Ticket, Cart, CartItem
 from decimal import Decimal
 from django.http import JsonResponse, HttpResponseRedirect
 from django.conf import settings
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import AuthenticationForm
 import stripe
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -70,15 +73,15 @@ def dashboard(request):
 @csrf_exempt
 def stripe_webhook(request):
     payload = request.body
-    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
     event = None
     try:
         event = stripe.Webhook.construct_event(
             payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
         )
-    except ValueError as e:
+    except ValueError:
         return JsonResponse({'status': 'invalid payload'}, status=400)
-    except stripe.error.SignatureVerificationError as e:
+    except stripe.error.SignatureVerificationError:
         return JsonResponse({'status': 'invalid signature'}, status=400)
 
     if event['type'] == 'checkout.session.completed':
@@ -254,70 +257,44 @@ def payment(request):
 
 def signup(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect('dashboard')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
 
-@login_required
-def purchase_ticket(request):
-    account, created = Account.objects.get_or_create(user=request.user)
-    context = {
-        'balance': account.balance,
-        'number_range': range(1, 36),
-        'bonus_range': range(1, 15),
-    }
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'placeholder': 'Username', 'class': 'form-control'}
+        )
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={'placeholder': 'Password', 'class': 'form-control'}
+        )
+    )
 
-    if request.method == 'POST':
-        if request.content_type == 'application/json':
-            data = json.loads(request.body)
-            tickets = data.get('tickets', [])
-            if not tickets:
-                return JsonResponse({'error': 'No tickets provided'}, status=400)
-            
-            try:
-                cart, _ = Cart.objects.get_or_create(user=request.user)
-                for ticket_data in tickets:
-                    numbers = ticket_data['numbers']
-                    bonus_number = ticket_data['bonus']
-                    if Ticket.objects.filter(user=request.user, numbers=','.join(map(str, numbers)), bonus=int(bonus_number)).exists():
-                        continue  # Skip duplicates
+class CustomUserCreationForm(UserCreationForm):
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'placeholder': 'Username', 'class': 'form-control'}
+        )
+    )
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={'placeholder': 'Password', 'class': 'form-control'}
+        )
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={'placeholder': 'Confirm Password', 'class': 'form-control'}
+        )
+    )
 
-                    ticket = Ticket(
-                        user=request.user,
-                        numbers=','.join(map(str, numbers)),
-                        bonus=int(bonus_number),
-                        price=Decimal('1.00')
-                    )
-                    ticket.save()
-                    CartItem.objects.create(cart=cart, ticket=ticket)
-                return JsonResponse({'success': 'Tickets added to cart successfully.'})
-            except Exception as e:
-                return JsonResponse({'error': str(e)}, status=500)
-        else:
-            numbers = request.POST.getlist('numbers')
-            bonus_number = request.POST.get('bonus')
-            if len(numbers) != 5 or not bonus_number:
-                return JsonResponse({'error': 'Please select 5 numbers and 1 bonus number.'}, status=400)
-
-            if Ticket.objects.filter(user=request.user, numbers=','.join(numbers), bonus=int(bonus_number)).exists():
-                return JsonResponse({'error': 'Duplicate ticket not allowed.'}, status=400)
-
-            try:
-                cart, _ = Cart.objects.get_or_create(user=request.user)
-                ticket = Ticket(
-                    user=request.user,
-                    numbers=','.join(numbers),
-                    bonus=int(bonus_number),
-                    price=Decimal('1.00')
-                )
-                ticket.save()
-                CartItem.objects.create(cart=cart, ticket=ticket)
-                return JsonResponse({'success': 'Ticket added to cart successfully.', 'ticket_id': ticket.id})
-            except Exception as e:
-                return JsonResponse({'error': str(e)}, status=500)
-    return render(request, 'core/purchase_ticket.html', context)
+    class Meta:
+        model = User
+        fields = ['username', 'password1', 'password2']
