@@ -7,7 +7,7 @@
     <h2>Purchase Tickets</h2>
     <p>Your current balance is: ${{ balance|floatformat:2|intcomma }}</p>
     <p>Ticket Price: $1.00</p>
-    <a href="{% url 'view_cart' %}" class="btn btn-info">View Cart (<span id="cart-count">{{ request.user.cart.cartitem_set.count }}</span>)</a>
+    
 
     <div class="d-flex justify-content-between">
         <div class="ticket-frame p-3 mb-3">
