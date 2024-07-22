@@ -128,7 +128,6 @@
                 alert(data.success);
                 updateCartCount();
                 form.reset();
-                window.location.href = "{% url 'payment' %}";
             } else if (data.error) {
                 alert(data.error);
             }
@@ -208,7 +207,6 @@
                 alert(data.success);
                 updateCartCount();
                 closeModal();
-                window.location.href = "{% url 'payment' %}";
             } else if (data.error) {
                 alert(data.error);
             }
