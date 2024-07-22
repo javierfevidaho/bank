@@ -21,11 +21,14 @@
                         <li><a href="{% url 'logout' %}">Logout</a></li>
                     {% endif %}
                 </ul>
-                <a href="{% url 'view_cart' %}" class="cart-icon-container">
-                    <img src="{% static 'images/cart-icon.png' %}" alt="Cart Icon" class="cart-icon">
-                    <span id="cart-count">{{ request.user.cart.cartitem_set.count }}</span>
-                </a>
             </nav>
+            <!-- Cart Icon -->
+            <div class="cart-icon">
+                <a href="{% url 'view_cart' %}">
+                    <img src="{% static 'images/cart-icon.png' %}" alt="Cart Icon">
+                    <span id="cart-count">{{ request.user.cart.cartitem_set.count|default:"0" }}</span>
+                </a>
+            </div>
         </div>
     </header>
     <main class="wrapper">
