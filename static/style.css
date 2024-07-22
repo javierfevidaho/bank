@@ -3,7 +3,7 @@
     --primary-light: #FEEAC6;  /* Light beige for secondary backgrounds */
     --accent-1: #E8690E;       /* Bright orange for accents */
     --accent-2: #FFA400;       /* Yellow-orange for highlights and calls-to-action */
-    --text-light: #999999;     /* White for text on dark backgrounds */
+    --text-light: #000000;     /* White for text on dark backgrounds */
     --text-dark: #8A2601;      /* Dark brown for text on light backgrounds */
     --success: #4CAF50;        /* Green for success messages */
     --warning: #FFA400;        /* Yellow-orange for warnings */
@@ -478,4 +478,44 @@ nav {
     border-radius: 50%;
     padding: 5px 10px;
     font-size: 14px;
+}
+
+.lock-icon {
+    width: 96px;
+    height: 96px;
+}
+
+.cart-icon-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0; /* Fondo circular */
+    border-radius: 50%;
+    padding: 5px;
+    width: 96px;
+    height: 96px;
+    text-align: center;
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.cart-icon {
+    width: 48px;
+    height: 48px;
+    margin-right: 5px;
+}
+
+#cart-count {
+    display: inline-block;
+    background-color: #cc0000;
+    color: #fff;
+    border-radius: 50%;
+    padding: 2px 8px;
+    font-size: 14px;
+    line-height: 1;
 }
