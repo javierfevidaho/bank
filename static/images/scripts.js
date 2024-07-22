@@ -49,19 +49,3 @@ window.addTicket = function() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    function updateCartCount() {
-        fetch("{% url 'view_cart' %}")
-        .then(response => response.json())
-        .then(data => {
-            const cartCountElement = document.getElementById('cart-count');
-            cartCountElement.textContent = data.cart_item_count || '0';
-        });
-    }
-
-    // Call updateCartCount on page load
-    updateCartCount();
-
-    // You can also call updateCartCount whenever items are added to the cart
-    // Example: document.querySelector('.add-to-cart-btn').addEventListener('click', updateCartCount);
-});
