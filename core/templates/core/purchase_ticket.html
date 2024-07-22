@@ -183,7 +183,15 @@
     }
 
     window.confirmBulk = function() {
-        const tickets = generateTickets(document.getElementById('quantity').value);
+        const tickets = [];
+        const bulkNumbersDiv = document.getElementById('bulkNumbers').children;
+        for (let i = 0; i < bulkNumbersDiv.length; i++) {
+            const ticketText = bulkNumbersDiv[i].textContent;
+            const numbers = ticketText.match(/Numbers: (.*), Bonus/)[1].split(', ').map(Number);
+            const bonus = parseInt(ticketText.match(/Bonus: (\d+)/)[1]);
+            tickets.push({ numbers, bonus });
+        }
+
         const formData = new FormData();
         formData.append('bulk_tickets', JSON.stringify(tickets));
         fetch("{% url 'purchase_ticket' %}", {

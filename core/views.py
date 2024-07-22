@@ -309,34 +309,35 @@ def purchase_ticket(request):
     }
 
     if request.method == 'POST':
-        if 'bulk_tickets' in request.body:
+        if request.content_type == 'application/json':
             data = json.loads(request.body)
-            bulk_tickets = data.get('bulk_tickets', [])
+            tickets = data.get('tickets', [])
+            if not tickets:
+                return JsonResponse({'error': 'No tickets provided'}, status=400)
+            
             try:
                 cart, _ = Cart.objects.get_or_create(user=request.user)
-                tickets = []
-                for ticket in bulk_tickets:
-                    ticket_numbers = ','.join(map(str, ticket['numbers']))
-                    ticket_bonus = int(ticket['bonus'])
-                    new_ticket = Ticket(
+                for ticket_data in tickets:
+                    numbers = ticket_data['numbers']
+                    bonus_number = ticket_data['bonus']
+                    if Ticket.objects.filter(user=request.user, numbers=','.join(map(str, numbers)), bonus=int(bonus_number)).exists():
+                        continue  # Skip duplicates
+
+                    ticket = Ticket(
                         user=request.user,
-                        numbers=ticket_numbers,
-                        bonus=ticket_bonus,
+                        numbers=','.join(map(str, numbers)),
+                        bonus=int(bonus_number),
                         price=Decimal('1.00')
                     )
-                    new_ticket.save()
-                    tickets.append(new_ticket)
-                    CartItem.objects.create(cart=cart, ticket=new_ticket)
-                messages.success(request, f'{len(tickets)} ticket(s) added to cart successfully.')
-                return JsonResponse({'success': f'{len(tickets)} ticket(s) added to cart successfully.', 'tickets': [t.id for t in tickets]})
+                    ticket.save()
+                    CartItem.objects.create(cart=cart, ticket=ticket)
+                return JsonResponse({'success': 'Tickets added to cart successfully.'})
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=500)
         else:
             numbers = request.POST.getlist('numbers')
             bonus_number = request.POST.get('bonus')
-            quantity = int(request.POST.get('quantity', 1))
             if len(numbers) != 5 or not bonus_number:
-                messages.error(request, 'Please select 5 numbers and 1 bonus number.')
                 return JsonResponse({'error': 'Please select 5 numbers and 1 bonus number.'}, status=400)
 
             if Ticket.objects.filter(user=request.user, numbers=','.join(numbers), bonus=int(bonus_number)).exists():
@@ -344,19 +345,15 @@ def purchase_ticket(request):
 
             try:
                 cart, _ = Cart.objects.get_or_create(user=request.user)
-                tickets = []
-                for _ in range(quantity):
-                    ticket = Ticket(
-                        user=request.user,
-                        numbers=','.join(numbers),
-                        bonus=int(bonus_number),
-                        price=Decimal('1.00')
-                    )
-                    ticket.save()
-                    tickets.append(ticket)
-                    CartItem.objects.create(cart=cart, ticket=ticket)
-                messages.success(request, f'{quantity} ticket(s) added to cart successfully.')
-                return JsonResponse({'success': f'{quantity} ticket(s) added to cart successfully.', 'tickets': [t.id for t in tickets]})
+                ticket = Ticket(
+                    user=request.user,
+                    numbers=','.join(numbers),
+                    bonus=int(bonus_number),
+                    price=Decimal('1.00')
+                )
+                ticket.save()
+                CartItem.objects.create(cart=cart, ticket=ticket)
+                return JsonResponse({'success': 'Ticket added to cart successfully.', 'ticket_id': ticket.id})
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=500)
     return render(request, 'core/purchase_ticket.html', context)
