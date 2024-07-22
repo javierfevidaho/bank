@@ -20,7 +20,7 @@ body {
     color: var(--text-light);
     margin: 0;
     padding: 0;
-
+    justify-content: center; /* Center the frame vertically */
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -68,6 +68,11 @@ nav {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     padding: 20px;
     margin: 20px;
+    color: var(--text-dark);
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
 }
 
 .footer {
@@ -80,7 +85,15 @@ nav {
     width: 100%;
 }
 
-.ticket-frame {
+.d-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Adjust alignment as needed */
+}
+
+.ticket-frame, .quantity-frame {
+    flex: 1;
+    margin-right: 10px; /* Add some space between the frames */
     border: 1px solid var(--accent-2);
     border-radius: 10px;
     padding: 15px;
@@ -89,10 +102,14 @@ nav {
     margin: 5px;
 }
 
-#tickets-container {
+.quantity-frame {
+    margin-right: 0; /* Remove margin from the last frame */
+}
+
+.number-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 5px;
 }
 
 .number-label, .bonus-label {
@@ -129,7 +146,7 @@ nav {
 
 .btn {
     background-color: var(--accent-2);
-    color: var(--text-light);
+    color: var(--text-dark);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -169,7 +186,7 @@ nav {
     background-color: var(--table-row-even);
 }
 
-.profile-container {
+.profile-container, .deposit-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -180,28 +197,23 @@ nav {
     margin: 20px;
 }
 
-.profile-container h2 {
-    color: var(--text-light);
-    margin-bottom: 20px;
-}
-
-.profile-container form {
+.profile-container form, .deposit-frame form {
     width: 100%;
     max-width: 500px;
 }
 
-.profile-container .form-group {
+.profile-container .form-group, .deposit-frame .form-group {
     margin-bottom: 15px;
 }
 
-.profile-container .form-group label {
+.profile-container .form-group label, .deposit-frame .form-group label {
     display: block;
     color: var(--text-light);
     font-weight: bold;
     margin-bottom: 5px;
 }
 
-.profile-container .form-group input {
+.profile-container .form-group input, .deposit-frame .form-group input {
     width: 100%;
     padding: 10px;
     border-radius: 5px;
@@ -210,7 +222,7 @@ nav {
     color: var(--text-light);
 }
 
-.profile-container .btn-primary {
+.profile-container .btn-primary, .deposit-frame .btn {
     background-color: var(--accent-2);
     color: var(--text-light);
     border: none;
@@ -220,57 +232,10 @@ nav {
     transition: background-color 0.3s ease;
 }
 
-.profile-container .btn-primary:hover {
+.profile-container .btn-primary:hover, .deposit-frame .btn:hover {
     background-color: var(--accent-1);
 }
 
-/* Añade esto a tu archivo CSS existente */
-
-.deposit-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 50px;
-}
-
-.deposit-frame {
-    background-color: var(--primary-light);
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    margin: 10px;
-    flex: 1;
-    text-align: center;
-}
-
-.deposit-frame img {
-    width: 50px;
-    height: auto;
-    margin-bottom: 15px;
-}
-
-.deposit-frame h2 {
-    color: var(--text-light);
-    margin-bottom: 15px;
-}
-
-.deposit-frame p {
-    color: var(--text-light);
-    margin-bottom: 15px;
-}
-
-.deposit-frame .btn {
-    background-color: var(--accent-2);
-    color: var(--text-light);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.deposit-frame .btn:hover {
-    background-color: var(--accent-1);
-}
 .lock-icon {
     width: 96px;
     height: 96px;
@@ -295,23 +260,6 @@ nav {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.cart-icon {
-    width: 48px;
-    height: 48px;
-    margin-right: 5px;
-}
-
-#cart-count {
-    display: inline-block;
-    background-color: #cc0000;
-    color: #fff;
-    border-radius: 50%;
-    padding: 2px 8px;
-    font-size: 14px;
-    line-height: 1;
-}
-
-/* Add this to your CSS file */
 .cart-icon {
     width: 1in; /* 1 inch */
     height: 1in; /* 1 inch */
@@ -340,185 +288,14 @@ nav {
     padding: 2px 6px;
     font-size: 12px;
 }
- 
-/* Center the frame in the middle of the page */
-.frame {
-    background-color: var(--primary-light);
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    padding: 30px;
-    width: 100%;
-    max-width: 400px;
-    margin: 50px auto;
-    text-align: center;
-}
 
-/* Style the form elements */
-.frame h2 {
-    color: var(--text-dark);
-    margin-bottom: 20px;
-}
+/* Styles for Login and Signup forms */
 
-.frame form {
-    width: 100%;
-}
-
-.frame .form-group {
-    margin-bottom: 20px;
-}
-
-.frame .form-group label {
-    display: block;
-    color: var(--text-dark);
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.frame .form-group input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid var(--accent-1);
-    background-color: var(--primary-light);
-    color: var(--text-dark);
-}
-
-.frame .btn-primary {
-    background-color: var(--accent-2);
-    color: var(--text-dark);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.frame .btn-primary:hover {
-    background-color: var(--accent-1);
-}
-
-.frame .forgot-password,
-.frame .signup {
-    display: block;
-    margin-top: 10px;
-    color: var(--accent-2);
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.frame .forgot-password:hover,
-.frame .signup:hover {
-    color: var(--accent-1);
-}
-
-/* Background and body styles */
-body {
-    font-family: 'Roboto', Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: var(--primary-dark);
-    color: var(--text-light);
-    margin: 0;
-    padding: 0;
-    justify-content: center; /* Center the frame vertically */
-}
-
-.d-flex {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start; /* Adjust alignment as needed */
-}
-
-.ticket-frame, .quantity-frame {
-    flex: 1;
-    margin-right: 10px; /* Add some space between the frames */
-}
-
-.quantity-frame {
-    margin-right: 0; /* Remove margin from the last frame */
-}
-
-.frame {
-    background-color: var(--primary-light);
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    margin: 20px;
-    color: var(--text-dark);
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    color: var(--text-dark);
-    font-weight: bold;
-}
-
-.form-group input, .form-group select {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid var(--accent-1);
-    background-color: var(--primary-light);
-    color: var(--text-dark);
-}
-
-.btn {
-    background-color: var(--accent-2);
-    color: var(--text-dark);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn:hover {
-    background-color: var(--accent-1);
-}
-
-/* Add this to your CSS file */
-
-.login-container {
+.login-container, .signup-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-}
-
-.frame {
-    width: 100%;
-    max-width: 400px;
-    background-color: var(--primary-light);
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    padding: 30px;
-    text-align: center;
-}
-
-.lock-icon {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 20px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.form-group label {
-    display: none; /* Hide the label */
-}
-
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid var(--accent-1);
-    background-color: var(--primary-light);
-    color: var(--text-dark);
 }
 
 .form-group input::placeholder {
@@ -528,100 +305,6 @@ body {
 
 .form-group input:focus::placeholder {
     opacity: 0; /* Hide placeholder on focus */
-}
-
-.btn {
-    background-color: var(--accent-2);
-    color: var(--text-dark);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn:hover {
-    background-color: var(--accent-1);
-}
-
-.forgot-password,
-.signup {
-    display: block;
-    margin-top: 10px;
-    color: var(--accent-2);
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.forgot-password:hover,
-.signup:hover {
-    color: var(--accent-1);
-}
-
-/* Add this to your CSS file */
-
-.signup-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.frame {
-    width: 100%;
-    max-width: 400px;
-    background-color: var(--primary-light);
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    padding: 30px;
-    text-align: center;
-}
-
-.lock-icon {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 20px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.form-group label {
-    display: none; /* Hide the label */
-}
-
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid var(--accent-1);
-    background-color: var(--primary-light);
-    color: var(--text-dark);
-}
-
-.form-group input::placeholder {
-    color: var(--text-dark);
-    opacity: 0.5;
-}
-
-.form-group input:focus::placeholder {
-    opacity: 0; /* Hide placeholder on focus */
-}
-
-.btn {
-    background-color: var(--accent-2);
-    color: var(--text-dark);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn:hover {
-    background-color: var(--accent-1);
 }
 
 .forgot-password,
