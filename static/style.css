@@ -1,16 +1,15 @@
 :root {
-    --primary-dark: #2E3A59;   /* Lighter dark blue for main background */
-    --primary-light: #F0F0F0;  /* Light grey for secondary backgrounds */
-    --accent-1: #5072A7;       /* Lighter deep blue for accents */
-    --accent-2: #CC3A3A;       /* Brighter red for highlights and calls-to-action */
-    --text-light: #3b3838;     /* White for text on dark backgrounds */
-    --text-dark: #2E3A59;      /* Lighter dark blue for text on light backgrounds */
+    --primary-dark: #1C3F3E;   /* Dark green for main background */
+    --primary-light: #DFF3E3;  /* Light green for secondary backgrounds */
+    --accent-1: #317B22;       /* Medium green for accents */
+    --accent-2: #FFC107;       /* Bright yellow for highlights and calls-to-action */
+    --text-light: #FFFFFF;     /* White for text on dark backgrounds */
+    --text-dark: #1C3F3E;      /* Dark green for text on light backgrounds */
     --success: #4CAF50;        /* Green for success messages */
     --warning: #FFC107;        /* Yellow for warnings */
     --table-row-odd: #FFFFFF;  /* White background color for odd rows */
-    --table-row-even: #a89e9e; /* Light grey background color for even rows */
+    --table-row-even: #E8F5E9; /* Light green background color for even rows */
 }
-
 
 bbody {
     font-family: 'Roboto', Arial, sans-serif;
