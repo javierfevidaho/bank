@@ -96,13 +96,40 @@ def handle_checkout_session(session):
         account.save()
 
 @login_required
+def create_checkout_session(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body) if request.content_type == 'application/json' else request.POST
+            amount = int(data.get('amount', 0)) * 100  # Convert to cents
+
+            checkout_session = stripe.checkout.Session.create(
+                payment_method_types=['card'],
+                line_items=[{
+                    'price_data': {
+                        'currency': 'usd',
+                        'product_data': {
+                            'name': 'Account Deposit',
+                        },
+                        'unit_amount': amount,
+                    },
+                    'quantity': 1,
+                }],
+                mode='payment',
+                success_url=request.build_absolute_uri('/success/'),
+                cancel_url=request.build_absolute_uri('/cancel/'),
+                client_reference_id=request.user.id  # Añadir la referencia del cliente
+            )
+            return HttpResponseRedirect(checkout_session.url)
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+
+@login_required
 def success(request):
     return render(request, 'core/success.html')
 
 @login_required
 def cancel(request):
     return render(request, 'core/cancel.html')
-
 @login_required
 def deposit(request):
     if request.method == 'POST':
