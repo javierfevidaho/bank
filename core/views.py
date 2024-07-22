@@ -76,21 +76,22 @@ def stripe_webhook(request):
         event = stripe.Webhook.construct_event(
             payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
         )
-    except ValueError as e:
+    except ValueError:
         return JsonResponse({'status': 'invalid payload'}, status=400)
-    except stripe.error.SignatureVerificationError as e:
+    except stripe.error.SignatureVerificationError:
         return JsonResponse({'status': 'invalid signature'}, status=400)
 
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
         handle_checkout_session(session)
+
     return JsonResponse({'status': 'success'})
 
 def handle_checkout_session(session):
     user_id = session.get('client_reference_id')
     if user_id:
         user = get_object_or_404(User, id=user_id)
-        amount = Decimal(session['amount_total']) / 100
+        amount = Decimal(session['amount_total']) / 100  # Convert to dollars
         account, created = Account.objects.get_or_create(user=user)
         account.balance += amount
         account.save()
@@ -131,111 +132,6 @@ def profile(request):
 def logout(request):
     auth_logout(request)
     return redirect('/accounts/login/')
-
-@login_required
-def purchase_ticket(request):
-    account, created = Account.objects.get_or_create(user=request.user)
-    context = {
-        'balance': account.balance,
-        'number_range': range(1, 36),
-        'bonus_range': range(1, 15),
-    }
-
-    if request.method == 'POST':
-        numbers = request.POST.getlist('numbers')
-        bonus_number = request.POST.get('bonus')
-        quantity = int(request.POST.get('quantity', 1))
-        if len(numbers) != 5 or not bonus_number:
-            messages.error(request, 'Please select 5 numbers and 1 bonus number.')
-            return JsonResponse({'error': 'Please select 5 numbers and 1 bonus number.'}, status=400)
-
-        if Ticket.objects.filter(user=request.user, numbers=','.join(numbers), bonus=int(bonus_number)).exists():
-            return JsonResponse({'error': 'Duplicate ticket not allowed.'}, status=400)
-
-        try:
-            cart, _ = Cart.objects.get_or_create(user=request.user)
-            tickets = []
-            for _ in range(quantity):
-                ticket = Ticket(
-                    user=request.user,
-                    numbers=','.join(numbers),
-                    bonus=int(bonus_number),
-                    price=Decimal('1.00')
-                )
-                ticket.save()
-                tickets.append(ticket)
-                CartItem.objects.create(cart=cart, ticket=ticket)
-            messages.success(request, f'{quantity} ticket(s) added to cart successfully.')
-            return JsonResponse({'success': f'{quantity} ticket(s) added to cart successfully.', 'tickets': [t.id for t in tickets]})
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-    return render(request, 'core/purchase_ticket.html', context)
-
-@login_required
-def view_cart(request):
-    cart, _ = Cart.objects.get_or_create(user=request.user)
-    cart_items = CartItem.objects.filter(cart=cart)
-    total_cost = sum(item.ticket.price for item in cart_items)
-    return render(request, 'core/cart.html', {'cart_items': cart_items, 'total_cost': total_cost})
-
-@login_required
-def remove_from_cart(request, item_id):
-    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
-    cart_item.delete()
-    messages.success(request, 'Item removed from cart.')
-    return redirect('view_cart')
-
-@login_required
-def checkout(request):
-    cart, _ = Cart.objects.get_or_create(user=request.user)
-    cart_items = CartItem.objects.filter(cart=cart)
-    account, created = Account.objects.get_or_create(user=request.user)
-    total_cost = sum(item.ticket.price for item in cart_items)
-    if account.balance >= total_cost:
-        account.balance -= Decimal(total_cost)
-        account.save()
-        for item in cart_items:
-            item.ticket.is_purchased = True
-            item.ticket.save()
-            item.delete()
-        messages.success(request, f'Purchase successful. Total cost: ${total_cost}')
-        return redirect('dashboard')
-    else:
-        messages.error(request, 'Insufficient balance')
-        return render(request, 'core/cart.html', {'cart_items': cart_items, 'total_cost': total_cost, 'error': 'Insufficient balance'})
-
-@login_required
-def coinbase_payment(request):
-    client = Client(api_key=settings.COINBASE_COMMERCE_API_KEY)
-    domain_url = 'http://localhost:8000/'
-    product = {
-        'name': 'Lottery Ticket',
-        'description': 'Purchase a lottery ticket',
-        'local_price': {
-            'amount': '1.00',
-            'currency': 'USD'
-        },
-        'pricing_type': 'fixed_price',
-        'redirect_url': domain_url + 'success/',
-        'cancel_url': domain_url + 'cancel/',
-    }
-    charge = client.charge.create(**product)
-    return render(request, 'core/coinbase_payment.html', {'charge': charge})
-
-@login_required
-def payment(request):
-    return render(request, 'core/payment.html', {'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY})
-
-def signup(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('dashboard')
-    else:
-        form = UserCreationForm()
-    return render(request, 'registration/signup.html', {'form': form})
 
 @login_required
 def purchase_ticket(request):
@@ -300,60 +196,70 @@ def purchase_ticket(request):
     return render(request, 'core/purchase_ticket.html', context)
 
 @login_required
-def purchase_ticket(request):
+def view_cart(request):
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    cart_items = CartItem.objects.filter(cart=cart)
+    total_cost = sum(item.ticket.price for item in cart_items)
+    return render(request, 'core/cart.html', {'cart_items': cart_items, 'total_cost': total_cost})
+
+@login_required
+def remove_from_cart(request, item_id):
+    try:
+        cart_item = CartItem.objects.get(id=item_id, cart__user=request.user)
+        cart_item.delete()
+        messages.success(request, 'Item removed from cart.')
+    except CartItem.DoesNotExist:
+        messages.error(request, 'Item not found or does not belong to you.')
+    return redirect('view_cart')
+
+@login_required
+def checkout(request):
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    cart_items = CartItem.objects.filter(cart=cart)
     account, created = Account.objects.get_or_create(user=request.user)
-    context = {
-        'balance': account.balance,
-        'number_range': range(1, 36),
-        'bonus_range': range(1, 15),
+    total_cost = sum(item.ticket.price for item in cart_items)
+    if account.balance >= total_cost:
+        account.balance -= Decimal(total_cost)
+        account.save()
+        for item in cart_items:
+            item.ticket.is_purchased = True
+            item.ticket.save()
+            item.delete()
+        messages.success(request, f'Purchase successful. Total cost: ${total_cost}')
+        return redirect('dashboard')
+    else:
+        messages.error(request, 'Insufficient balance')
+        return render(request, 'core/cart.html', {'cart_items': cart_items, 'total_cost': total_cost, 'error': 'Insufficient balance'})
+
+@login_required
+def coinbase_payment(request):
+    client = Client(api_key=settings.COINBASE_COMMERCE_API_KEY)
+    domain_url = 'http://localhost:8000/'
+    product = {
+        'name': 'Lottery Ticket',
+        'description': 'Purchase a lottery ticket',
+        'local_price': {
+            'amount': '1.00',
+            'currency': 'USD'
+        },
+        'pricing_type': 'fixed_price',
+        'redirect_url': domain_url + 'success/',
+        'cancel_url': domain_url + 'cancel/',
     }
+    charge = client.charge.create(**product)
+    return render(request, 'core/coinbase_payment.html', {'charge': charge})
 
+@login_required
+def payment(request):
+    return render(request, 'core/payment.html', {'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY})
+
+def signup(request):
     if request.method == 'POST':
-        if request.content_type == 'application/json':
-            data = json.loads(request.body)
-            tickets = data.get('tickets', [])
-            if not tickets:
-                return JsonResponse({'error': 'No tickets provided'}, status=400)
-            
-            try:
-                cart, _ = Cart.objects.get_or_create(user=request.user)
-                for ticket_data in tickets:
-                    numbers = ticket_data['numbers']
-                    bonus_number = ticket_data['bonus']
-                    if Ticket.objects.filter(user=request.user, numbers=','.join(map(str, numbers)), bonus=int(bonus_number)).exists():
-                        continue  # Skip duplicates
-
-                    ticket = Ticket(
-                        user=request.user,
-                        numbers=','.join(map(str, numbers)),
-                        bonus=int(bonus_number),
-                        price=Decimal('1.00')
-                    )
-                    ticket.save()
-                    CartItem.objects.create(cart=cart, ticket=ticket)
-                return JsonResponse({'success': 'Tickets added to cart successfully.'})
-            except Exception as e:
-                return JsonResponse({'error': str(e)}, status=500)
-        else:
-            numbers = request.POST.getlist('numbers')
-            bonus_number = request.POST.get('bonus')
-            if len(numbers) != 5 or not bonus_number:
-                return JsonResponse({'error': 'Please select 5 numbers and 1 bonus number.'}, status=400)
-
-            if Ticket.objects.filter(user=request.user, numbers=','.join(numbers), bonus=int(bonus_number)).exists():
-                return JsonResponse({'error': 'Duplicate ticket not allowed.'}, status=400)
-
-            try:
-                cart, _ = Cart.objects.get_or_create(user=request.user)
-                ticket = Ticket(
-                    user=request.user,
-                    numbers=','.join(numbers),
-                    bonus=int(bonus_number),
-                    price=Decimal('1.00')
-                )
-                ticket.save()
-                CartItem.objects.create(cart=cart, ticket=ticket)
-                return JsonResponse({'success': 'Ticket added to cart successfully.', 'ticket_id': ticket.id})
-            except Exception as e:
-                return JsonResponse({'error': str(e)}, status=500)
-    return render(request, 'core/purchase_ticket.html', context)
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('dashboard')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
