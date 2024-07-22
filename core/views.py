@@ -74,20 +74,26 @@ def dashboard(request):
 def stripe_webhook(request):
     payload = request.body
     sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
+
+    if sig_header is None:
+        return JsonResponse({'status': 'signature missing'}, status=400)
+
     event = None
     try:
         event = stripe.Webhook.construct_event(
             payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
         )
-    except ValueError:
+    except ValueError as e:
         return JsonResponse({'status': 'invalid payload'}, status=400)
-    except stripe.error.SignatureVerificationError:
+    except stripe.error.SignatureVerificationError as e:
         return JsonResponse({'status': 'invalid signature'}, status=400)
 
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
         handle_checkout_session(session)
+
     return JsonResponse({'status': 'success'})
+
 
 def handle_checkout_session(session):
     user_id = session.get('client_reference_id')
