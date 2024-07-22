@@ -20,7 +20,6 @@ body {
     color: var(--text-light);
     margin: 0;
     padding: 0;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Sombra para el texto */
 
 }
 
@@ -69,12 +68,11 @@ nav {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     padding: 20px;
     margin: 20px;
-    color: var(--text-dark);
 }
 
 .footer {
     background-color: var(--primary-light);
-    color: var(--text-dark);
+    color: var(--text-light);
     text-align: center;
     padding: 10px;
     position: fixed;
@@ -87,19 +85,8 @@ nav {
     border-radius: 10px;
     padding: 15px;
     background-color: var(--primary-light);
-    width: 48%;
+    width: 30%;
     margin: 5px;
-    color: var(--text-dark);
-}
-
-.quantity-frame {
-    border: 1px solid var(--accent-2);
-    border-radius: 10px;
-    padding: 15px;
-    background-color: var(--primary-light);
-    width: 48%;
-    margin: 5px;
-    color: var(--text-dark);
 }
 
 #tickets-container {
@@ -120,7 +107,6 @@ nav {
     cursor: pointer;
     font-size: 14px;
     transition: all 0.3s ease;
-    color: var(--text-dark);
 }
 
 .number-label input, .bonus-label input {
@@ -134,17 +120,16 @@ nav {
     line-height: 40px;
     text-align: center;
     border-radius: 50%;
-    background-color: var(--primary-light);
 }
 
 .number-label input:checked + span, .bonus-label input:checked + span {
     background-color: var(--accent-2);
-    color: var(--text-dark);
+    color: var(--text-light);
 }
 
 .btn {
     background-color: var(--accent-2);
-    color: var(--text-dark);
+    color: var(--text-light);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -173,8 +158,7 @@ nav {
 .table th, .table td {
     padding: 12px;
     text-align: left;
-    border-bottom: 1px solid var(--primary-dark);
-    color: var(--text-dark);
+    border-bottom: 1px solid var(--primary-light);
 }
 
 .table tr:nth-child(odd) {
@@ -194,11 +178,10 @@ nav {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     padding: 20px;
     margin: 20px;
-    color: var(--text-dark);
 }
 
 .profile-container h2 {
-    color: var(--text-dark);
+    color: var(--text-light);
     margin-bottom: 20px;
 }
 
@@ -213,7 +196,7 @@ nav {
 
 .profile-container .form-group label {
     display: block;
-    color: var (--text-dark);
+    color: var(--text-light);
     font-weight: bold;
     margin-bottom: 5px;
 }
@@ -223,13 +206,13 @@ nav {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid var(--accent-1);
-    background-color: var(--primary-light);
-    color: var(--text-dark);
+    background-color: var(--primary-dark);
+    color: var(--text-light);
 }
 
 .profile-container .btn-primary {
     background-color: var(--accent-2);
-    color: var(--text-dark);
+    color: var(--text-light);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -240,6 +223,8 @@ nav {
 .profile-container .btn-primary:hover {
     background-color: var(--accent-1);
 }
+
+/* Añade esto a tu archivo CSS existente */
 
 .deposit-container {
     display: flex;
@@ -255,7 +240,6 @@ nav {
     margin: 10px;
     flex: 1;
     text-align: center;
-    color: var(--text-dark);
 }
 
 .deposit-frame img {
@@ -265,18 +249,18 @@ nav {
 }
 
 .deposit-frame h2 {
-    color: var(--text-dark);
+    color: var(--text-light);
     margin-bottom: 15px;
 }
 
 .deposit-frame p {
-    color: var(--text-dark);
+    color: var(--text-light);
     margin-bottom: 15px;
 }
 
 .deposit-frame .btn {
     background-color: var(--accent-2);
-    color: var(--text-dark);
+    color: var(--text-light);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -287,199 +271,6 @@ nav {
 .deposit-frame .btn:hover {
     background-color: var(--accent-1);
 }
-
-/* Login specific styles */
-.login-frame {
-    background-color: var(--primary-light);
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    padding: 30px;
-    width: 100%;
-    max-width: 400px;
-    margin: 50px auto;
-    text-align: center;
-}
-
-.login-frame h2 {
-    color: var(--text-dark);
-    margin-bottom: 20px;
-}
-
-.login-frame form {
-    width: 100%;
-}
-
-.login-frame .form-group {
-    margin-bottom: 20px;
-}
-
-.login-frame .form-group label {
-    display: block;
-    color: var(--text-dark);
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.login-frame .form-group input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid var(--accent-1);
-    background-color: var(--primary-light);
-    color: var(--text-dark);
-}
-
-.login-frame .btn-primary {
-    background-color: var(--accent-2);
-    color: var(--text-dark);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.login-frame .btn-primary:hover {
-    background-color: var(--accent-1);
-}
-
-.login-frame .forgot-password,
-.login-frame .signup {
-    display: block;
-    margin-top: 10px;
-    color: var(--accent-2);
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.login-frame .forgot-password:hover,
-.login-frame .signup:hover {
-    color: var(--accent-1);
-}
-
-/* Modal styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-.modal-content {
-    background-color: var(--primary-light);
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid var(--accent-2);
-    width: 80%;
-    max-width: 500px;
-    color: var(--text-dark);
-    border-radius: 10px;
-}
-
-.close {
-    color: var(--accent-2);
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: var(--accent-1);
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* Existing CSS */
-
-/* Modal specific styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* Ensure the frames are next to each other */
-.d-flex {
-    display: flex;
-    gap: 20px;
-}
-/* Small icon class */
-.small-icon {
-    width: 25%;
-}
-
-.cart-icon-container {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background-color: var(--accent-1);
-    border-radius: 50%;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.cart-icon {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-}
-
-.cart-icon img {
-    width: 40px;
-    height: 40px;
-}
-
-#cart-count {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background-color: var(--accent-2);
-    color: var(--text-light);
-    border-radius: 50%;
-    padding: 5px 10px;
-    font-size: 14px;
-}
-
 .lock-icon {
     width: 96px;
     height: 96px;
@@ -518,4 +309,117 @@ nav {
     padding: 2px 8px;
     font-size: 14px;
     line-height: 1;
+}
+
+/* Add this to your CSS file */
+.cart-icon {
+    width: 1in; /* 1 inch */
+    height: 1in; /* 1 inch */
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    right: 10px; /* Adjust as needed */
+    background-color: var(--primary-light); /* Optional: for visibility */
+    border-radius: 50%; /* Optional: to make it round */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-icon img {
+    width: 100%;
+    height: 100%;
+}
+
+.cart-icon span {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: var(--accent-2); /* Highlight color */
+    color: var(--text-light);
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+}
+ 
+/* Center the frame in the middle of the page */
+.frame {
+    background-color: var(--primary-light);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+/* Style the form elements */
+.frame h2 {
+    color: var(--text-dark);
+    margin-bottom: 20px;
+}
+
+.frame form {
+    width: 100%;
+}
+
+.frame .form-group {
+    margin-bottom: 20px;
+}
+
+.frame .form-group label {
+    display: block;
+    color: var(--text-dark);
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.frame .form-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--accent-1);
+    background-color: var(--primary-light);
+    color: var(--text-dark);
+}
+
+.frame .btn-primary {
+    background-color: var(--accent-2);
+    color: var(--text-dark);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.frame .btn-primary:hover {
+    background-color: var(--accent-1);
+}
+
+.frame .forgot-password,
+.frame .signup {
+    display: block;
+    margin-top: 10px;
+    color: var(--accent-2);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.frame .forgot-password:hover,
+.frame .signup:hover {
+    color: var(--accent-1);
+}
+
+/* Background and body styles */
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--primary-dark);
+    color: var(--text-light);
+    margin: 0;
+    padding: 0;
+    justify-content: center; /* Center the frame vertically */
 }
