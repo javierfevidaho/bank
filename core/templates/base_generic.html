@@ -1,10 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Cyberloto Bank{% endblock %}</title>
-    {% load static %}
     <link rel="stylesheet" href="{% static 'core/style.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
@@ -12,6 +12,9 @@
     <header>
         <div class="header-container">
             <h1>Cyberloto Bank</h1>
+            <div class="jackpot">
+                Jackpot: $5,000
+            </div>
             <div class="countdown-container">
                 <div class="countdown-item">
                     <span id="days">46</span> Days
@@ -25,9 +28,6 @@
                 <div class="countdown-item">
                     <span id="seconds">18</span> Seconds
                 </div>
-                <div class="jackpot">
-                    Jackpot: $5,000
-                </div>
             </div>
             <nav>
                 <ul class="navbar">
@@ -37,6 +37,9 @@
                         <li><a href="{% url 'purchase_ticket' %}">Purchase Ticket</a></li>
                         <li><a href="{% url 'profile' %}">Profile</a></li>
                         <li><a href="{% url 'logout' %}">Logout</a></li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}">Login</a></li>
+                        <li><a href="{% url 'signup' %}">Signup</a></li>
                     {% endif %}
                 </ul>
             </nav>
