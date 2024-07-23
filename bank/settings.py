@@ -18,6 +18,12 @@ LOCALE_PATHS = [
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
+# Add the production domain to ALLOWED_HOSTS
+ALLOWED_HOSTS.extend([
+    'uneven-idalina-cyberlotto-62107c4f.koyeb.app',
+    'ltd-brandea-cyberlottobank-7684fb46.koyeb.app'
+])
+
 # Custom error view configuration
 handler404 = 'core.views.error_404'
 
@@ -102,7 +108,7 @@ DATABASES = {
         'USER': os.getenv('DATABASE_USER'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD'),
         'HOST': os.getenv('DATABASE_HOST'),
-        'PORT': os.getenv('DB_PORT'),
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
 
