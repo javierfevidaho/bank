@@ -10,7 +10,7 @@
     --table-row-odd: #FFFFFF;  /* White background color for odd rows */
     --table-row-even: #FEEAC6; /* Light beige background color for even rows */
 }
-
+/*Anexo para update*/
 body {
     font-family: 'Roboto', Arial, sans-serif;
     display: flex;
