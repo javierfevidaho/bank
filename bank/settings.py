@@ -1,24 +1,27 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import logging
 
 # Load environment variables from .env file
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load locale paths
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
     os.path.join(BASE_DIR, 'core/locale'),
 ]
 
+# Set debug mode based on environment variable
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
-# Configuración de vistas de errores personalizados
+# Custom error view configuration
 handler404 = 'core.views.error_404'
 
-# Security
+# Security settings
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # Application definition
@@ -56,11 +59,6 @@ LANGUAGES = [
     ('es', 'Español'),
 ]
 
-LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale'),
-]
-
-
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -81,7 +79,6 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'core/templates'),
-            # Add any other template directories here
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -101,10 +98,10 @@ WSGI_APPLICATION = 'bank.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
+        'NAME': os.getenv('DATABASE_NAME'),
+        'USER': os.getenv('DATABASE_USER'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+        'HOST': os.getenv('DATABASE_HOST'),
         'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
@@ -148,3 +145,7 @@ STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
 # Coinbase settings
 COINBASE_COMMERCE_API_KEY = os.getenv('COINBASE_COMMERCE_API_KEY')
 COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET = os.getenv('COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET')
+
+# Debug log database configuration
+logging.basicConfig(level=logging.DEBUG)
+logging.debug("Database configuration: %s", DATABASES['default'])
