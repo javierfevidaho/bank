@@ -158,3 +158,4 @@ COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET = os.getenv('COINBASE_COMMERCE_WEBHOOK_S
 # Debug log database configuration
 logging.basicConfig(level=logging.DEBUG)
 logging.debug("Database configuration: %s", DATABASES['default'])
+#Pushing line
