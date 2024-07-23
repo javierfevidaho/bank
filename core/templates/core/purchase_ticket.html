@@ -52,23 +52,21 @@
                         <option value="200">200</option>
                         <option value="500">500</option>
                     </select>
-                    <div id="bulkModal" class="modal">
-                        <div class="modal-content">
-                            <span class="close" onclick="closeModal()">&times;</span>
-                            <h2>Selected Numbers</h2>
-                            <div id="bulkNumbers"></div>
-                            <button class="btn btn-primary" onclick="confirmBulk()">Confirm</button>
-                        </div>
-                    </div>
                 </div>
                 <button type="button" class="btn btn-success" onclick="addBulkToCart()">Add Bulk to Cart</button>
             </form>
         </div>
     </div>
-
     <a href="{% url 'view_cart' %}" class="btn btn-info mt-3">View Cart (<span id="cart-count">{{ request.user.cart.cartitem_set.count }}</span>)</a>
+</div>
 
-    
+<div id="bulkModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Selected Numbers</h2>
+        <div id="bulkNumbers"></div>
+        <button class="btn btn-primary" onclick="confirmBulk()">Confirm</button>
+    </div>
 </div>
 
 <script>
