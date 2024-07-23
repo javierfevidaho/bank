@@ -1,4 +1,7 @@
-from django.urls import path
+from django.contrib import admin
+from django.urls import path, include
+from django.conf.urls.i18n import i18n_patterns
+from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 from . import views
 from rest_framework_simplejwt.views import (
@@ -32,4 +35,13 @@ urlpatterns = [
     path('accounts/reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('accounts/reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('accounts/signup/', views.signup, name='signup'),
+]
+
+urlpatterns += i18n_patterns(
+    path('admin/', admin.site.urls),
+    path('', include('core.urls')),  # Ajuste aquí para incluir las rutas de tu aplicación principal
+)
+
+urlpatterns += [
+    url(r'^i18n/', include('django.conf.urls.i18n')),
 ]

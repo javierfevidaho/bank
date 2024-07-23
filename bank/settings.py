@@ -7,21 +7,20 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-#SECURE_SSL_REDIRECT = True
-#CSRF_COOKIE_SECURE = True
-#SESSION_COOKIE_SECURE = True
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+    os.path.join(BASE_DIR, 'core/locale'),
 
-DEBUG = False
+]
 
-ALLOWED_HOSTS = ['*']  # Asegúrate de configurar esto correctamente para tu entorno
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 # Configuración de vistas de errores personalizados
-handler404 = 'tu_aplicacion.views.error_404'
+handler404 = 'core.views.error_404'
 
 # Security
 SECRET_KEY = os.getenv('SECRET_KEY')
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 # Application definition
 INSTALLED_APPS = [
@@ -37,8 +36,6 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'rest_framework',
     'rest_framework_simplejwt',
-    #'sslserver',
-    
 ]
 
 MIDDLEWARE = [
@@ -50,7 +47,20 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
+
+LANGUAGE_CODE = 'en-us'
+
+LANGUAGES = [
+    ('en', 'English'),
+    ('es', 'Español'),
+    # Añade más idiomas aquí
+]
+
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True
 
 ROOT_URLCONF = 'bank.urls'
 
@@ -67,7 +77,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            '/home/javierfelix/Documents/banco/bank/core/templates',
+            os.path.join(BASE_DIR, 'core/templates'),
             # Add any other template directories here
         ],
         'APP_DIRS': True,
@@ -81,7 +91,6 @@ TEMPLATES = [
         },
     },
 ]
-
 
 WSGI_APPLICATION = 'bank.wsgi.application'
 
@@ -97,11 +106,6 @@ DATABASES = {
     }
 }
 
-# Internationalization
-LANGUAGE_CODE = 'en-us'
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
 USE_THOUSAND_SEPARATOR = True
 THOUSAND_SEPARATOR = ','
 

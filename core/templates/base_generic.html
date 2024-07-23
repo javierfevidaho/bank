@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +11,21 @@
 </head>
 <body>
     <header>
+        <div class="language-selector">
+            <span>{% trans "Language" %}:</span>
+            {% get_current_language as LANGUAGE_CODE %}
+            {% get_available_languages as LANGUAGES %}
+            {% get_language_info_list for LANGUAGES as languages %}
+            <ul>
+                {% for language in languages %}
+                    <li>
+                        <a href="{% url 'set_language' %}?next={{ request.path }}&language={{ language.code }}">
+                            {{ language.name_local }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
         <div class="header-container">
             <h1>Cyberloto Bank</h1>
             <div class="jackpot">
@@ -36,7 +52,7 @@
                         <li><a href="{% url 'deposit' %}">Deposit</a></li>
                         <li><a href="{% url 'purchase_ticket' %}">Purchase Ticket</a></li>
                         <li><a href="{% url 'profile' %}">Profile</a></li>
-                        <li><a href="{% url 'cart' %}">Cart</a></li>
+                        <li><a href="{% url 'view_cart' %}">Cart</a></li>
                         <li><a href="{% url 'logout' %}">Logout</a></li>
                     {% else %}
                         <li><a href="{% url 'login' %}">Login</a></li>
