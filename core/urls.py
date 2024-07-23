@@ -1,8 +1,4 @@
-from django.contrib import admin
-from django.urls import path, include
-from django.conf.urls.i18n import i18n_patterns
-from django.conf.urls import url
-from django.contrib.auth import views as auth_views
+from django.urls import path
 from . import views
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -26,22 +22,4 @@ urlpatterns = [
     path('stripe-webhook/', views.stripe_webhook, name='stripe_webhook'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
-    # Auth-related paths
-    path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
-    path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('accounts/password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
-    path('accounts/password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
-    path('accounts/reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('accounts/reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
-    path('accounts/signup/', views.signup, name='signup'),
-]
-
-urlpatterns += i18n_patterns(
-    path('admin/', admin.site.urls),
-    path('', include('core.urls')),  # Ajuste aquí para incluir las rutas de tu aplicación principal
-)
-
-urlpatterns += [
-    url(r'^i18n/', include('django.conf.urls.i18n')),
 ]
