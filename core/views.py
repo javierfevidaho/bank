@@ -19,6 +19,9 @@ from django.contrib.auth.models import User
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
+def error_404(request, exception):
+    return render(request, '404.html', status=404)
+
 @csrf_exempt
 def api_login(request):
     if request.method == 'POST':

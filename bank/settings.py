@@ -11,6 +11,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #CSRF_COOKIE_SECURE = True
 #SESSION_COOKIE_SECURE = True
 
+DEBUG = False
+
+ALLOWED_HOSTS = ['*']  # Asegúrate de configurar esto correctamente para tu entorno
+
+# Configuración de vistas de errores personalizados
+handler404 = 'tu_aplicacion.views.error_404'
 
 # Security
 SECRET_KEY = os.getenv('SECRET_KEY')
