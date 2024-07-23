@@ -320,4 +320,28 @@ nav {
 .signup:hover {
     color: var(--accent-1);
 }
-/*Agregar */
+.countdown-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: var(--text-light);
+}
+
+.countdown-item {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.countdown-item span {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.jackpot {
+    font-weight: bold;
+    margin-left: 20px;
+    color: var(--accent-2);
+}
