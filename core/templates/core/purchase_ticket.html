@@ -7,8 +7,10 @@
     <h2>Purchase Tickets</h2>
     <p>Your current balance is: ${{ balance|floatformat:2|intcomma }}</p>
     <p>Ticket Price: $1.00</p>
-    <div class="d-flex justify-content-between align-items-start">
-        <div class="ticket-frame p-3 mb-3">
+    <a href="{% url 'view_cart' %}" class="btn btn-info">View Cart (<span id="cart-count">{{ request.user.cart.cartitem_set.count }}</span>)</a>
+    
+    <div class="d-flex">
+        <div class="ticket-frame p-3 mb-3 mr-3">
             <form id="ticket-form" method="post" class="ticket-form">
                 {% csrf_token %}
                 <div class="form-group">
@@ -37,6 +39,7 @@
                 <button type="button" class="btn btn-success" onclick="addToCart()">Add to Cart</button>
             </form>
         </div>
+
         <div class="quantity-frame p-3 mb-3">
             <form id="quantity-form" method="post" class="quantity-form">
                 {% csrf_token %}
@@ -54,19 +57,8 @@
                         <option value="500">500</option>
                     </select>
                 </div>
-                <button type="button" class="btn btn-success" onclick="addBulkToCart()">Add Bulk to Cart</button>
+                <button type="button" class="btn btn-success" onclick="addToCart()">Add to Cart</button>
             </form>
-        </div>
-    </div>
-
-    <a href="{% url 'view_cart' %}" class="btn btn-info mt-3">View Cart (<span id="cart-count">{{ request.user.cart.cartitem_set.count }}</span>)</a>
-
-    <div id="bulkModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2>Selected Numbers</h2>
-            <div id="bulkNumbers"></div>
-            <button class="btn btn-primary" onclick="confirmBulk()">Confirm</button>
         </div>
     </div>
 </div>
@@ -113,7 +105,9 @@
 
     window.addToCart = function() {
         const form = document.getElementById('ticket-form');
+        const quantityForm = document.getElementById('quantity-form');
         const formData = new FormData(form);
+        formData.append('quantity', quantityForm.querySelector('#quantity').value);
         fetch("{% url 'purchase_ticket' %}", {
             method: 'POST',
             body: formData,
@@ -127,6 +121,8 @@
                 alert(data.success);
                 updateCartCount();
                 form.reset();
+                quantityForm.reset();
+                window.location.href = "{% url 'payment_page' %}";
             } else if (data.error) {
                 alert(data.error);
             }
@@ -144,74 +140,6 @@
             const doc = parser.parseFromString(html, 'text/html');
             const cartCount = doc.querySelectorAll('.cart-item').length;
             document.getElementById('cart-count').textContent = cartCount;
-        });
-    }
-
-    window.addBulkToCart = function() {
-        const quantity = document.getElementById('quantity').value;
-        const tickets = generateTickets(quantity);
-        const bulkNumbersDiv = document.getElementById('bulkNumbers');
-        bulkNumbersDiv.innerHTML = '';
-        tickets.forEach((ticket, index) => {
-            const ticketDiv = document.createElement('div');
-            ticketDiv.textContent = `Ticket ${index + 1}: Numbers: ${ticket.numbers.join(', ')}, Bonus: ${ticket.bonus}`;
-            bulkNumbersDiv.appendChild(ticketDiv);
-        });
-        document.getElementById('bulkModal').style.display = 'block';
-    }
-
-    function generateTickets(quantity) {
-        const tickets = [];
-        for (let i = 0; i < quantity; i++) {
-            const numbers = [];
-            while (numbers.length < 5) {
-                const randomNum = Math.floor(Math.random() * 35) + 1;
-                if (!numbers.includes(randomNum)) {
-                    numbers.push(randomNum);
-                }
-            }
-            const bonus = Math.floor(Math.random() * 14) + 1;
-            tickets.push({ numbers, bonus });
-        }
-        return tickets;
-    }
-
-    function closeModal() {
-        document.getElementById('bulkModal').style.display = 'none';
-    }
-
-    window.confirmBulk = function() {
-        const tickets = [];
-        const bulkNumbersDiv = document.getElementById('bulkNumbers').children;
-        for (let i = 0; i < bulkNumbersDiv.length; i++) {
-            const ticketText = bulkNumbersDiv[i].textContent;
-            const numbers = ticketText.match(/Numbers: (.*), Bonus/)[1].split(', ').map(Number);
-            const bonus = parseInt(ticketText.match(/Bonus: (\d+)/)[1]);
-            tickets.push({ numbers, bonus });
-        }
-
-        const formData = new FormData();
-        formData.append('bulk_tickets', JSON.stringify(tickets));
-        fetch("{% url 'purchase_ticket' %}", {
-            method: 'POST',
-            body: JSON.stringify({ tickets }),
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}',
-                'Content-Type': 'application/json',
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert(data.success);
-                updateCartCount();
-                closeModal();
-            } else if (data.error) {
-                alert(data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
         });
     }
 </script>
