@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -22,4 +22,6 @@ urlpatterns = [
     path('stripe-webhook/', views.stripe_webhook, name='stripe_webhook'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('signup/', views.signup, name='signup'),
+    path('accounts/', include('django.contrib.auth.urls')),  # Incluye las rutas de autenticación de Django, incluyendo restablecimiento de contraseña
 ]

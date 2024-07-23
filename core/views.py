@@ -15,7 +15,6 @@ import stripe
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth.models import User
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -154,9 +153,8 @@ def purchase_ticket(request):
     }
 
     if request.method == 'POST':
-        if 'bulk_tickets' in request.body:
-            data = json.loads(request.body)
-            bulk_tickets = data.get('bulk_tickets', [])
+        if 'bulk_tickets' in request.POST:
+            bulk_tickets = json.loads(request.POST['bulk_tickets'])
             try:
                 cart, _ = Cart.objects.get_or_create(user=request.user)
                 tickets = []
@@ -205,6 +203,8 @@ def purchase_ticket(request):
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=500)
     return render(request, 'core/purchase_ticket.html', context)
+
+
 
 @login_required
 def view_cart(request):

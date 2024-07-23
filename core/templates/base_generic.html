@@ -1,7 +1,7 @@
 {% load static %}
 {% load i18n %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,39 +11,37 @@
 </head>
 <body>
     <header>
-        <div class="language-selector">
-            <span>{% trans "Language" %}:</span>
-            {% get_current_language as LANGUAGE_CODE %}
-            {% get_available_languages as LANGUAGES %}
-            {% get_language_info_list for LANGUAGES as languages %}
-            <ul>
-                {% for language in languages %}
-                    <li>
-                        <a href="{% url 'set_language' %}?next={{ request.path }}&language={{ language.code }}">
-                            {{ language.name_local }}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
+        <div class="top-right-container">
+            <div class="countdown-container">
+                <div class="countdown-item">
+                    <span id="days">45</span> Days
+                </div>
+                <div class="countdown-item">
+                    <span id="hours">7</span> Hours
+                </div>
+                <div class="countdown-item">
+                    <span id="minutes">42</span> Minutes
+                </div>
+                <div class="countdown-item">
+                    <span id="seconds">29</span> Seconds
+                </div>
+            </div>
+            <div class="language-selector">
+                <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.path }}">
+                    <button type="submit" name="language" value="es">
+                        <img src="{% static 'core/images/mx.png' %}" alt="Español" width="50" height="50">
+                    </button>
+                    <button type="submit" name="language" value="en">
+                        <img src="{% static 'core/images/usa.png' %}" alt="English" width="50" height="50">
+                    </button>
+                </form>
+            </div>
         </div>
         <div class="header-container">
             <h1>Cyberloto Bank</h1>
             <div class="jackpot">
                 Jackpot: $5,000
-            </div>
-            <div class="countdown-container">
-                <div class="countdown-item">
-                    <span id="days">46</span> Days
-                </div>
-                <div class="countdown-item">
-                    <span id="hours">5</span> Hours
-                </div>
-                <div class="countdown-item">
-                    <span id="minutes">33</span> Minutes
-                </div>
-                <div class="countdown-item">
-                    <span id="seconds">18</span> Seconds
-                </div>
             </div>
             <nav>
                 <ul class="navbar">

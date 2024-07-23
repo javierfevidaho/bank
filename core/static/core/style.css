@@ -1,14 +1,14 @@
 :root {
-    --primary-dark: #8A2601;   /* Dark brown for main background */
-    --primary-light: #FEEAC6;  /* Light beige for secondary backgrounds */
-    --accent-1: #E8690E;       /* Bright orange for accents */
-    --accent-2: #FFA400;       /* Yellow-orange for highlights and calls-to-action */
-    --text-light: #000000;     /* White for text on dark backgrounds */
-    --text-dark: #8A2601;      /* Dark brown for text on light backgrounds */
-    --success: #4CAF50;        /* Green for success messages */
-    --warning: #FFA400;        /* Yellow-orange for warnings */
-    --table-row-odd: #FFFFFF;  /* White background color for odd rows */
-    --table-row-even: #FEEAC6; /* Light beige background color for even rows */
+    --primary-dark: #8A2601;
+    --primary-light: #FEEAC6;
+    --accent-1: #E8690E;
+    --accent-2: #FFA400;
+    --text-light: #000000;
+    --text-dark: #8A2601;
+    --success: #4CAF50;
+    --warning: #FFA400;
+    --table-row-odd: #FFFFFF;
+    --table-row-even: #FEEAC6;
 }
 
 body {
@@ -20,7 +20,6 @@ body {
     color: var(--text-light);
     margin: 0;
     padding: 0;
-    justify-content: center; /* Center the frame vertically */
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -71,7 +70,7 @@ nav {
     color: var(--text-dark);
     text-align: center;
     width: 100%;
-    max-width: 1000px; /* Aumentar el ancho máximo */
+    max-width: 1000px;
     margin: 50px auto;
     box-sizing: border-box;
 }
@@ -89,12 +88,12 @@ nav {
 .d-flex {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start; /* Adjust alignment as needed */
+    align-items: flex-start;
 }
 
 .ticket-frame, .quantity-frame {
     flex: 1;
-    margin-right: 10px; /* Add some space between the frames */
+    margin-right: 10px;
     border: 1px solid var(--accent-2);
     border-radius: 10px;
     padding: 15px;
@@ -103,7 +102,7 @@ nav {
 }
 
 .quantity-frame {
-    margin-right: 0; /* Remove margin from the last frame */
+    margin-right: 0;
 }
 
 .number-grid {
@@ -145,8 +144,8 @@ nav {
 }
 
 .btn {
-    background-color: var (--accent-2);
-    color: var (--text-dark);
+    background-color: var(--accent-2);
+    color: var(--text-dark);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -155,15 +154,15 @@ nav {
 }
 
 .btn:hover {
-    background-color: var (--accent-1);
+    background-color: var(--accent-1);
 }
 
 .success-message {
-    color: var (--success);
+    color: var(--success);
 }
 
 .warning-message {
-    color: var (--warning);
+    color: var(--warning);
 }
 
 .table {
@@ -175,22 +174,22 @@ nav {
 .table th, .table td {
     padding: 12px;
     text-align: left;
-    border-bottom: 1px solid var (--primary-light);
+    border-bottom: 1px solid var(--primary-light);
 }
 
 .table tr:nth-child(odd) {
-    background-color: var (--table-row-odd);
+    background-color: var(--table-row-odd);
 }
 
 .table tr:nth-child(even) {
-    background-color: var (--table-row-even);
+    background-color: var(--table-row-even);
 }
 
 .profile-container, .deposit-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: var (--primary-light);
+    background-color: var(--primary-light);
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     padding: 20px;
@@ -208,7 +207,7 @@ nav {
 
 .profile-container .form-group label, .deposit-frame .form-group label {
     display: block;
-    color: var (--text-light);
+    color: var(--text-light);
     font-weight: bold;
     margin-bottom: 5px;
 }
@@ -217,14 +216,14 @@ nav {
     width: 100%;
     padding: 10px;
     border-radius: 5px;
-    border: 1px solid var (--accent-1);
-    background-color: var (--primary-dark);
-    color: var (--text-light);
+    border: 1px solid var(--accent-1);
+    background-color: var(--primary-dark);
+    color: var(--text-light);
 }
 
 .profile-container .btn-primary, .deposit-frame .btn {
-    background-color: var (--accent-2);
-    color: var (--text-light);
+    background-color: var(--accent-2);
+    color: var(--text-light);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -233,26 +232,21 @@ nav {
 }
 
 .profile-container .btn-primary:hover, .deposit-frame .btn:hover {
-    background-color: var (--accent-1);
-}
-
-.lock-icon {
-    width: 96px;
-    height: 96px;
+    background-color: var(--accent-1);
 }
 
 .cart-icon-container {
-    position: absolute;
+    position: fixed;
     top: 20px;
     right: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f0f0f0; /* Fondo circular */
+    background-color: #f0f0f0;
     border-radius: 50%;
     padding: 5px;
-    width: 96px;
-    height: 96px;
+    width: 50px;
+    height: 50px;
     text-align: center;
     color: #333;
     font-size: 16px;
@@ -261,13 +255,13 @@ nav {
 }
 
 .cart-icon {
-    width: 1in; /* 1 inch */
-    height: 1in; /* 1 inch */
-    position: absolute;
-    top: 10px; /* Adjust as needed */
-    right: 10px; /* Adjust as needed */
-    background-color: var (--primary-light); /* Optional: for visibility */
-    border-radius: 50%; /* Optional: to make it round */
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: var(--primary-light);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -282,14 +276,12 @@ nav {
     position: absolute;
     top: 5px;
     right: 5px;
-    background-color: var (--accent-2); /* Highlight color */
-    color: var (--text-light);
+    background-color: var(--accent-2);
+    color: var(--text-light);
     border-radius: 50%;
     padding: 2px 6px;
     font-size: 12px;
 }
-
-/* Styles for Login and Signup forms */
 
 .login-container, .signup-container {
     display: flex;
@@ -299,26 +291,26 @@ nav {
 }
 
 .form-group input::placeholder {
-    color: var (--text-dark);
+    color: var(--text-dark);
     opacity: 0.5;
 }
 
 .form-group input:focus::placeholder {
-    opacity: 0; /* Hide placeholder on focus */
+    opacity: 0;
 }
 
 .forgot-password,
 .signup {
     display: block;
     margin-top: 10px;
-    color: var (--accent-2);
+    color: var(--accent-2);
     text-decoration: none;
     font-size: 14px;
 }
 
 .forgot-password:hover,
 .signup:hover {
-    color: var (--accent-1);
+    color: var(--accent-1);
 }
 
 .countdown-container {
@@ -327,7 +319,7 @@ nav {
     justify-content: flex-start;
     margin-bottom: 20px;
     font-size: 16px;
-    color: var (--text-light);
+    color: var(--text-light);
 }
 
 .countdown-item {
@@ -342,8 +334,44 @@ nav {
 }
 
 .jackpot {
-    font-size: 24px; /* Adjust the font size to make it larger */
+    font-size: 40px;
     font-weight: bold;
-    margin-bottom: 10px; /* Add some margin to separate from the countdown */
-    color: var (--accent-2);
+    margin-bottom: 10px;
+    color: var(--accent-2);
+}
+
+.language-selector {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.language-selector img {
+    width: 50px;
+    height: 50px;
+}
+
+.top-left-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent; /* Fondo transparente */
+    padding: 10px;
+}
+
+.language-selector button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.language-selector img {
+    width: 50px;
+    height: 50px;
+    background-color: transparent; /* Fondo transparente */
 }

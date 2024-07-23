@@ -53,19 +53,20 @@
                         <option value="500">500</option>
                     </select>
                 </div>
+                <div id="bulkNumbersFrame" class="ticket-frame p-3 mb-3" style="display: none;">
+                    <h2>Selected Numbers</h2>
+                    <div id="bulkNumbers"></div>
+                    <button type="button" class="btn btn-primary" onclick="confirmBulk()">Confirm</button>
+                </div>
                 <button type="button" class="btn btn-success" onclick="addBulkToCart()">Add Bulk to Cart</button>
             </form>
         </div>
     </div>
-    <a href="{% url 'view_cart' %}" class="btn btn-info mt-3">View Cart (<span id="cart-count">{{ request.user.cart.cartitem_set.count }}</span>)</a>
-</div>
-
-<div id="bulkModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2>Selected Numbers</h2>
-        <div id="bulkNumbers"></div>
-        <button class="btn btn-primary" onclick="confirmBulk()">Confirm</button>
+    <div class="cart-icon-container">
+        <a href="{% url 'view_cart' %}">
+            <img src="{% static 'core/images/cart-icon.png' %}" alt="Cart" class="cart-icon">
+            <span id="cart-count">{{ request.user.cart.cartitem_set.count }}</span>
+        </a>
     </div>
 </div>
 
@@ -155,7 +156,7 @@
             ticketDiv.textContent = `Ticket ${index + 1}: Numbers: ${ticket.numbers.join(', ')}, Bonus: ${ticket.bonus}`;
             bulkNumbersDiv.appendChild(ticketDiv);
         });
-        document.getElementById('bulkModal').style.display = 'block';
+        document.getElementById('bulkNumbersFrame').style.display = 'block';
     }
 
     function generateTickets(quantity) {
@@ -192,10 +193,9 @@
         formData.append('bulk_tickets', JSON.stringify(tickets));
         fetch("{% url 'purchase_ticket' %}", {
             method: 'POST',
-            body: JSON.stringify({ tickets }),
+            body: formData,
             headers: {
                 'X-CSRFToken': '{{ csrf_token }}',
-                'Content-Type': 'application/json',
             },
         })
         .then(response => response.json())
@@ -203,7 +203,7 @@
             if (data.success) {
                 alert(data.success);
                 updateCartCount();
-                closeModal();
+                document.getElementById('bulkNumbersFrame').style.display = 'none';
             } else if (data.error) {
                 alert(data.error);
             }

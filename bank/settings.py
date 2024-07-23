@@ -10,7 +10,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
     os.path.join(BASE_DIR, 'core/locale'),
-
 ]
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
@@ -50,13 +49,17 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
 ]
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
 LANGUAGES = [
     ('en', 'English'),
     ('es', 'Español'),
-    # Añade más idiomas aquí
 ]
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
+
 
 USE_I18N = True
 USE_L10N = True
@@ -98,11 +101,11 @@ WSGI_APPLICATION = 'bank.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DATABASE_NAME'),
-        'USER': os.getenv('DATABASE_USER'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-        'HOST': os.getenv('DATABASE_HOST'),
-        'PORT': os.getenv('DATABASE_PORT', '5432'),
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
 
@@ -144,4 +147,4 @@ STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
 
 # Coinbase settings
 COINBASE_COMMERCE_API_KEY = os.getenv('COINBASE_COMMERCE_API_KEY')
-COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET = os.getenv('COINBASE_COMMERCE_API_SECRET')
+COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET = os.getenv('COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET')

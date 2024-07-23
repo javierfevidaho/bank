@@ -1,16 +1,16 @@
 :root {
-    --primary-dark: #1A1A2E;   /* Dark blue for main background */
-    --primary-light: #16213E;  /* Lighter blue for secondary backgrounds */
-    --accent-1: #0F3460;       /* Deep blue for accents */
-    --accent-2: #E94560;       /* Vibrant red for highlights and calls-to-action */
-    --text-light: #FFFFFF;     /* White for text on dark backgrounds */
-    --text-dark: #1A1A2E;      /* Dark blue for text on light backgrounds */
+    --primary-dark: #8A2601;   /* Dark brown for main background */
+    --primary-light: #FEEAC6;  /* Light beige for secondary backgrounds */
+    --accent-1: #E8690E;       /* Bright orange for accents */
+    --accent-2: #FFA400;       /* Yellow-orange for highlights and calls-to-action */
+    --text-light: #000000;     /* White for text on dark backgrounds */
+    --text-dark: #8A2601;      /* Dark brown for text on light backgrounds */
     --success: #4CAF50;        /* Green for success messages */
-    --warning: #FFC107;        /* Yellow for warnings */
-    --table-row-odd: #2C2C54;  /* Background color for odd rows */
-    --table-row-even: #1A1A2E; /* Background color for even rows */
+    --warning: #FFA400;        /* Yellow-orange for warnings */
+    --table-row-odd: #FFFFFF;  /* White background color for odd rows */
+    --table-row-even: #FEEAC6; /* Light beige background color for even rows */
 }
-
+/*Anexo para update*/
 body {
     font-family: 'Roboto', Arial, sans-serif;
     display: flex;
@@ -20,6 +20,7 @@ body {
     color: var(--text-light);
     margin: 0;
     padding: 0;
+    justify-content: center; /* Center the frame vertically */
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -67,6 +68,11 @@ nav {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     padding: 20px;
     margin: 20px;
+    color: var(--text-dark);
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
 }
 
 .footer {
@@ -79,7 +85,15 @@ nav {
     width: 100%;
 }
 
-.ticket-frame {
+.d-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Adjust alignment as needed */
+}
+
+.ticket-frame, .quantity-frame {
+    flex: 1;
+    margin-right: 10px; /* Add some space between the frames */
     border: 1px solid var(--accent-2);
     border-radius: 10px;
     padding: 15px;
@@ -88,10 +102,14 @@ nav {
     margin: 5px;
 }
 
-#tickets-container {
+.quantity-frame {
+    margin-right: 0; /* Remove margin from the last frame */
+}
+
+.number-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 5px;
 }
 
 .number-label, .bonus-label {
@@ -128,7 +146,7 @@ nav {
 
 .btn {
     background-color: var(--accent-2);
-    color: var(--text-light);
+    color: var(--text-dark);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -168,7 +186,7 @@ nav {
     background-color: var(--table-row-even);
 }
 
-.profile-container {
+.profile-container, .deposit-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -179,28 +197,23 @@ nav {
     margin: 20px;
 }
 
-.profile-container h2 {
-    color: var(--text-light);
-    margin-bottom: 20px;
-}
-
-.profile-container form {
+.profile-container form, .deposit-frame form {
     width: 100%;
     max-width: 500px;
 }
 
-.profile-container .form-group {
+.profile-container .form-group, .deposit-frame .form-group {
     margin-bottom: 15px;
 }
 
-.profile-container .form-group label {
+.profile-container .form-group label, .deposit-frame .form-group label {
     display: block;
     color: var(--text-light);
     font-weight: bold;
     margin-bottom: 5px;
 }
 
-.profile-container .form-group input {
+.profile-container .form-group input, .deposit-frame .form-group input {
     width: 100%;
     padding: 10px;
     border-radius: 5px;
@@ -209,7 +222,7 @@ nav {
     color: var(--text-light);
 }
 
-.profile-container .btn-primary {
+.profile-container .btn-primary, .deposit-frame .btn {
     background-color: var(--accent-2);
     color: var(--text-light);
     border: none;
@@ -219,54 +232,92 @@ nav {
     transition: background-color 0.3s ease;
 }
 
-.profile-container .btn-primary:hover {
+.profile-container .btn-primary:hover, .deposit-frame .btn:hover {
     background-color: var(--accent-1);
 }
 
-/* Añade esto a tu archivo CSS existente */
+.lock-icon {
+    width: 96px;
+    height: 96px;
+}
 
-.deposit-container {
+.cart-icon-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0; /* Fondo circular */
+    border-radius: 50%;
+    padding: 5px;
+    width: 96px;
+    height: 96px;
+    text-align: center;
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.cart-icon {
+    width: 1in; /* 1 inch */
+    height: 1in; /* 1 inch */
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    right: 10px; /* Adjust as needed */
+    background-color: var(--primary-light); /* Optional: for visibility */
+    border-radius: 50%; /* Optional: to make it round */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-icon img {
+    width: 100%;
+    height: 100%;
+}
+
+.cart-icon span {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: var(--accent-2); /* Highlight color */
+    color: var(--text-light);
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+}
+
+/* Styles for Login and Signup forms */
+
+.login-container, .signup-container {
     display: flex;
     justify-content: center;
-    margin-top: 50px;
+    align-items: center;
+    height: 100vh;
 }
 
-.deposit-frame {
-    background-color: var(--primary-light);
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    margin: 10px;
-    flex: 1;
-    text-align: center;
+.form-group input::placeholder {
+    color: var(--text-dark);
+    opacity: 0.5;
 }
 
-.deposit-frame img {
-    width: 50px;
-    height: auto;
-    margin-bottom: 15px;
+.form-group input:focus::placeholder {
+    opacity: 0; /* Hide placeholder on focus */
 }
 
-.deposit-frame h2 {
-    color: var(--text-light);
-    margin-bottom: 15px;
+.forgot-password,
+.signup {
+    display: block;
+    margin-top: 10px;
+    color: var(--accent-2);
+    text-decoration: none;
+    font-size: 14px;
 }
 
-.deposit-frame p {
-    color: var(--text-light);
-    margin-bottom: 15px;
+.forgot-password:hover,
+.signup:hover {
+    color: var(--accent-1);
 }
-
-.deposit-frame .btn {
-    background-color: var(--accent-2);
-    color: var(--text-light);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.deposit-frame .btn:hover {
-    background-color: var(--accent-1);
-}
+/* agregar */

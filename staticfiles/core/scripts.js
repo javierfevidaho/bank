@@ -48,3 +48,4 @@ window.addTicket = function() {
         ticketsContainer.appendChild(newTicket);
     }
 }
+
