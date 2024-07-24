@@ -211,6 +211,10 @@ def view_cart(request):
     cart, _ = Cart.objects.get_or_create(user=request.user)
     cart_items = CartItem.objects.filter(cart=cart)
     total_cost = sum(item.ticket.price for item in cart_items)
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'cart_items_count': cart_items.count()})
+    
     return render(request, 'core/cart.html', {'cart_items': cart_items, 'total_cost': total_cost})
 
 @login_required

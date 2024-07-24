@@ -136,13 +136,17 @@
     }
 
     function updateCartCount() {
-        fetch("{% url 'view_cart' %}")
-        .then(response => response.text())
-        .then(html => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const cartCount = doc.querySelectorAll('.cart-item').length;
-            document.getElementById('cart-count').textContent = cartCount;
+        fetch("{% url 'view_cart' %}", {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('cart-count').textContent = data.cart_items_count;
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
     }
 
@@ -212,5 +216,8 @@
             console.error('Error:', error);
         });
     }
+
+    document.addEventListener('DOMContentLoaded', updateCartCount);
 </script>
+
 {% endblock %}
