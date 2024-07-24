@@ -10,6 +10,11 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body>
+    <div class="header-container">
+        <h1>Cyberloto Bank</h1>
+        <div class="jackpot">
+            Jackpot: $5,000
+        </div>
     <header>
         <div class="top-right-container">
             <div class="countdown-container">
@@ -38,12 +43,7 @@
                 </form>
             </div>
         </div>
-        <div class="header-container">
-            <h1>Cyberloto Bank</h1>
-            <div class="jackpot">
-                Jackpot: $5,000
-            </div>
-            <nav>
+                    <nav>
                 <ul class="navbar">
                     {% if user.is_authenticated %}
                         <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
