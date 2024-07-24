@@ -284,10 +284,14 @@ nav {
 }
 
 .login-container, .signup-container {
-    display: flex;
+    width: 50px; /* Ajusta el ancho según sea necesario */
+    height: 50px; /* Ajusta la altura según sea necesario */
+    display: block;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    margin: 0 auto 20px; /* Centra la imagen horizontalmente y añade un margen inferior */
+
 }
 
 .form-group input::placeholder {
