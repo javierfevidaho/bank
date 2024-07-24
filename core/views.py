@@ -165,7 +165,7 @@ def purchase_ticket(request):
                         user=request.user,
                         numbers=ticket_numbers,
                         bonus=ticket_bonus,
-                        price=Decimal('1.00')
+                        price=Decimal('1.34')
                     )
                     new_ticket.save()
                     tickets.append(new_ticket)
@@ -193,7 +193,7 @@ def purchase_ticket(request):
                         user=request.user,
                         numbers=','.join(numbers),
                         bonus=int(bonus_number),
-                        price=Decimal('1.00')
+                        price=Decimal('1.34')
                     )
                     ticket.save()
                     tickets.append(ticket)
@@ -250,7 +250,7 @@ def coinbase_payment(request):
         'name': 'Lottery Ticket',
         'description': 'Purchase a lottery ticket',
         'local_price': {
-            'amount': '1.00',
+            'amount': '1.34',
             'currency': 'USD'
         },
         'pricing_type': 'fixed_price',

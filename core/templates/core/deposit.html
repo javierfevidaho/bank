@@ -6,10 +6,10 @@
     <div class="col-md-3">
         <div class="frame deposit-frame">
             <h2>Básica</h2>
-            <p>Deposita $1</p>
+            <p>Deposita $1.34</p>
             <form id="basic-form" action="{% url 'create_checkout_session' %}" method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="amount" value="1">
+                <input type="hidden" name="amount" value="1.34">
                 <button type="submit" class="btn btn-primary" id="basic-button">Depositar $1</button>
             </form>
         </div>
@@ -17,10 +17,10 @@
     <div class="col-md-3">
         <div class="frame deposit-frame">
             <h2>Bronce</h2>
-            <p>Deposita $10</p>
+            <p>Deposita $10.34</p>
             <form id="bronze-form" action="{% url 'create_checkout_session' %}" method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="amount" value="10">
+                <input type="hidden" name="amount" value="10.34">
                 <button type="submit" class="btn btn-primary" id="bronze-button">Depositar $10</button>
             </form>
         </div>
@@ -28,10 +28,10 @@
     <div class="col-md-3">
         <div class="frame deposit-frame">
             <h2>Oro</h2>
-            <p>Deposita $100</p>
+            <p>Deposita $103.40</p>
             <form id="gold-form" action="{% url 'create_checkout_session' %}" method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="amount" value="100">
+                <input type="hidden" name="amount" value="103.40">
                 <button type="submit" class="btn btn-primary" id="gold-button">Depositar $100</button>
             </form>
         </div>
@@ -39,10 +39,10 @@
     <div class="col-md-3">
         <div class="frame deposit-frame">
             <h2>Diamante</h2>
-            <p>Deposita $1000</p>
+            <p>Deposita $1034</p>
             <form id="diamond-form" action="{% url 'create_checkout_session' %}" method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="amount" value="1000">
+                <input type="hidden" name="amount" value="1034">
                 <button type="submit" class="btn btn-primary" id="diamond-button">Depositar $1000</button>
             </form>
         </div>

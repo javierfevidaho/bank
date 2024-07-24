@@ -6,7 +6,7 @@
 <div class="frame p-3">
     <h2>Purchase Tickets</h2>
     <p>Your current balance is: ${{ balance|floatformat:2|intcomma }}</p>
-    <p>Ticket Price: $1.00</p>
+    <p>Ticket Price: $1.34</p>
     <div class="d-flex justify-content-between">
         <div class="ticket-frame p-3 mb-3">
             <form id="ticket-form" method="post" class="ticket-form">
@@ -106,7 +106,7 @@
 
         handleNumberSelection(checkboxes[0]);
 
-        const randomBonus = Math.floor(Math.random() * 14) + 1;
+        const randomBonus = Math.floor(Math.random() * 13) + 1;
         radioButtons[randomBonus - 1].checked = true;
     }
 
