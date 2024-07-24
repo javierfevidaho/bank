@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-import logging
+import dj_database_url
 
 # Load environment variables from .env file
 load_dotenv()
@@ -20,6 +20,7 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 # Add the production domain to ALLOWED_HOSTS
 ALLOWED_HOSTS.extend([
+    'uneven-idalina-cyberlotto-62107c4f.koyeb.app',
     'ltd-brandea-cyberlottobank-7684fb46.koyeb.app'
 ])
 
@@ -101,17 +102,9 @@ WSGI_APPLICATION = 'bank.wsgi.application'
 
 # Database configuration for production (example with PostgreSQL)
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DATABASE_NAME'),
-        'USER': os.getenv('DATABASE_USER'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-        'HOST': os.getenv('DATABASE_HOST'),
-        'PORT': os.getenv('DB_PORT', '5432'),
-        'OPTIONS': {
-            'sslmode': 'require',  # Use SSL for the database connection
-        },
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL')
+    )
 }
 
 USE_THOUSAND_SEPARATOR = True
@@ -155,6 +148,6 @@ COINBASE_COMMERCE_API_KEY = os.getenv('COINBASE_COMMERCE_API_KEY')
 COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET = os.getenv('COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET')
 
 # Debug log database configuration
+import logging
 logging.basicConfig(level=logging.DEBUG)
 logging.debug("Database configuration: %s", DATABASES['default'])
-#Pushing line
