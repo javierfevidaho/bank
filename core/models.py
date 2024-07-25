@@ -1,15 +1,29 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.crypto import get_random_string
+from decimal import Decimal
 
+class WinningNumbers(models.Model):
+    draw_date = models.DateField(unique=True)
+    numbers = models.CharField(max_length=20)
+    bonus = models.IntegerField()
+    jackpot = models.DecimalField(max_digits=10, decimal_places=2, default=5000.00)
+
+    def __str__(self):
+        return f"Winning Numbers for {self.draw_date}"
+    
 class Ticket(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     ticket_number = models.CharField(max_length=10, unique=True, blank=True)
     numbers = models.CharField(max_length=20)
     bonus = models.IntegerField()
     purchase_date = models.DateTimeField(auto_now_add=True)
-    price = models.DecimalField(max_digits=6, decimal_places=2, default=1.00)
+    draw_date = models.DateField(null=True, blank=True)
+    price = models.DecimalField(max_digits=6, decimal_places=2, default=1.34)
     is_purchased = models.BooleanField(default=False)
+    is_winner = models.BooleanField(default=False)
+    win_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    win_type = models.CharField(max_length=20, default="No Win")
 
     class Meta:
         unique_together = ('user', 'numbers', 'bonus')
@@ -47,3 +61,7 @@ class Account(models.Model):
 
     def __str__(self):
         return f"Account of {self.user.username}"
+
+class Jackpot(models.Model):
+    amount = models.DecimalField(max_digits=10, decimal_places=2, default=5000.00)
+    last_won = models.DateField(null=True, blank=True)

@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
 from django.contrib import messages
-from .models import Account, Ticket, Cart, CartItem
+from .models import Account, Ticket, Cart, CartItem, WinningNumbers
 from decimal import Decimal
 from django.http import JsonResponse, HttpResponseRedirect
 from django.conf import settings
@@ -15,11 +15,71 @@ import stripe
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login
 from rest_framework_simplejwt.tokens import RefreshToken
+from coinbase_commerce.client import Client
+import random
+from datetime import datetime, timedelta
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 def error_404(request, exception):
     return render(request, '404.html', status=404)
+
+@login_required
+def publish_winners(request):
+    today = datetime.today()
+    last_saturday = today - timedelta(days=today.weekday() + 2)
+    winning_numbers, created = WinningNumbers.objects.get_or_create(draw_date=last_saturday)
+
+    if created:
+        winning_numbers.numbers = ','.join(map(str, random.sample(range(1, 36), 5)))
+        winning_numbers.bonus = random.randint(1, 14)
+        winning_numbers.jackpot = calculate_jackpot()
+        winning_numbers.save()
+        update_winners(winning_numbers)
+
+    winners = Ticket.objects.filter(draw_date=last_saturday, is_winner=True)
+    return render(request, 'core/winners.html', {'winning_numbers': winning_numbers, 'winners': winners})
+
+def calculate_jackpot():
+    last_winning = WinningNumbers.objects.order_by('-draw_date').first()
+    if last_winning and not Ticket.objects.filter(is_winner=True, draw_date=last_winning.draw_date).exists():
+        return last_winning.jackpot + 1000
+    return 5000
+
+def update_winners(winning_numbers):
+    winning_tickets = Ticket.objects.filter(is_purchased=True)
+    for ticket in winning_tickets:
+        user_numbers = set(map(int, ticket.numbers.split(',')))
+        winning_numbers_set = set(map(int, winning_numbers.numbers.split(',')))
+        matching_numbers = len(user_numbers & winning_numbers_set)
+        is_bonus_matched = (ticket.bonus == winning_numbers.bonus)
+
+        if matching_numbers == 5 and is_bonus_matched:
+            ticket.win_amount = winning_numbers.jackpot
+            ticket.win_type = "Jackpot"
+        elif matching_numbers == 5:
+            ticket.win_amount = 1340
+            ticket.win_type = "5 Numbers"
+        elif matching_numbers == 4 and is_bonus_matched:
+            ticket.win_amount = 300
+            ticket.win_type = "4 Numbers + Bonus"
+        elif matching_numbers == 4:
+            ticket.win_amount = 134
+            ticket.win_type = "4 Numbers"
+        elif matching_numbers == 3 and is_bonus_matched:
+            ticket.win_amount = 4.02
+            ticket.win_type = "3 Numbers + Bonus"
+        elif matching_numbers == 3:
+            ticket.win_amount = 1.34
+            ticket.win_type = "3 Numbers"
+        else:
+            ticket.win_amount = 0
+            ticket.win_type = "No Win"
+
+        if ticket.win_amount > 0:
+            ticket.is_winner = True
+        ticket.save()
+
 @csrf_exempt
 def guest_login(request):
     guest_user, created = User.objects.get_or_create(username='guest', defaults={'email': 'guest@example.com'})
@@ -104,7 +164,6 @@ def stripe_webhook(request):
 
     return JsonResponse({'status': 'success'})
 
-
 def handle_checkout_session(session):
     user_id = session.get('client_reference_id')
     if user_id:
@@ -142,7 +201,6 @@ def deposit(request):
         return redirect('dashboard')
     return render(request, 'core/deposit.html')
 
-
 @login_required
 def profile(request):
     account, created = Account.objects.get_or_create(user=request.user)
@@ -171,9 +229,6 @@ def purchase_ticket(request):
         'number_range': range(1, 36),
         'bonus_range': range(1, 15),
     }
-    return render(request, 'core/purchase_ticket.html', context)
-
-
     if request.method == 'POST':
         if 'bulk_tickets' in request.POST:
             bulk_tickets = json.loads(request.POST['bulk_tickets'])
@@ -225,8 +280,6 @@ def purchase_ticket(request):
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=500)
     return render(request, 'core/purchase_ticket.html', context)
-
-
 
 @login_required
 def view_cart(request):
