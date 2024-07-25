@@ -15,40 +15,42 @@
         <div class="jackpot">
             Jackpot: $5,000
         </div>
-    <header>
-        <div class="top-right-container">
-            <div class="countdown-container">
-                <div class="countdown-item">
-                    <span id="days">45</span> Days
+        <header>
+            <div class="top-right-container">
+                <div class="countdown-container">
+                    <div class="countdown-item">
+                        <span id="days">45</span> Days
+                    </div>
+                    <div class="countdown-item">
+                        <span id="hours">7</span> Hours
+                    </div>
+                    <div class="countdown-item">
+                        <span id="minutes">42</span> Minutes
+                    </div>
+                    <div class="countdown-item">
+                        <span id="seconds">29</span> Seconds
+                    </div>
                 </div>
-                <div class="countdown-item">
-                    <span id="hours">7</span> Hours
-                </div>
-                <div class="countdown-item">
-                    <span id="minutes">42</span> Minutes
-                </div>
-                <div class="countdown-item">
-                    <span id="seconds">29</span> Seconds
+                <div class="language-selector">
+                    <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.path }}">
+                        <button type="submit" name="language" value="es">
+                            <img src="{% static 'core/images/mx.png' %}" alt="Español" width="50" height="50">
+                        </button>
+                        <button type="submit" name="language" value="en">
+                            <img src="{% static 'core/images/usa.png' %}" alt="English" width="50" height="50">
+                        </button>
+                    </form>
                 </div>
             </div>
-            <div class="language-selector">
-                <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
-                    <input name="next" type="hidden" value="{{ request.path }}">
-                    <button type="submit" name="language" value="es">
-                        <img src="{% static 'core/images/mx.png' %}" alt="Español" width="50" height="50">
-                    </button>
-                    <button type="submit" name="language" value="en">
-                        <img src="{% static 'core/images/usa.png' %}" alt="English" width="50" height="50">
-                    </button>
-                </form>
-            </div>
-        </div>
-                    <nav>
+            <nav>
                 <ul class="navbar">
                     {% if user.is_authenticated %}
                         <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
                         <li><a href="{% url 'deposit' %}">Deposit</a></li>
                         <li><a href="{% url 'purchase_ticket' %}">Purchase Ticket</a></li>
+                        <li><a href="{% url 'winners' %}">Winners</a></li>
+                        <li><a href="{% url 'winning_numbers' %}">Winning Numbers</a></li>
                         <li><a href="{% url 'profile' %}">Profile</a></li>
                         <li><a href="{% url 'logout' %}">Logout</a></li>
                     {% else %}
@@ -57,8 +59,8 @@
                     {% endif %}
                 </ul>
             </nav>
-        </div>
-    </header>
+        </header>
+    </div>
 
     {% block content %}
     {% endblock %}

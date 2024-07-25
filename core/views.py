@@ -18,6 +18,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from coinbase_commerce.client import Client
 from datetime import datetime, timedelta
 import random
+from .models import WinningNumbers, Ticket
+from django.shortcuts import render
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -113,7 +115,8 @@ def create_checkout_session(request):
             else:
                 data = request.POST
 
-            amount = int(data.get('amount', 0)) * 100  # Convert to cents
+            # Asegúrate de convertir el monto a centavos correctamente
+            amount = Decimal(data.get('amount', 0)) * 100  # Convertir a centavos
 
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
@@ -123,18 +126,19 @@ def create_checkout_session(request):
                         'product_data': {
                             'name': 'Account Deposit',
                         },
-                        'unit_amount': amount,
+                        'unit_amount': int(amount),  # Asegúrate de que amount sea un entero
                     },
                     'quantity': 1,
                 }],
                 mode='payment',
                 success_url=request.build_absolute_uri('/success/'),
                 cancel_url=request.build_absolute_uri('/cancel/'),
-                client_reference_id=str(request.user.id)  # Añadir la referencia del cliente
+                client_reference_id=str(request.user.id)
             )
             return HttpResponseRedirect(checkout_session.url)
         except Exception as e:
             return JsonResponse({'error': str(e)})
+
 
 @login_required
 def dashboard(request):
@@ -202,6 +206,16 @@ def deposit(request):
         messages.success(request, f'Successfully deposited ${amount}')
         return redirect('dashboard')
     return render(request, 'core/deposit.html')
+
+@login_required
+def winners(request):
+    winning_tickets = Ticket.objects.filter(is_winner=True)
+    return render(request, 'core/winners.html', {'winning_tickets': winning_tickets})
+
+@login_required
+def winning_numbers(request):
+    winning_numbers = WinningNumbers.objects.all().order_by('-draw_date')
+    return render(request, 'core/winning_numbers.html', {'winning_numbers': winning_numbers})
 
 @login_required
 def profile(request):

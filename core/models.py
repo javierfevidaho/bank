@@ -42,6 +42,7 @@ class Ticket(models.Model):
     def __str__(self):
         return f"Ticket {self.ticket_number} for {self.user.username}"
 
+
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 

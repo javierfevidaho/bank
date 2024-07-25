@@ -24,7 +24,8 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('signup/', views.signup, name='signup'),
-    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),  # Incluye las rutas de autenticación de Django, incluyendo restablecimiento de contraseña
     path('guest-login/', guest_login, name='guest_login'),
-    path('winners/', views.publish_winners, name='publish_winners'),
+    path('winners/', views.winners, name='winners'),
+    path('winning_numbers/', views.winning_numbers, name='winning_numbers'),
 ]

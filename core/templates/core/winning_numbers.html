@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Winning Numbers</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>Winning Numbers</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Draw Date</th>
+                <th>Numbers</th>
+                <th>Bonus</th>
+                <th>Jackpot</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for winning_number in winning_numbers %}
+                <tr>
+                    <td>{{ winning_number.draw_date }}</td>
+                    <td>{{ winning_number.numbers }}</td>
+                    <td>{{ winning_number.bonus }}</td>
+                    <td>${{ winning_number.jackpot }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
