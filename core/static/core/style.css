@@ -1,15 +1,16 @@
 :root {
-    --primary-dark: #8A2601;
-    --primary-light: #FEEAC6;
-    --accent-1: #E8690E;
-    --accent-2: #FFA400;
-    --text-light: #000000;
-    --text-dark: #8A2601;
-    --success: #4CAF50;
-    --warning: #FFA400;
-    --table-row-odd: #FFFFFF;
-    --table-row-even: #FEEAC6;
+    --primary-dark: #1F3A93; /* Deep Navy Blue */
+    --primary-light: #DCEFFA; /* Soft Light Blue */
+    --accent-1: #E74C3C; /* Bright Red */
+    --accent-2: #F39C12; /* Vibrant Orange */
+    --text-light: #FFFFFF; /* Pure White */
+    --text-dark: #2C3E50; /* Charcoal */
+    --success: #27AE60; /* Bright Green */
+    --warning: #F1C40F; /* Amber */
+    --table-row-odd: #FFFFFF; /* Pure White */
+    --table-row-even: #ECF0F1; /* Light Grey */
 }
+
 
 body {
     font-family: 'Roboto', Arial, sans-serif;
@@ -284,12 +285,12 @@ nav {
 }
 
 .login-container, .signup-container {
-    width: 50px;  /*Ajusta el ancho según sea necesario */
-    height: 50px; /* Ajusta la altura según sea necesario */
-    display: block;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
 }
 
 .form-group input::placeholder {
@@ -339,7 +340,7 @@ nav {
     font-size: 40px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: var(--accent-2);
+    color: var (--accent-2);
 }
 
 .language-selector {
@@ -378,9 +379,9 @@ nav {
     background-color: transparent; /* Fondo transparente */
 }
 
-.lock-icon img {
-    width: 80px;
-    height: 80px;
-    background-color: transparent; /* Fondo transparente */
-
+.lock-icon {
+    width: 80px; /* Ajusta el ancho a 80 píxeles */
+    height: 80px; /* Ajusta la altura a 80 píxeles */
+    display: block;
+    margin: 0 auto; /* Centra la imagen horizontalmente */
 }
