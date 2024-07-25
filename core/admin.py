@@ -1,6 +1,5 @@
-# admin.py
 from django.contrib import admin
-from .models import Account, Ticket, Cart, CartItem
+from .models import Account, Ticket, Cart, CartItem, WinningNumbers, Jackpot
 
 class AccountAdmin(admin.ModelAdmin):
     list_display = ('user', 'balance')
@@ -11,11 +10,11 @@ class AccountAdmin(admin.ModelAdmin):
     readonly_fields = ('user',)
 
 class TicketAdmin(admin.ModelAdmin):
-    list_display = ('user', 'ticket_number', 'numbers', 'bonus', 'purchase_date', 'price', 'is_purchased')
+    list_display = ('user', 'ticket_number', 'numbers', 'bonus', 'purchase_date', 'price', 'is_purchased', 'is_winner', 'win_amount', 'win_type', 'draw_date')
     search_fields = ('user__username', 'ticket_number', 'numbers')
-    list_filter = ('user', 'purchase_date', 'is_purchased')
+    list_filter = ('user', 'purchase_date', 'is_purchased', 'is_winner', 'draw_date')
     ordering = ('purchase_date', 'user')
-    fields = ('user', 'ticket_number', 'numbers', 'bonus', 'purchase_date', 'price', 'is_purchased')
+    fields = ('user', 'ticket_number', 'numbers', 'bonus', 'purchase_date', 'price', 'is_purchased', 'is_winner', 'win_amount', 'win_type', 'draw_date')
     readonly_fields = ('ticket_number', 'purchase_date')
 
 class CartAdmin(admin.ModelAdmin):
@@ -30,7 +29,25 @@ class CartItemAdmin(admin.ModelAdmin):
     list_filter = ('cart',)
     ordering = ('cart',)
 
+class WinningNumbersAdmin(admin.ModelAdmin):
+    list_display = ('draw_date', 'numbers', 'bonus', 'jackpot')
+    search_fields = ('draw_date', 'numbers', 'bonus')
+    list_filter = ('draw_date',)
+    ordering = ('draw_date',)
+    fields = ('draw_date', 'numbers', 'bonus', 'jackpot')
+    readonly_fields = ('draw_date', 'numbers', 'bonus', 'jackpot')
+
+class JackpotAdmin(admin.ModelAdmin):
+    list_display = ('amount', 'last_won')
+    search_fields = ('amount', 'last_won')
+    list_filter = ('last_won',)
+    ordering = ('last_won',)
+    fields = ('amount', 'last_won')
+    readonly_fields = ('last_won',)
+
 admin.site.register(Account, AccountAdmin)
 admin.site.register(Ticket, TicketAdmin)
 admin.site.register(Cart, CartAdmin)
 admin.site.register(CartItem, CartItemAdmin)
+admin.site.register(WinningNumbers, WinningNumbersAdmin)
+admin.site.register(Jackpot, JackpotAdmin)
