@@ -284,8 +284,8 @@ nav {
 }
 
 .login-container, .signup-container {
-    /*width: 50px;  Ajusta el ancho según sea necesario */
-    /*height: 50px;  Ajusta la altura según sea necesario */
+    width: 50px;  /*Ajusta el ancho según sea necesario */
+    height: 50px; /* Ajusta la altura según sea necesario */
     display: block;
     justify-content: center;
     align-items: center;
