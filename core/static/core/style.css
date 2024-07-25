@@ -286,7 +286,7 @@ nav {
 .login-container, .signup-container {
     width: 50px; /* Ajusta el ancho según sea necesario */
     height: 50px; /* Ajusta la altura según sea necesario */
-    display: flex;
+    display: block;
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -376,4 +376,10 @@ nav {
     width: 50px;
     height: 50px;
     background-color: transparent; /* Fondo transparente */
+}
+
+.lock-icon
+{
+    width: 50px;
+    height: 50px;
 }
