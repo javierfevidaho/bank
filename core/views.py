@@ -20,6 +20,14 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 def error_404(request, exception):
     return render(request, '404.html', status=404)
+@csrf_exempt
+def guest_login(request):
+    guest_user, created = User.objects.get_or_create(username='guest', defaults={'email': 'guest@example.com'})
+    if created:
+        guest_user.set_unusable_password()
+        guest_user.save()
+    login(request, guest_user)
+    return JsonResponse({'success': True})
 
 @csrf_exempt
 def api_login(request):
@@ -116,14 +124,24 @@ def cancel(request):
 
 @login_required
 def deposit(request):
+    if not request.user.is_authenticated or request.user.username == 'guest':
+        return redirect('login')
     if request.method == 'POST':
-        amount = request.POST.get('amount')
+        try:
+            amount = Decimal(request.POST.get('amount'))
+            if amount <= 0:
+                raise ValueError("Amount must be greater than zero.")
+        except (InvalidOperation, ValueError):
+            messages.error(request, 'Invalid amount entered.')
+            return redirect('deposit')
+        
         account, created = Account.objects.get_or_create(user=request.user)
-        account.balance += Decimal(amount)
+        account.balance += amount
         account.save()
         messages.success(request, f'Successfully deposited ${amount}')
         return redirect('dashboard')
     return render(request, 'core/deposit.html')
+
 
 @login_required
 def profile(request):
@@ -145,12 +163,16 @@ def logout(request):
 
 @login_required
 def purchase_ticket(request):
+    if request.user.username == 'guest':
+        return redirect('login')
     account, created = Account.objects.get_or_create(user=request.user)
     context = {
-        'balance': account.balance,
+        'balance': account.balance if account else 0,
         'number_range': range(1, 36),
         'bonus_range': range(1, 15),
     }
+    return render(request, 'core/purchase_ticket.html', context)
+
 
     if request.method == 'POST':
         if 'bulk_tickets' in request.POST:

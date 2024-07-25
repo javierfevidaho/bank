@@ -1,16 +1,15 @@
 :root {
-    --primary-dark: #1F3A93; /* Deep Navy Blue */
-    --primary-light: #DCEFFA; /* Soft Light Blue */
-    --accent-1: #E74C3C; /* Bright Red */
-    --accent-2: #F39C12; /* Vibrant Orange */
+    --primary-dark: #0A2540; /* Dark Blue */
+    --primary-light: #C8E3E6; /* Light Aqua */
+    --accent-1: #6EE2F5; /* Bright Cyan */
+    --accent-2: #92F97B; /* Vibrant Green */
     --text-light: #FFFFFF; /* Pure White */
-    --text-dark: #2C3E50; /* Charcoal */
+    --text-dark: #10283A; /* Deep Blue */
     --success: #27AE60; /* Bright Green */
     --warning: #F1C40F; /* Amber */
     --table-row-odd: #FFFFFF; /* Pure White */
-    --table-row-even: #ECF0F1; /* Light Grey */
+    --table-row-even: #C8E3E6; /* Light Aqua */
 }
-
 
 body {
     font-family: 'Roboto', Arial, sans-serif;
@@ -208,7 +207,7 @@ nav {
 
 .profile-container .form-group label, .deposit-frame .form-group label {
     display: block;
-    color: var(--text-light);
+    color: var(--text-dark);
     font-weight: bold;
     margin-bottom: 5px;
 }
@@ -285,12 +284,13 @@ nav {
 }
 
 .login-container, .signup-container {
+    width: 100%;
+    max-width: 500px;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
+    margin: 0 auto;
 }
 
 .form-group input::placeholder {
@@ -340,7 +340,7 @@ nav {
     font-size: 40px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: var (--accent-2);
+    color: var(--accent-2);
 }
 
 .language-selector {
