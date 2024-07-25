@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
 from django.contrib import messages
-from .models import Account, Ticket, Cart, CartItem, WinningNumbers
+from .models import Account, Ticket, Cart, CartItem, WinningNumbers, Jackpot
 from decimal import Decimal
 from django.http import JsonResponse, HttpResponseRedirect
 from django.conf import settings
@@ -16,8 +16,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login
 from rest_framework_simplejwt.tokens import RefreshToken
 from coinbase_commerce.client import Client
-import random
 from datetime import datetime, timedelta
+import random
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -37,8 +37,7 @@ def publish_winners(request):
         winning_numbers.save()
         update_winners(winning_numbers)
 
-    winners = Ticket.objects.filter(draw_date=last_saturday, is_winner=True)
-    return render(request, 'core/winners.html', {'winning_numbers': winning_numbers, 'winners': winners})
+    return render(request, 'core/winners.html', {'winning_numbers': winning_numbers})
 
 def calculate_jackpot():
     last_winning = WinningNumbers.objects.order_by('-draw_date').first()
@@ -47,38 +46,41 @@ def calculate_jackpot():
     return 5000
 
 def update_winners(winning_numbers):
-    winning_tickets = Ticket.objects.filter(is_purchased=True)
+    winning_tickets = Ticket.objects.filter(draw_date=winning_numbers.draw_date)
     for ticket in winning_tickets:
         user_numbers = set(map(int, ticket.numbers.split(',')))
-        winning_numbers_set = set(map(int, winning_numbers.numbers.split(',')))
-        matching_numbers = len(user_numbers & winning_numbers_set)
-        is_bonus_matched = (ticket.bonus == winning_numbers.bonus)
-
-        if matching_numbers == 5 and is_bonus_matched:
-            ticket.win_amount = winning_numbers.jackpot
-            ticket.win_type = "Jackpot"
-        elif matching_numbers == 5:
-            ticket.win_amount = 1340
-            ticket.win_type = "5 Numbers"
-        elif matching_numbers == 4 and is_bonus_matched:
-            ticket.win_amount = 300
-            ticket.win_type = "4 Numbers + Bonus"
-        elif matching_numbers == 4:
-            ticket.win_amount = 134
-            ticket.win_type = "4 Numbers"
-        elif matching_numbers == 3 and is_bonus_matched:
-            ticket.win_amount = 4.02
-            ticket.win_type = "3 Numbers + Bonus"
-        elif matching_numbers == 3:
-            ticket.win_amount = 1.34
-            ticket.win_type = "3 Numbers"
-        else:
-            ticket.win_amount = 0
-            ticket.win_type = "No Win"
-
-        if ticket.win_amount > 0:
+        winning_set = set(map(int, winning_numbers.numbers.split(',')))
+        match_count = len(user_numbers & winning_set)
+        win_amount = 0
+        win_type = "No Win"
+        
+        if match_count == 5 and ticket.bonus == winning_numbers.bonus:
+            win_amount = winning_numbers.jackpot
+            win_type = "Jackpot"
+        elif match_count == 5:
+            win_amount = 1000 * 1.34
+            win_type = "5 Numbers"
+        elif match_count == 4 and ticket.bonus == winning_numbers.bonus:
+            win_amount = 300
+            win_type = "4 + Bonus"
+        elif match_count == 4:
+            win_amount = 100 * 1.34
+            win_type = "4 Numbers"
+        elif match_count == 3 and ticket.bonus == winning_numbers.bonus:
+            win_amount = 3 * 1.34
+            win_type = "3 + Bonus"
+        elif match_count == 3:
+            win_amount = 1.34
+            win_type = "3 Numbers"
+        
+        if win_amount > 0:
             ticket.is_winner = True
-        ticket.save()
+            ticket.win_amount = win_amount
+            ticket.win_type = win_type
+            ticket.save()
+            account = Account.objects.get(user=ticket.user)
+            account.balance += win_amount
+            account.save()
 
 @csrf_exempt
 def guest_login(request):
