@@ -35,7 +35,6 @@ class WinningNumbersAdmin(admin.ModelAdmin):
     list_filter = ('draw_date',)
     ordering = ('draw_date',)
     fields = ('draw_date', 'numbers', 'bonus', 'jackpot')
-    readonly_fields = ('draw_date', 'numbers', 'bonus', 'jackpot')
 
 class JackpotAdmin(admin.ModelAdmin):
     list_display = ('amount', 'last_won')

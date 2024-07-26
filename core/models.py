@@ -11,7 +11,7 @@ class WinningNumbers(models.Model):
 
     def __str__(self):
         return f"Winning Numbers for {self.draw_date}"
-    
+
 class Ticket(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     ticket_number = models.CharField(max_length=10, unique=True, blank=True)
@@ -42,7 +42,6 @@ class Ticket(models.Model):
     def __str__(self):
         return f"Ticket {self.ticket_number} for {self.user.username}"
 
-
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -66,3 +65,6 @@ class Account(models.Model):
 class Jackpot(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=5000.00)
     last_won = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Jackpot of {self.amount}"

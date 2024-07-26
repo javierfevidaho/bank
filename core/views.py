@@ -5,7 +5,7 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib import messages
 from .models import Account, Ticket, Cart, CartItem, WinningNumbers, Jackpot
 from decimal import Decimal
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponseServerError
 from django.conf import settings
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
@@ -18,8 +18,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from coinbase_commerce.client import Client
 from datetime import datetime, timedelta
 import random
-from .models import WinningNumbers, Ticket
-from django.shortcuts import render
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -28,83 +26,98 @@ def error_404(request, exception):
 
 @login_required
 def publish_winners(request):
-    today = datetime.today()
-    last_saturday = today - timedelta(days=today.weekday() + 2)
-    winning_numbers, created = WinningNumbers.objects.get_or_create(draw_date=last_saturday)
+    try:
+        today = datetime.today()
+        last_saturday = today - timedelta(days=today.weekday() + 2)
+        winning_numbers, created = WinningNumbers.objects.get_or_create(draw_date=last_saturday)
 
-    if created:
-        winning_numbers.numbers = ','.join(map(str, random.sample(range(1, 36), 5)))
-        winning_numbers.bonus = random.randint(1, 14)
-        winning_numbers.jackpot = calculate_jackpot()
-        winning_numbers.save()
-        update_winners(winning_numbers)
+        if created:
+            winning_numbers.numbers = ','.join(map(str, random.sample(range(1, 36), 5)))
+            winning_numbers.bonus = random.randint(1, 14)
+            winning_numbers.jackpot = calculate_jackpot()
+            winning_numbers.save()
+            update_winners(winning_numbers)
 
-    return render(request, 'core/winners.html', {'winning_numbers': winning_numbers})
+        return render(request, 'core/winners.html', {'winning_numbers': winning_numbers})
+    except Exception as e:
+        return HttpResponseServerError(f"An error occurred: {e}")
 
 def calculate_jackpot():
-    last_winning = WinningNumbers.objects.order_by('-draw_date').first()
-    if last_winning and not Ticket.objects.filter(is_winner=True, draw_date=last_winning.draw_date).exists():
-        return last_winning.jackpot + 1000
-    return 5000
+    try:
+        last_winning = WinningNumbers.objects.order_by('-draw_date').first()
+        if last_winning and not Ticket.objects.filter(is_winner=True, draw_date=last_winning.draw_date).exists():
+            return last_winning.jackpot + 1000
+        return 5000
+    except Exception as e:
+        return 5000
 
 def update_winners(winning_numbers):
-    winning_tickets = Ticket.objects.filter(draw_date=winning_numbers.draw_date)
-    for ticket in winning_tickets:
-        user_numbers = set(map(int, ticket.numbers.split(',')))
-        winning_set = set(map(int, winning_numbers.numbers.split(',')))
-        match_count = len(user_numbers & winning_set)
-        win_amount = 0
-        win_type = "No Win"
-        
-        if match_count == 5 and ticket.bonus == winning_numbers.bonus:
-            win_amount = winning_numbers.jackpot
-            win_type = "Jackpot"
-        elif match_count == 5:
-            win_amount = 1000 * 1.34
-            win_type = "5 Numbers"
-        elif match_count == 4 and ticket.bonus == winning_numbers.bonus:
-            win_amount = 300
-            win_type = "4 + Bonus"
-        elif match_count == 4:
-            win_amount = 100 * 1.34
-            win_type = "4 Numbers"
-        elif match_count == 3 and ticket.bonus == winning_numbers.bonus:
-            win_amount = 3 * 1.34
-            win_type = "3 + Bonus"
-        elif match_count == 3:
-            win_amount = 1.34
-            win_type = "3 Numbers"
-        
-        if win_amount > 0:
-            ticket.is_winner = True
-            ticket.win_amount = win_amount
-            ticket.win_type = win_type
-            ticket.save()
-            account = Account.objects.get(user=ticket.user)
-            account.balance += win_amount
-            account.save()
+    try:
+        winning_tickets = Ticket.objects.filter(draw_date=winning_numbers.draw_date)
+        for ticket in winning_tickets:
+            user_numbers = set(map(int, ticket.numbers.split(',')))
+            winning_set = set(map(int, winning_numbers.numbers.split(',')))
+            match_count = len(user_numbers & winning_set)
+            win_amount = 0
+            win_type = "No Win"
+            
+            if match_count == 5 and ticket.bonus == winning_numbers.bonus:
+                win_amount = winning_numbers.jackpot
+                win_type = "Jackpot"
+            elif match_count == 5:
+                win_amount = 1000 * 1.34
+                win_type = "5 Numbers"
+            elif match_count == 4 and ticket.bonus == winning_numbers.bonus:
+                win_amount = 300
+                win_type = "4 + Bonus"
+            elif match_count == 4:
+                win_amount = 100 * 1.34
+                win_type = "4 Numbers"
+            elif match_count == 3 and ticket.bonus == winning_numbers.bonus:
+                win_amount = 3 * 1.34
+                win_type = "3 + Bonus"
+            elif match_count == 3:
+                win_amount = 1.34
+                win_type = "3 Numbers"
+            
+            if win_amount > 0:
+                ticket.is_winner = True
+                ticket.win_amount = win_amount
+                ticket.win_type = win_type
+                ticket.save()
+                account = Account.objects.get(user=ticket.user)
+                account.balance += win_amount
+                account.save()
+    except Exception as e:
+        print(f"Error updating winners: {e}")
 
 @csrf_exempt
 def guest_login(request):
-    guest_user, created = User.objects.get_or_create(username='guest', defaults={'email': 'guest@example.com'})
-    if created:
-        guest_user.set_unusable_password()
-        guest_user.save()
-    login(request, guest_user)
-    return JsonResponse({'success': True})
+    try:
+        guest_user, created = User.objects.get_or_create(username='guest', defaults={'email': 'guest@example.com'})
+        if created:
+            guest_user.set_unusable_password()
+            guest_user.save()
+        login(request, guest_user)
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 @csrf_exempt
 def api_login(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        username = data.get('username')
-        password = data.get('password')
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            refresh = RefreshToken.for_user(user)
-            return JsonResponse({'refresh': str(refresh), 'access': str(refresh.access_token)})
-        else:
-            return JsonResponse({'error': 'Invalid credentials'}, status=400)
+    try:
+        if request.method == 'POST':
+            data = json.loads(request.body)
+            username = data.get('username')
+            password = data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                refresh = RefreshToken.for_user(user)
+                return JsonResponse({'refresh': str(refresh), 'access': str(refresh.access_token)})
+            else:
+                return JsonResponse({'error': 'Invalid credentials'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 @login_required
 def create_checkout_session(request):
@@ -115,7 +128,6 @@ def create_checkout_session(request):
             else:
                 data = request.POST
 
-            # Asegúrate de convertir el monto a centavos correctamente
             amount = Decimal(data.get('amount', 0)) * 100  # Convertir a centavos
 
             checkout_session = stripe.checkout.Session.create(
@@ -139,12 +151,14 @@ def create_checkout_session(request):
         except Exception as e:
             return JsonResponse({'error': str(e)})
 
-
 @login_required
 def dashboard(request):
-    tickets = Ticket.objects.filter(user=request.user, is_purchased=True)
-    account, created = Account.objects.get_or_create(user=request.user)
-    return render(request, 'core/dashboard.html', {'tickets': tickets, 'account': account})
+    try:
+        tickets = Ticket.objects.filter(user=request.user, is_purchased=True)
+        account, created = Account.objects.get_or_create(user=request.user)
+        return render(request, 'core/dashboard.html', {'tickets': tickets, 'account': account})
+    except Exception as e:
+        return HttpResponseServerError(f"An error occurred: {e}")
 
 @csrf_exempt
 def stripe_webhook(request):
@@ -171,13 +185,16 @@ def stripe_webhook(request):
     return JsonResponse({'status': 'success'})
 
 def handle_checkout_session(session):
-    user_id = session.get('client_reference_id')
-    if user_id:
-        user = get_object_or_404(User, id=int(user_id))
-        amount = Decimal(session['amount_total']) / 100
-        account, created = Account.objects.get_or_create(user=user)
-        account.balance += amount
-        account.save()
+    try:
+        user_id = session.get('client_reference_id')
+        if user_id:
+            user = get_object_or_404(User, id=int(user_id))
+            amount = Decimal(session['amount_total']) / 100
+            account, created = Account.objects.get_or_create(user=user)
+            account.balance += amount
+            account.save()
+    except Exception as e:
+        print(f"Error handling checkout session: {e}")
 
 @login_required
 def success(request):
@@ -209,26 +226,35 @@ def deposit(request):
 
 @login_required
 def winners(request):
-    winning_tickets = Ticket.objects.filter(is_winner=True)
-    return render(request, 'core/winners.html', {'winning_tickets': winning_tickets})
+    try:
+        winning_tickets = Ticket.objects.filter(is_winner=True)
+        return render(request, 'core/winners.html', {'winning_tickets': winning_tickets})
+    except Exception as e:
+        return HttpResponseServerError(f"An error occurred: {e}")
 
 @login_required
 def winning_numbers(request):
-    winning_numbers = WinningNumbers.objects.all().order_by('-draw_date')
-    return render(request, 'core/winning_numbers.html', {'winning_numbers': winning_numbers})
+    try:
+        winning_numbers = WinningNumbers.objects.all().order_by('-draw_date')
+        return render(request, 'core/winning_numbers.html', {'winning_numbers': winning_numbers})
+    except Exception as e:
+        return HttpResponseServerError(f"An error occurred: {e}")
 
 @login_required
 def profile(request):
-    account, created = Account.objects.get_or_create(user=request.user)
-    tickets = Ticket.objects.filter(user=request.user, is_purchased=True)
-    if request.method == 'POST':
-        user = request.user
-        user.first_name = request.POST.get('first_name')
-        user.last_name = request.POST.get('last_name')
-        user.save()
-        messages.success(request, 'Profile updated successfully')
-        return redirect('profile')
-    return render(request, 'core/profile.html', {'account': account, 'tickets': tickets})
+    try:
+        account, created = Account.objects.get_or_create(user=request.user)
+        tickets = Ticket.objects.filter(user=request.user, is_purchased=True)
+        if request.method == 'POST':
+            user = request.user
+            user.first_name = request.POST.get('first_name')
+            user.last_name = request.POST.get('last_name')
+            user.save()
+            messages.success(request, 'Profile updated successfully')
+            return redirect('profile')
+        return render(request, 'core/profile.html', {'account': account, 'tickets': tickets})
+    except Exception as e:
+        return HttpResponseServerError(f"An error occurred: {e}")
 
 @login_required
 def logout(request):
@@ -299,14 +325,17 @@ def purchase_ticket(request):
 
 @login_required
 def view_cart(request):
-    cart, _ = Cart.objects.get_or_create(user=request.user)
-    cart_items = CartItem.objects.filter(cart=cart)
-    total_cost = sum(item.ticket.price for item in cart_items)
+    try:
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+        total_cost = sum(item.ticket.price for item in cart_items)
 
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({'cart_items_count': cart_items.count()})
-    
-    return render(request, 'core/cart.html', {'cart_items': cart_items, 'total_cost': total_cost})
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'cart_items_count': cart_items.count()})
+        
+        return render(request, 'core/cart.html', {'cart_items': cart_items, 'total_cost': total_cost})
+    except Exception as e:
+        return HttpResponseServerError(f"An error occurred: {e}")
 
 @login_required
 def remove_from_cart(request, item_id):
@@ -320,55 +349,64 @@ def remove_from_cart(request, item_id):
 
 @login_required
 def checkout(request):
-    cart, _ = Cart.objects.get_or_create(user=request.user)
-    cart_items = CartItem.objects.filter(cart=cart)
-    account, created = Account.objects.get_or_create(user=request.user)
-    total_cost = sum(item.ticket.price for item in cart_items)
-    if account.balance >= total_cost:
-        account.balance -= Decimal(total_cost)
-        account.save()
-        for item in cart_items:
-            item.ticket.is_purchased = True
-            item.ticket.save()
-            item.delete()
-        messages.success(request, f'Purchase successful. Total cost: ${total_cost}')
-        return redirect('dashboard')
-    else:
-        messages.error(request, 'Insufficient balance')
-        return render(request, 'core/cart.html', {'cart_items': cart_items, 'total_cost': total_cost, 'error': 'Insufficient balance'})
+    try:
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+        account, created = Account.objects.get_or_create(user=request.user)
+        total_cost = sum(item.ticket.price for item in cart_items)
+        if account.balance >= total_cost:
+            account.balance -= Decimal(total_cost)
+            account.save()
+            for item in cart_items:
+                item.ticket.is_purchased = True
+                item.ticket.save()
+                item.delete()
+            messages.success(request, f'Purchase successful. Total cost: ${total_cost}')
+            return redirect('dashboard')
+        else:
+            messages.error(request, 'Insufficient balance')
+            return render(request, 'core/cart.html', {'cart_items': cart_items, 'total_cost': total_cost, 'error': 'Insufficient balance'})
+    except Exception as e:
+        return HttpResponseServerError(f"An error occurred: {e}")
 
 @login_required
 def coinbase_payment(request):
-    client = Client(api_key=settings.COINBASE_COMMERCE_API_KEY)
-    domain_url = 'http://localhost:8000/'
-    product = {
-        'name': 'Lottery Ticket',
-        'description': 'Purchase a lottery ticket',
-        'local_price': {
-            'amount': '1.34',
-            'currency': 'USD'
-        },
-        'pricing_type': 'fixed_price',
-        'redirect_url': domain_url + 'success/',
-        'cancel_url': domain_url + 'cancel/',
-    }
-    charge = client.charge.create(**product)
-    return render(request, 'core/coinbase_payment.html', {'charge': charge})
+    try:
+        client = Client(api_key=settings.COINBASE_COMMERCE_API_KEY)
+        domain_url = 'http://localhost:8000/'
+        product = {
+            'name': 'Lottery Ticket',
+            'description': 'Purchase a lottery ticket',
+            'local_price': {
+                'amount': '1.34',
+                'currency': 'USD'
+            },
+            'pricing_type': 'fixed_price',
+            'redirect_url': domain_url + 'success/',
+            'cancel_url': domain_url + 'cancel/',
+        }
+        charge = client.charge.create(**product)
+        return render(request, 'core/coinbase_payment.html', {'charge': charge})
+    except Exception as e:
+        return HttpResponseServerError(f"An error occurred: {e}")
 
 @login_required
 def payment(request):
     return render(request, 'core/payment.html', {'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY})
 
 def signup(request):
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('dashboard')
-    else:
-        form = CustomUserCreationForm()
-    return render(request, 'registration/signup.html', {'form': form})
+    try:
+        if request.method == 'POST':
+            form = CustomUserCreationForm(request.POST)
+            if form.is_valid():
+                user = form.save()
+                login(request, user)
+                return redirect('dashboard')
+        else:
+            form = CustomUserCreationForm()
+        return render(request, 'registration/signup.html', {'form': form})
+    except Exception as e:
+        return HttpResponseServerError(f"An error occurred: {e}")
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
