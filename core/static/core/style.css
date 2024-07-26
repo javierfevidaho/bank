@@ -1,14 +1,14 @@
 :root {
-    --primary-dark: #0A2540; /* Dark Blue */
-    --primary-light: #C8E3E6; /* Light Aqua */
-    --accent-1: #6EE2F5; /* Bright Cyan */
-    --accent-2: #92F97B; /* Vibrant Green */
-    --text-light: #2b2b2b; /* Pure White */
-    --text-dark: #10283A; /* Deep Blue */
-    --success: #27AE60; /* Bright Green */
-    --warning: #F1C40F; /* Amber */
-    --table-row-odd: #FFFFFF; /* Pure White */
-    --table-row-even: #C8E3E6; /* Light Aqua */
+    --primary-dark: #000000; /* Negro */
+    --primary-light: #F2F2F2; /* Gris Claro */
+    --accent-1: #E31D1A; /* Rojo */
+    --accent-2: #FFFFFF; /* Blanco */
+    --text-light: #FFFFFF; /* Blanco */
+    --text-dark: #000000; /* Negro */
+    --success: #27AE60; /* Verde Brillante */
+    --warning: #F1C40F; /* Amarillo */
+    --table-row-odd: #FFFFFF; /* Blanco */
+    --table-row-even: #F2F2F2; /* Gris Claro */
 }
 
 body {
