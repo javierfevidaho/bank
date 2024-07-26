@@ -1,6 +1,10 @@
 {% extends "base_generic.html" %}
 {% load static %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'core/css/cart.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="frame">
@@ -39,4 +43,8 @@
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/cart.js' %}"></script>
 {% endblock %}

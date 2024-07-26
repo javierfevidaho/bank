@@ -2,6 +2,10 @@
 {% load static %}
 {% load qr_code %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'core/css/profile.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="profile-container">
@@ -61,4 +65,8 @@
         {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/profile.js' %}"></script>
 {% endblock %}

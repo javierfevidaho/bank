@@ -1,48 +1,17 @@
 {% load static %}
-{% load i18n %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Cyberloto Bank{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/base_generic.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
     <div class="header-container">
         <header>
             <h1>Cyberloto Bank</h1>
-            <div class="top-right-container">
-                <div class="jackpot">
-                    Jackpot: $5,000
-                </div>
-                <div class="countdown-container">
-                    <div class="countdown-item">
-                        <span id="days">45</span> Days
-                    </div>
-                    <div class="countdown-item">
-                        <span id="hours">7</span> Hours
-                    </div>
-                    <div class="countdown-item">
-                        <span id="minutes">42</span> Minutes
-                    </div>
-                    <div class="countdown-item">
-                        <span id="seconds">29</span> Seconds
-                    </div>
-                </div>
-                <div class="language-selector">
-                    <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
-                        <input name="next" type="hidden" value="{{ request.path }}">
-                        <button type="submit" name="language" value="es">
-                            <img src="{% static 'core/images/mx.png' %}" alt="Español" width="50" height="50">
-                        </button>
-                        <button type="submit" name="language" value="en">
-                            <img src="{% static 'core/images/usa.png' %}" alt="English" width="50" height="50">
-                        </button>
-                    </form>
-                </div>
-            </div>
             <nav>
                 <ul class="navbar">
                     {% if user.is_authenticated %}
@@ -60,34 +29,24 @@
                 </ul>
             </nav>
         </header>
+        <div class="countdown-container">
+            <div class="countdown-item">
+                <span id="days">0</span> Days
+            </div>
+            <div class="countdown-item">
+                <span id="hours">0</span> Hours
+            </div>
+            <div class="countdown-item">
+                <span id="minutes">0</span> Minutes
+            </div>
+            <div class="countdown-item">
+                <span id="seconds">0</span> Seconds
+            </div>
+        </div>
     </div>
-
     {% block content %}
     {% endblock %}
-
-    <script>
-        function updateCountdown() {
-            const eventDate = new Date('September 7, 2024 00:00:00').getTime();
-            const now = new Date().getTime();
-            const distance = eventDate - now;
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById('days').textContent = days;
-            document.getElementById('hours').textContent = hours;
-            document.getElementById('minutes').textContent = minutes;
-            document.getElementById('seconds').textContent = seconds;
-
-            if (distance < 0) {
-                document.querySelector('.countdown-container').innerHTML = "Draw has ended!";
-            }
-        }
-
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-    </script>
+    <script src="{% static 'core/js/base_generic.js' %}"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -4,6 +4,10 @@
 {% load humanize %}
 {% load qr_code %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'core/css/dashboard.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="frame p-3">
     <div class="d-flex justify-content-between align-items-center">
@@ -45,4 +49,8 @@
         <p>You haven't purchased any tickets yet.</p>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/dashboard.js' %}"></script>
 {% endblock %}
