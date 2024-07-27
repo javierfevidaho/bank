@@ -14,7 +14,7 @@
     </header>
     {% endblock %}
     
-    <nav>
+    <nav class="navbar-container">
         <ul class="navbar">
             <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
             <li><a href="{% url 'deposit' %}">Deposit</a></li>
@@ -35,7 +35,7 @@
         <div class="frame">
             <h2>Winning Numbers</h2>
             <div class="numbers-container">
-                {% for number in winning_numbers.numbers.split(',') %}
+                {% for number in winning_numbers.numbers.split(",") %}
                     <div class="number-sphere">{{ number }}</div>
                 {% endfor %}
                 <div class="bonus-sphere">{{ winning_numbers.bonus }}</div>
@@ -68,13 +68,13 @@
                 <p>Wed, Jul 24, 2024</p>
                 <p>Powerball</p>
                 <p>JACKPOT WINNERS</p>
-                <p class="jackpot-winner">None</p>
+                <p class="jackpot-none">None</p>
                 <p>Match 5 + Power Play</p>
                 <p>$2 Million Winners</p>
                 <p>GA</p>
                 <p>Match 5</p>
                 <p>$1 Million Winners</p>
-                <p class="jackpot-winner">None</p>
+                <p class="jackpot-none">None</p>
             </div>
         </div>
     </div>

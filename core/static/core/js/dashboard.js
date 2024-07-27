@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Common JavaScript for all pages
+    // Código JavaScript común para todas las páginas
+
+    // Ejemplo: mostrar un mensaje de bienvenida
     console.log('Bienvenido a Cyberloto Bank');
 
-    // Function to update the countdown
+    // Función para actualizar el contador
     function updateCountdown() {
         const eventDate = new Date('September 7, 2024 00:00:00').getTime();
         const now = new Date().getTime();
@@ -25,17 +27,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     setInterval(updateCountdown, 1000);
     updateCountdown();
-});
 
-document.addEventListener('DOMContentLoaded', () => {
-    const dropdown = document.querySelector('.dropdown');
+    // Dropdown menu functionality
+    const dropdown = document.querySelector('.navbar-container');
     dropdown.addEventListener('mouseover', () => {
-        const content = dropdown.querySelector('.dropdown-content');
+        const content = dropdown.querySelector('.navbar');
         content.style.display = 'block';
     });
 
     dropdown.addEventListener('mouseout', () => {
-        const content = dropdown.querySelector('.dropdown-content');
+        const content = dropdown.querySelector('.navbar');
         content.style.display = 'none';
     });
 });
