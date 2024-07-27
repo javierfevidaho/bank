@@ -1,21 +1,42 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Código JavaScript específico para el dashboard
+    // Código JavaScript común para todas las páginas
 
-    function updateBalance() {
-        fetch("{% url 'dashboard' %}", {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            document.querySelector('.text-right p').textContent = `Your current balance is: $${data.balance.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    // Ejemplo: mostrar un mensaje de bienvenida
+    console.log('Bienvenido a Cyberloto Bank');
+
+    // Función para actualizar el contador
+    function updateCountdown() {
+        const eventDate = new Date('September 7, 2024 00:00:00').getTime();
+        const now = new Date().getTime();
+        const distance = eventDate - now;
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById('days').textContent = days;
+        document.getElementById('hours').textContent = hours;
+        document.getElementById('minutes').textContent = minutes;
+        document.getElementById('seconds').textContent = seconds;
+
+        if (distance < 0) {
+            document.querySelector('.countdown-container').innerHTML = "Draw has ended!";
+        }
     }
 
-    // Actualizar balance al cargar la página
-    updateBalance();
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // Dropdown menu functionality
+    const dropdown = document.querySelector('.dropdown');
+    dropdown.addEventListener('mouseover', () => {
+        const content = dropdown.querySelector('.dropdown-content');
+        content.style.display = 'block';
+    });
+
+    dropdown.addEventListener('mouseout', () => {
+        const content = dropdown.querySelector('.dropdown-content');
+        content.style.display = 'none';
+    });
 });

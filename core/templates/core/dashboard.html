@@ -1,56 +1,51 @@
 {% extends "base_generic.html" %}
 {% load static %}
-{% load l10n %}
-{% load humanize %}
-{% load qr_code %}
-
-{% block extra_head %}
-<link rel="stylesheet" href="{% static 'core/css/dashboard.css' %}">
-{% endblock %}
-
 {% block content %}
-<div class="frame p-3">
-    <div class="d-flex justify-content-between align-items-center">
-        <h2>Dashboard</h2>
-        <div class="text-right" style="text-align: right;">
-            <h4>Welcome, {{ user.username }}</h4>
-            <p>Your current balance is: ${{ account.balance|floatformat:2|intcomma }}</p>
+<div class="dashboard-container">
+    <div class="frame">
+        <h2>Winning Numbers</h2>
+        <div class="numbers-container">
+            {% for number in winning_numbers.numbers.split(',') %}
+                <div class="number-sphere">{{ number }}</div>
+            {% endfor %}
+            <div class="bonus-sphere">{{ winning_numbers.bonus }}</div>
         </div>
     </div>
-    <h3>Your Purchased Tickets</h3>
-    {% if tickets %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Ticket Number</th>
-                    <th>Numbers</th>
-                    <th>Bonus Number</th>
-                    <th>Purchase Date</th>
-                    <th>Price</th>
-                    <th>QR Code</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for ticket in tickets %}
-                    <tr>
-                        <td>{{ ticket.ticket_number }}</td>
-                        <td>{{ ticket.numbers }}</td>
-                        <td>{{ ticket.bonus }}</td>
-                        <td>{{ ticket.purchase_date }}</td>
-                        <td>${{ ticket.price|floatformat:2|intcomma }}</td>
-                        <td>
-                            {% qr_from_text ticket.ticket_number size="T" %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>You haven't purchased any tickets yet.</p>
-    {% endif %}
+    <div class="frame">
+        <h2>Next Drawing</h2>
+        <div class="countdown-container">
+            <div class="countdown-item">
+                <span id="days"></span>
+                <div>Days</div>
+            </div>
+            <div class="countdown-item">
+                <span id="hours"></span>
+                <div>Hours</div>
+            </div>
+            <div class="countdown-item">
+                <span id="minutes"></span>
+                <div>Minutes</div>
+            </div>
+            <div class="countdown-item">
+                <span id="seconds"></span>
+                <div>Seconds</div>
+            </div>
+        </div>
+    </div>
+    <div class="frame">
+        <h2>Winners</h2>
+        <div class="winner-info">
+            <p>{{ winning_numbers.draw_date|date:"D, M j, Y" }}</p>
+            <p>Powerball</p>
+            <p><strong>Jackpot Winners</strong></p>
+            <p class="jackpot-winner">{{ "None" if not jackpot_winners else jackpot_winners }}</p>
+            <p><strong>Match 5 + Power Play</strong></p>
+            <p>$2 Million Winners</p>
+            <p>{{ match5_power_play_winners|default:"None" }}</p>
+            <p><strong>Match 5</strong></p>
+            <p>$1 Million Winners</p>
+            <p>{{ match5_winners|default:"None" }}</p>
+        </div>
+    </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script src="{% static 'core/js/dashboard.js' %}"></script>
 {% endblock %}
