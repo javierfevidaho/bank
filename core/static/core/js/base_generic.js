@@ -27,9 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     setInterval(updateCountdown, 1000);
     updateCountdown();
-});
 
-document.addEventListener('DOMContentLoaded', () => {
+    // Dropdown menu functionality
     const dropdown = document.querySelector('.dropdown');
     dropdown.addEventListener('mouseover', () => {
         const content = dropdown.querySelector('.dropdown-content');
