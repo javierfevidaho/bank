@@ -3,17 +3,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Cyber Lotto Bank Dashboard{% endblock %}</title>
+    <title>{% block title %}Dashboard{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'core/css/dashboard.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
     {% block header %}
-    <header class="header-container">
+    <header>
         <h1>Cyber Lotto Bank</h1>
     </header>
     {% endblock %}
-    
+
     <nav class="navbar-container">
         <ul class="navbar">
             <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
@@ -28,64 +28,57 @@
             <li><a href="{% url 'winning_numbers' %}">Winning Numbers</a></li>
         </ul>
     </nav>
-    
+
     {% block content %}
-    <div class="dashboard-container">
-        <!-- Winning Numbers Frame -->
+    <div class="dashboard">
         <div class="frame">
             <h2>Winning Numbers</h2>
-            <div class="numbers-container">
-                {% for number in winning_numbers.numbers.split(",") %}
-                    <div class="number-sphere">{{ number }}</div>
+            <div class="numbers">
+                {% for number in winning_numbers_list %}
+                <span class="number">{{ number }}</span>
                 {% endfor %}
-                <div class="bonus-sphere">{{ winning_numbers.bonus }}</div>
             </div>
         </div>
-        
-        <!-- Next Drawing Frame -->
         <div class="frame">
             <h2>Next Drawing</h2>
             <div class="countdown-container">
                 <div class="countdown-item">
-                    <span id="days">0</span> Days
+                    <span id="days">0</span>
+                    Days
                 </div>
                 <div class="countdown-item">
-                    <span id="hours">0</span> Hours
+                    <span id="hours">0</span>
+                    Hours
                 </div>
                 <div class="countdown-item">
-                    <span id="minutes">0</span> Minutes
+                    <span id="minutes">0</span>
+                    Minutes
                 </div>
                 <div class="countdown-item">
-                    <span id="seconds">0</span> Seconds
+                    <span id="seconds">0</span>
+                    Seconds
                 </div>
             </div>
         </div>
-        
-        <!-- Winners Frame -->
         <div class="frame">
             <h2>Winners</h2>
-            <div class="winner-info">
-                <p>Wed, Jul 24, 2024</p>
-                <p>Powerball</p>
-                <p>JACKPOT WINNERS</p>
-                <p class="jackpot-none">None</p>
-                <p>Match 5 + Power Play</p>
-                <p>$2 Million Winners</p>
-                <p>GA</p>
-                <p>Match 5</p>
-                <p>$1 Million Winners</p>
-                <p class="jackpot-none">None</p>
+            <div class="winners">
+                <!-- Add logic to display winners -->
+                {% if winning_numbers.jackpot == 0 %}
+                    <p style="color: red;">None</p>
+                {% else %}
+                    <p>{{ winning_numbers.jackpot }}</p>
+                {% endif %}
             </div>
         </div>
     </div>
     {% endblock %}
-    
+
     {% block footer %}
-    <footer class="footer">
+    <footer>
         <p>&copy; 2024 Cyber Lotto Bank</p>
     </footer>
     {% endblock %}
-    
     <script src="{% static 'core/js/base_generic.js' %}"></script>
 </body>
 </html>

@@ -156,7 +156,15 @@ def dashboard(request):
     try:
         tickets = Ticket.objects.filter(user=request.user, is_purchased=True)
         account, created = Account.objects.get_or_create(user=request.user)
-        return render(request, 'core/dashboard.html', {'tickets': tickets, 'account': account})
+        winning_numbers = WinningNumbers.objects.latest('draw_date')
+        winning_numbers_list = winning_numbers.numbers.split(",") if winning_numbers and winning_numbers.numbers else []
+        
+        return render(request, 'core/dashboard.html', {
+            'tickets': tickets,
+            'account': account,
+            'winning_numbers': winning_numbers,
+            'winning_numbers_list': winning_numbers_list,
+        })
     except Exception as e:
         return HttpResponseServerError(f"An error occurred: {e}")
 

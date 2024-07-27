@@ -1,24 +1,7 @@
-/* Variables de color */
-:root {
-    --primary-dark: #000000;
-    --primary-light: #F2F2F2;
-    --accent-1: #E31D1A;
-    --accent-2: #FFFFFF;
-    --text-light: #FFFFFF;
-    --text-dark: #000000;
-    --background-blue: #4AA6FB;
-    --border-gray: #bdbdbd;
-    --background-hover: #f5f5f5;
-    --number-sphere-color: #FFFFFF;
-    --bonus-sphere-color: #4AA6FB;
-    --jackpot-none-color: #E31D1A;
-}
-
-/* Estilos globales */
 body {
     font-family: 'Roboto', Arial, sans-serif;
-    background: radial-gradient(circle, var(--primary-dark) 0%, var(--primary-light) 100%);
-    color: var(--text-light);
+    background: radial-gradient(circle, #000000, #4AA6FB);
+    color: #FFFFFF;
     margin: 0;
     padding: 0;
     display: flex;
@@ -26,7 +9,6 @@ body {
     min-height: 100vh;
 }
 
-/* Estilos de encabezado */
 .header-container {
     background-color: var(--primary-light);
     padding: 20px;
@@ -37,24 +19,11 @@ h1 {
     color: var(--text-dark);
 }
 
-/* Estilos de navegación */
-.navbar-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 200px;
-    height: 100vh;
-    background-color: var(--primary-light);
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    border-radius: 0 10px 10px 0;
-}
-
 .navbar {
     list-style-type: none;
     padding: 0;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     gap: 20px;
 }
 
@@ -76,7 +45,6 @@ h1 {
     color: var(--accent-2);
 }
 
-/* Estilos del pie de página */
 .footer {
     background-color: var(--primary-light);
     color: var(--text-dark);
@@ -87,14 +55,38 @@ h1 {
     width: 100%;
 }
 
-/* Contenedores flexibles */
-.d-flex {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+.frame {
+    background: linear-gradient(to bottom, gray, white);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin: 20px auto;
+    color: var(--text-dark);
+    text-align: center;
+    width: 90%;
+    max-width: 600px;
+    box-sizing: border-box;
 }
 
-/* Estilos del contador */
+.numbers {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.number {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-color: var(--accent-2);
+    border-radius: 50%;
+    line-height: 40px;
+    text-align: center;
+    color: var(--text-dark);
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
 .countdown-container {
     display: flex;
     justify-content: center;
@@ -118,63 +110,7 @@ h1 {
     font-weight: bold;
 }
 
-/* Estilos para el dashboard */
-.dashboard-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    margin: 100px 0 50px 220px;
-    gap: 20px;
-}
-
-/* Estilos de los frames */
-.frame {
-    background: linear-gradient(to bottom, var(--primary-light) 0%, var(--accent-2) 100%);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 300px;
-    text-align: center;
-}
-
-.frame h2 {
-    margin-top: 0;
-}
-
-.numbers-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.number-sphere, .bonus-sphere {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.number-sphere {
-    background-color: var(--number-sphere-color);
-    color: var(--text-dark);
-}
-
-.bonus-sphere {
-    background-color: var(--bonus-sphere-color);
-    color: var(--text-light);
-}
-
-.winner-info {
+.winners {
     text-align: left;
-}
-
-.jackpot-none {
-    color: var(--jackpot-none-color);
-    font-weight: bold;
+    padding: 10px;
 }
