@@ -10,27 +10,21 @@
 </head>
 <body>
     {% block header %}
-    <header>
+    <header class="header-container">
         <h1>Cyber Lotto Bank</h1>
     </header>
     {% endblock %}
 
     <nav>
-        <ul>
+        <ul class="navbar">
             <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-            <li><a href="{% url 'create_checkout_session' %}">Create Checkout Session</a></li>
-            <li><a href="{% url 'success' %}">Success</a></li>
-            <li><a href="{% url 'cancel' %}">Cancel</a></li>
             <li><a href="{% url 'deposit' %}">Deposit</a></li>
             <li><a href="{% url 'profile' %}">Profile</a></li>
             <li><a href="{% url 'logout' %}">Logout</a></li>
             <li><a href="{% url 'purchase_ticket' %}">Purchase Ticket</a></li>
             <li><a href="{% url 'view_cart' %}">Cart</a></li>
-            <li><a href="{% url 'checkout' %}">Checkout</a></li>
             <li><a href="{% url 'coinbase_payment' %}">Coinbase Payment</a></li>
             <li><a href="{% url 'payment' %}">Payment</a></li>
-            <li><a href="{% url 'signup' %}">Signup</a></li>
-            <li><a href="{% url 'guest_login' %}">Guest Login</a></li>
             <li><a href="{% url 'winners' %}">Winners</a></li>
             <li><a href="{% url 'winning_numbers' %}">Winning Numbers</a></li>
         </ul>
@@ -39,9 +33,11 @@
     {% block content %}{% endblock %}
 
     {% block footer %}
-    <footer>
+    <footer class="footer">
         <p>&copy; 2024 My Site</p>
     </footer>
     {% endblock %}
+
+    <script src="{% static 'core/js/base_generic.js' %}"></script>
 </body>
 </html>
