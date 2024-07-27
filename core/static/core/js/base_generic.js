@@ -1,10 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Código JavaScript común para todas las páginas
-
-    // Ejemplo: mostrar un mensaje de bienvenida
     console.log('Bienvenido a Cyberloto Bank');
 
-    // Función para actualizar el contador
     function updateCountdown() {
         const eventDate = new Date('September 7, 2024 00:00:00').getTime();
         const now = new Date().getTime();
@@ -28,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // Dropdown menu functionality
     const dropdown = document.querySelector('.dropdown');
     dropdown.addEventListener('mouseover', () => {
         const content = dropdown.querySelector('.dropdown-content');

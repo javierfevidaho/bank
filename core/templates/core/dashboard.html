@@ -13,6 +13,7 @@
         <h1>Cyber Lotto Bank</h1>
     </header>
     {% endblock %}
+    <script src="{% static 'core/js/base_generic.js' %}"></script>
 
     <nav class="navbar-container">
         <ul class="navbar">
@@ -63,7 +64,6 @@
         <div class="frame">
             <h2>Winners</h2>
             <div class="winners">
-                <!-- Add logic to display winners -->
                 {% if winning_numbers.jackpot == 0 %}
                     <p style="color: red;">None</p>
                 {% else %}
@@ -79,6 +79,5 @@
         <p>&copy; 2024 Cyber Lotto Bank</p>
     </footer>
     {% endblock %}
-    <script src="{% static 'core/js/base_generic.js' %}"></script>
 </body>
 </html>

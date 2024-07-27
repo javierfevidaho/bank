@@ -168,6 +168,7 @@ def dashboard(request):
     except Exception as e:
         return HttpResponseServerError(f"An error occurred: {e}")
 
+
 @csrf_exempt
 def stripe_webhook(request):
     payload = request.body
