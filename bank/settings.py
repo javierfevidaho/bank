@@ -2,27 +2,16 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
+import logging
 
 # Load environment variables from .env file
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Static files settings
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'core/static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# Load locale paths
-LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale'),
-    os.path.join(BASE_DIR, 'core/locale'),
-]
-
-# Set debug mode based on environment variable
+# Security settings
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
-
+SECRET_KEY = os.getenv('SECRET_KEY')
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 ALLOWED_HOSTS.extend([
     '0.0.0.0',
@@ -32,11 +21,21 @@ ALLOWED_HOSTS.extend([
     'ltd-brandea-cyberlottobank-7684fb46.koyeb.app'
 ])
 
-# Custom error view configuration
-handler404 = 'core.views.error_404'
+# Static files settings
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Security settings
-SECRET_KEY = os.getenv('SECRET_KEY')
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Locale paths
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+    os.path.join(BASE_DIR, 'core/locale'),
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -67,34 +66,12 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
 ]
 
-LANGUAGE_CODE = 'en'
-
-LANGUAGES = [
-    ('en', 'English'),
-    ('es', 'Español'),
-]
-
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
-
 ROOT_URLCONF = 'bank.urls'
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
-}
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'core/templates'),
-        ],
+        'DIRS': [os.path.join(BASE_DIR, 'core/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -109,19 +86,33 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bank.wsgi.application'
 
-# Database configuration for production (example with PostgreSQL)
+# Database configuration for production
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL')
-    )
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
+
+# REST framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+# Internationalization settings
+LANGUAGE_CODE = 'en'
+LANGUAGES = [
+    ('en', 'English'),
+    ('es', 'Español'),
+]
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True
 
 USE_THOUSAND_SEPARATOR = True
 THOUSAND_SEPARATOR = ','
-
-# Media files
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -150,7 +141,9 @@ STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
 COINBASE_COMMERCE_API_KEY = os.getenv('COINBASE_COMMERCE_API_KEY')
 COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET = os.getenv('COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET')
 
+# Custom error view configuration
+handler404 = 'core.views.error_404'
+
 # Debug log database configuration
-import logging
 logging.basicConfig(level=logging.DEBUG)
 logging.debug("Database configuration: %s", DATABASES['default'])
