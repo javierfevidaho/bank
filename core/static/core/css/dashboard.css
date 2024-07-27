@@ -55,17 +55,26 @@ h1 {
     width: 100%;
 }
 
+.dashboard {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
 .frame {
     background: linear-gradient(to bottom, gray, white);
-    border-radius: 15px;
+    border-radius: 0 15px 15px 0;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     padding: 20px;
-    margin: 20px auto;
     color: var(--text-dark);
     text-align: center;
-    width: 90%;
-    max-width: 600px;
+    width: 300px;
     box-sizing: border-box;
+}
+
+.frame:first-child {
+    border-radius: 15px 0 0 15px;
 }
 
 .numbers {
