@@ -40,7 +40,7 @@ window.autoSelectNumbers = function(button) {
 window.addToCart = function() {
     const form = document.getElementById('ticket-form');
     const formData = new FormData(form);
-    fetch("{% url 'purchase_ticket' %}", {
+    fetch(form.action, {
         method: 'POST',
         body: formData,
         headers: {
@@ -63,7 +63,7 @@ window.addToCart = function() {
 }
 
 function updateCartCount() {
-    fetch("{% url 'view_cart' %}", {
+    fetch("/view-cart/", {
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
         }
@@ -122,11 +122,11 @@ window.confirmBulk = function() {
 
     const formData = new FormData();
     formData.append('bulk_tickets', JSON.stringify(tickets));
-    fetch("{% url 'purchase_ticket' %}", {
+    fetch("/purchase-ticket/", {
         method: 'POST',
         body: formData,
         headers: {
-            'X-CSRFToken': '{{ csrf_token }}',
+            'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value,
         },
     })
     .then(response => response.json())
