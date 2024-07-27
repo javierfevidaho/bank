@@ -1,51 +1,91 @@
-{% extends "base_generic.html" %}
 {% load static %}
-{% block content %}
-<div class="dashboard-container">
-    <div class="frame">
-        <h2>Winning Numbers</h2>
-        <div class="numbers-container">
-            {% for number in winning_numbers.numbers.split(',') %}
-                <div class="number-sphere">{{ number }}</div>
-            {% endfor %}
-            <div class="bonus-sphere">{{ winning_numbers.bonus }}</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Cyber Lotto Bank Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'core/css/dashboard.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    {% block header %}
+    <header class="header-container">
+        <h1>Cyber Lotto Bank</h1>
+    </header>
+    {% endblock %}
+    
+    <nav>
+        <ul class="navbar">
+            <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'deposit' %}">Deposit</a></li>
+            <li><a href="{% url 'profile' %}">Profile</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+            <li><a href="{% url 'purchase_ticket' %}">Purchase Ticket</a></li>
+            <li><a href="{% url 'view_cart' %}">Cart</a></li>
+            <li><a href="{% url 'coinbase_payment' %}">Coinbase Payment</a></li>
+            <li><a href="{% url 'payment' %}">Payment</a></li>
+            <li><a href="{% url 'winners' %}">Winners</a></li>
+            <li><a href="{% url 'winning_numbers' %}">Winning Numbers</a></li>
+        </ul>
+    </nav>
+    
+    {% block content %}
+    <div class="dashboard-container">
+        <!-- Winning Numbers Frame -->
+        <div class="frame">
+            <h2>Winning Numbers</h2>
+            <div class="numbers-container">
+                {% for number in winning_numbers.numbers.split(',') %}
+                    <div class="number-sphere">{{ number }}</div>
+                {% endfor %}
+                <div class="bonus-sphere">{{ winning_numbers.bonus }}</div>
+            </div>
+        </div>
+        
+        <!-- Next Drawing Frame -->
+        <div class="frame">
+            <h2>Next Drawing</h2>
+            <div class="countdown-container">
+                <div class="countdown-item">
+                    <span id="days">0</span> Days
+                </div>
+                <div class="countdown-item">
+                    <span id="hours">0</span> Hours
+                </div>
+                <div class="countdown-item">
+                    <span id="minutes">0</span> Minutes
+                </div>
+                <div class="countdown-item">
+                    <span id="seconds">0</span> Seconds
+                </div>
+            </div>
+        </div>
+        
+        <!-- Winners Frame -->
+        <div class="frame">
+            <h2>Winners</h2>
+            <div class="winner-info">
+                <p>Wed, Jul 24, 2024</p>
+                <p>Powerball</p>
+                <p>JACKPOT WINNERS</p>
+                <p class="jackpot-winner">None</p>
+                <p>Match 5 + Power Play</p>
+                <p>$2 Million Winners</p>
+                <p>GA</p>
+                <p>Match 5</p>
+                <p>$1 Million Winners</p>
+                <p class="jackpot-winner">None</p>
+            </div>
         </div>
     </div>
-    <div class="frame">
-        <h2>Next Drawing</h2>
-        <div class="countdown-container">
-            <div class="countdown-item">
-                <span id="days"></span>
-                <div>Days</div>
-            </div>
-            <div class="countdown-item">
-                <span id="hours"></span>
-                <div>Hours</div>
-            </div>
-            <div class="countdown-item">
-                <span id="minutes"></span>
-                <div>Minutes</div>
-            </div>
-            <div class="countdown-item">
-                <span id="seconds"></span>
-                <div>Seconds</div>
-            </div>
-        </div>
-    </div>
-    <div class="frame">
-        <h2>Winners</h2>
-        <div class="winner-info">
-            <p>{{ winning_numbers.draw_date|date:"D, M j, Y" }}</p>
-            <p>Powerball</p>
-            <p><strong>Jackpot Winners</strong></p>
-            <p class="jackpot-winner">{{ "None" if not jackpot_winners else jackpot_winners }}</p>
-            <p><strong>Match 5 + Power Play</strong></p>
-            <p>$2 Million Winners</p>
-            <p>{{ match5_power_play_winners|default:"None" }}</p>
-            <p><strong>Match 5</strong></p>
-            <p>$1 Million Winners</p>
-            <p>{{ match5_winners|default:"None" }}</p>
-        </div>
-    </div>
-</div>
-{% endblock %}
+    {% endblock %}
+    
+    {% block footer %}
+    <footer class="footer">
+        <p>&copy; 2024 Cyber Lotto Bank</p>
+    </footer>
+    {% endblock %}
+    
+    <script src="{% static 'core/js/base_generic.js' %}"></script>
+</body>
+</html>
