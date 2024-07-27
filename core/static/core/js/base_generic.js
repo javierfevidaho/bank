@@ -28,3 +28,16 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateCountdown, 1000);
     updateCountdown();
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const dropdown = document.querySelector('.dropdown');
+    dropdown.addEventListener('mouseover', () => {
+        const content = dropdown.querySelector('.dropdown-content');
+        content.style.display = 'block';
+    });
+
+    dropdown.addEventListener('mouseout', () => {
+        const content = dropdown.querySelector('.dropdown-content');
+        content.style.display = 'none';
+    });
+});

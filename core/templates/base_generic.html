@@ -17,16 +17,21 @@
 
     <nav>
         <ul class="navbar">
-            <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-            <li><a href="{% url 'deposit' %}">Deposit</a></li>
-            <li><a href="{% url 'profile' %}">Profile</a></li>
-            <li><a href="{% url 'logout' %}">Logout</a></li>
-            <li><a href="{% url 'purchase_ticket' %}">Purchase Ticket</a></li>
-            <li><a href="{% url 'view_cart' %}">Cart</a></li>
-            <li><a href="{% url 'coinbase_payment' %}">Coinbase Payment</a></li>
-            <li><a href="{% url 'payment' %}">Payment</a></li>
-            <li><a href="{% url 'winners' %}">Winners</a></li>
-            <li><a href="{% url 'winning_numbers' %}">Winning Numbers</a></li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="dropbtn">Menu</a>
+                <div class="dropdown-content">
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                    <a href="{% url 'deposit' %}">Deposit</a>
+                    <a href="{% url 'profile' %}">Profile</a>
+                    <a href="{% url 'logout' %}">Logout</a>
+                    <a href="{% url 'purchase_ticket' %}">Purchase Ticket</a>
+                    <a href="{% url 'view_cart' %}">Cart</a>
+                    <a href="{% url 'coinbase_payment' %}">Coinbase Payment</a>
+                    <a href="{% url 'payment' %}">Payment</a>
+                    <a href="{% url 'winners' %}">Winners</a>
+                    <a href="{% url 'winning_numbers' %}">Winning Numbers</a>
+                </div>
+            </li>
         </ul>
     </nav>
 
