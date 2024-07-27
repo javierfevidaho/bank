@@ -1,52 +1,27 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Cyberloto Bank{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'core/css/base_generic.css' %}">
+    <title>{% block title %}My Site{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/base_generic.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <div class="header-container">
-        <header>
-            <h1>Cyberloto Bank</h1>
-            <nav>
-                <ul class="navbar">
-                    {% if user.is_authenticated %}
-                        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                        <li><a href="{% url 'deposit' %}">Deposit</a></li>
-                        <li><a href="{% url 'purchase_ticket' %}">Purchase Ticket</a></li>
-                        <li><a href="{% url 'winners' %}">Winners</a></li>
-                        <li><a href="{% url 'winning_numbers' %}">Winning Numbers</a></li>
-                        <li><a href="{% url 'profile' %}">Profile</a></li>
-                        <li><a href="{% url 'logout' %}">Logout</a></li>
-                    {% else %}
-                        <li><a href="{% url 'login' %}">Login</a></li>
-                        <li><a href="{% url 'signup' %}">Signup</a></li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </header>
-        <div class="countdown-container">
-            <div class="countdown-item">
-                <span id="days">0</span> Days
-            </div>
-            <div class="countdown-item">
-                <span id="hours">0</span> Hours
-            </div>
-            <div class="countdown-item">
-                <span id="minutes">0</span> Minutes
-            </div>
-            <div class="countdown-item">
-                <span id="seconds">0</span> Seconds
-            </div>
-        </div>
-    </div>
-    {% block content %}
+    {% block header %}
+    <header>
+        <h1>Welcome to My Site</h1>
+    </header>
     {% endblock %}
-    <script src="{% static 'core/js/base_generic.js' %}"></script>
-    {% block extra_js %}{% endblock %}
+
+    {% block content %}{% endblock %}
+
+    {% block footer %}
+    <footer>
+        <p>&copy; 2024 My Site</p>
+    </footer>
+    {% endblock %}
 </body>
 </html>

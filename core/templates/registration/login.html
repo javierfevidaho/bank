@@ -1,11 +1,13 @@
 {% extends "base_generic.html" %}
 {% load static %}
 
+{% block title %}Login{% endblock %}
+
 {% block content %}
 <div class="login-container">
     <div class="frame p-3">
         <div class="login-header">
-            <img src="{% static 'images/lock-icon.png' %}" alt="Lock Icon" class="lock-icon">
+            <img src="{% static 'core/images/lock-icon.png' %}" alt="Lock Icon" class="lock-icon">
         </div>
         <h2>Login Now</h2>
         <form method="post">
@@ -29,36 +31,5 @@
         <a href="{% url 'signup' %}" class="signup">Don't have an account?</a>
     </div>
 </div>
-<script>
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-    
-    function loginAsGuest() {
-        fetch("{% url 'guest_login' %}", {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken'),
-            },
-        })
-        .then(response => {
-            if (response.ok) {
-                window.location.href = "{% url 'dashboard' %}";
-            } else {
-                alert('Failed to log in as guest');
-            }
-        });
-    }
-</script>
+<script src="{% static 'core/js/login.js' %}"></script>
 {% endblock %}

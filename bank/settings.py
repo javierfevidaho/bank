@@ -8,6 +8,12 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Static files settings
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'core/static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Load locale paths
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
@@ -16,10 +22,12 @@ LOCALE_PATHS = [
 
 # Set debug mode based on environment variable
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
-# Add the production domain to ALLOWED_HOSTS
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 ALLOWED_HOSTS.extend([
+    '0.0.0.0',
+    'localhost',
+    '127.0.0.1',
     'uneven-idalina-cyberlotto-62107c4f.koyeb.app',
     'ltd-brandea-cyberlottobank-7684fb46.koyeb.app'
 ])
@@ -44,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'rest_framework',
     'rest_framework_simplejwt',
+    'sslserver',
 ]
 
 MIDDLEWARE = [
@@ -109,12 +118,6 @@ DATABASES = {
 
 USE_THOUSAND_SEPARATOR = True
 THOUSAND_SEPARATOR = ','
-
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files
 MEDIA_URL = '/media/'

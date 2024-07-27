@@ -1,6 +1,8 @@
 from django.urls import path, include
 from . import views
 from .views import guest_login
+from django.urls import re_path
+from django.views.generic.base import TemplateView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -28,4 +30,6 @@ urlpatterns = [
     path('guest-login/', guest_login, name='guest_login'),
     path('winners/', views.winners, name='winners'),
     path('winning_numbers/', views.winning_numbers, name='winning_numbers'),
+    re_path(r'^robots\.txt$', TemplateView.as_view(template_name="static/robots.txt", content_type="text/plain")),
+
 ]
