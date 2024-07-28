@@ -3,6 +3,7 @@
 
 {% block content %}
 <div class="container mt-5">
+    <link rel="stylesheet" href="{% static 'core/css/common.css' %}">
     <h2>Pay with Coinbase</h2>
     <p>Click the button below to complete your payment:</p>
     <a href="{{ charge.hosted_url }}" class="btn btn-primary">Complete Payment</a>
