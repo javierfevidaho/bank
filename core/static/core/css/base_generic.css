@@ -118,9 +118,9 @@ h1 {
 .countdown-container {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 10px;
     margin-top: 20px;
-    font-size: 24px;
+    font-size: 16px;
 }
 
 .countdown-item {
@@ -134,6 +134,6 @@ h1 {
 }
 
 .countdown-item span {
-    font-size: 36px;
+    font-size: 18px;
     font-weight: bold;
 }
