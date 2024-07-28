@@ -4,21 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}My Site{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'core/css/base_generic.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/common.css' %}">
     <link rel="stylesheet" href="{% static 'core/css/login.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
     {% block header %}
-    <header class="header-container">
+    <header>
         <h1>Cyber Lotto Bank</h1>
     </header>
     {% endblock %}
     <script src="{% static 'core/js/base_generic.js' %}"></script>
 
-    <nav class="navbar">
-        <ul class="dropdown">
-            <li><a href="javascript:void(0)" class="dropbtn">Menu</a>
+    <nav class="navbar-container">
+        <ul class="navbar">
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="dropbtn">Menu</a>
                 <div class="dropdown-content">
                     <a href="{% url 'dashboard' %}">Dashboard</a>
                     <a href="{% url 'deposit' %}">Deposit</a>
@@ -35,29 +36,10 @@
         </ul>
     </nav>
 
-    <div class="countdown-container">
-        <div class="countdown-item">
-            <span id="days">0</span>
-            <p>Days</p>
-        </div>
-        <div class="countdown-item">
-            <span id="hours">0</span>
-            <p>Hours</p>
-        </div>
-        <div class="countdown-item">
-            <span id="minutes">0</span>
-            <p>Minutes</p>
-        </div>
-        <div class="countdown-item">
-            <span id="seconds">0</span>
-            <p>Seconds</p>
-        </div>
-    </div>
-
     {% block content %}{% endblock %}
 
     {% block footer %}
-    <footer class="footer">
+    <footer>
         <p>&copy; 2024 My Site</p>
     </footer>
     {% endblock %}
