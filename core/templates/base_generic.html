@@ -1,46 +1,96 @@
+{% extends "base_generic.html" %}
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Cyber Lotto Bank{% endblock %}</title>
+    <title>{% block title %}Dashboard{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'core/css/common.css' %}">
-    <link rel="stylesheet" href="{% static 'core/css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/dashboard.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
     {% block header %}
     <header>
         <h1>Cyber Lotto Bank</h1>
+        <div class="user-info">
+            {% if user.is_authenticated %}
+                <span>Welcome, {{ request.user.username }}</span> | 
+                <span>Balance: $<span id="user-balance">{{ account.balance|floatformat:2|intcomma }}</span></span>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a> | <a href="{% url 'signup' %}">Signup</a>
+            {% endif %}
+        </div>
     </header>
     {% endblock %}
-<!--     <script src="{% static 'core/js/base_generic.js' %}"></script> -->
+    <script src="{% static 'core/js/base_generic.js' %}"></script>
 
     <nav class="navbar-container">
         <ul class="navbar">
-            <li class="dropdown">
-                <a href="javascript:void(0)" class="dropbtn">Menu</a>
-                <div class="dropdown-content">
-                    <a href="{% url 'dashboard' %}">Dashboard</a>
-                    <a href="{% url 'deposit' %}">Deposit</a>
-                    <a href="{% url 'profile' %}">Profile</a>
-                    <a href="{% url 'logout' %}">Logout</a>
-                    <a href="{% url 'purchase_ticket' %}">Purchase Ticket</a>
-                    <a href="{% url 'view_cart' %}">Cart</a>
-                    <a href="{% url 'coinbase_payment' %}">Coinbase Payment</a>
-                    <a href="{% url 'payment' %}">Payment</a>
-                    <a href="{% url 'winners' %}">Winners</a>
-                    <a href="{% url 'winning_numbers' %}">Winning Numbers</a>
-                </div>
-            </li>
+            <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'deposit' %}">Deposit</a></li>
+            <li><a href="{% url 'profile' %}">Profile</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+            <li><a href="{% url 'purchase_ticket' %}">Purchase Ticket</a></li>
+            <li><a href="{% url 'view_cart' %}">Cart</a></li>
+            <li><a href="{% url 'coinbase_payment' %}">Coinbase Payment</a></li>
+            <li><a href="{% url 'payment' %}">Payment</a></li>
+            <li><a href="{% url 'winners' %}">Winners</a></li>
+            <li><a href="{% url 'winning_numbers' %}">Winning Numbers</a></li>
         </ul>
     </nav>
 
-    {% block content %}{% endblock %}
+    {% block content %}
+    <div class="dashboard">
+        <div class="frame">
+            <h2>Winning Numbers</h2>
+            <div class="numbers">
+                {% for number in winning_numbers_list %}
+                <span class="number">{{ number }}</span>
+                {% endfor %}
+            </div>
+            <div class="bonus">
+                <span class="number">{{ winning_numbers.bonus }}</span>
+            </div>
+        </div>
+        <div class="frame">
+            <h2>Next Drawing</h2>
+            <div class="countdown-container">
+                <div class="countdown-item">
+                    <span id="days">0</span>
+                    Days
+                </div>
+                <div class="countdown-item">
+                    <span id="hours">0</span>
+                    Hours
+                </div>
+                <div class="countdown-item">
+                    <span id="minutes">0</span>
+                    Minutes
+                </div>
+                <div class="countdown-item">
+                    <span id="seconds">0</span>
+                    Seconds
+                </div>
+            </div>
+        </div>
+        <div class="frame">
+            <h2>Winners</h2>
+            <div class="winners">
+                {% if winning_numbers.jackpot == 0 %}
+                    <p style="color: red;">None</p>
+                {% else %}
+                    <p>{{ winning_numbers.jackpot|floatformat:2|intcomma }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endblock %}
 
     {% block footer %}
     <footer>
-        <p>&copy; 2024 My Site</p>
+        <p>&copy; 2024 Cyber Lotto Bank</p>
     </footer>
     {% endblock %}
 </body>

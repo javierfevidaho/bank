@@ -211,7 +211,7 @@ def handle_checkout_session(session):
     except Exception as e:
         logging.error(f"Error handling checkout session: {e}")
 
-@login_required
+# @login_required
 def dashboard(request):
     try:
         tickets = Ticket.objects.filter(user=request.user, is_purchased=True)
@@ -258,7 +258,7 @@ def deposit(request):
         return redirect('dashboard')
     return render(request, 'core/deposit.html')
 
-@login_required
+# @login_required
 def winners(request):
     try:
         winning_tickets = Ticket.objects.filter(is_winner=True)
@@ -266,7 +266,7 @@ def winners(request):
     except Exception as e:
         return HttpResponseServerError(f"An error occurred: {e}")
 
-@login_required
+# @login_required
 def winning_numbers(request):
     try:
         winning_numbers = WinningNumbers.objects.all().order_by('-draw_date')
@@ -295,7 +295,7 @@ def logout(request):
     auth_logout(request)
     return redirect('/accounts/login/')
 
-@login_required
+# @login_required
 def purchase_ticket(request):
     if request.user.username == 'guest':
         return redirect('login')
@@ -357,7 +357,7 @@ def purchase_ticket(request):
                 return JsonResponse({'error': str(e)}, status=500)
     return render(request, 'core/purchase_ticket.html', context)
 
-@login_required
+# @login_required
 def view_cart(request):
     try:
         cart, _ = Cart.objects.get_or_create(user=request.user)
@@ -371,7 +371,7 @@ def view_cart(request):
     except Exception as e:
         return HttpResponseServerError(f"An error occurred: {e}")
 
-@login_required
+# @login_required
 def remove_from_cart(request, item_id):
     try:
         cart_item = CartItem.objects.get(id=item_id, cart__user=request.user)
