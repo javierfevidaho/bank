@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
+import json
 import logging
 
 # Load environment variables from .env file
@@ -140,6 +141,14 @@ STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
 # Coinbase settings
 COINBASE_COMMERCE_API_KEY = os.getenv('COINBASE_COMMERCE_API_KEY')
 COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET = os.getenv('COINBASE_COMMERCE_API_SECRET')
+
+# Load Coinbase Commerce private key from JSON file
+COINBASE_COMMERCE_PRIVATE_KEY_PATH = os.getenv('COINBASE_COMMERCE_PRIVATE_KEY_PATH')
+if COINBASE_COMMERCE_PRIVATE_KEY_PATH and os.path.exists(COINBASE_COMMERCE_PRIVATE_KEY_PATH):
+    with open(COINBASE_COMMERCE_PRIVATE_KEY_PATH, 'r') as f:
+        COINBASE_COMMERCE_PRIVATE_KEY = json.load(f)['privateKey']
+else:
+    COINBASE_COMMERCE_PRIVATE_KEY = None
 
 # Custom error view configuration
 handler404 = 'core.views.error_404'
