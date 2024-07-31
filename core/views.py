@@ -403,7 +403,7 @@ def checkout(request):
 def coinbase_payment(request):
     try:
         client = Client(api_key=settings.COINBASE_COMMERCE_API_KEY)
-        domain_url = 'http://localhost:8000/'
+        domain_url = request.build_absolute_uri('/')  # Actualiza esto para que sea dinámico
         product = {
             'name': 'Lottery Ticket',
             'description': 'Purchase a lottery ticket',
