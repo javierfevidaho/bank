@@ -145,3 +145,27 @@ window.confirmBulk = function() {
 }
 
 document.addEventListener('DOMContentLoaded', updateCartCount);
+
+document.addEventListener('DOMContentLoaded', function() {
+    const numberLabels = document.querySelectorAll('.number-label, .bonus-label');
+    
+    numberLabels.forEach(label => {
+        label.addEventListener('click', function() {
+            label.classList.add('selected');
+            setTimeout(() => {
+                label.classList.remove('selected');
+            }, 300);
+        });
+    });
+
+    const menuItems = document.querySelectorAll('.menu-item');
+    
+    menuItems.forEach(item => {
+        item.addEventListener('mouseover', function() {
+            item.classList.add('hovered');
+        });
+        item.addEventListener('mouseout', function() {
+            item.classList.remove('hovered');
+        });
+    });
+});
