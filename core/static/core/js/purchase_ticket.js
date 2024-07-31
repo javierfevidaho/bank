@@ -52,6 +52,7 @@ window.addToCart = function() {
         if (data.success) {
             alert(data.success);
             updateCartCount();
+            updateBalance();
             form.reset();
         } else if (data.error) {
             alert(data.error);
@@ -74,6 +75,24 @@ function updateCartCount() {
     })
     .catch(error => {
         console.error('Error:', error);
+    });
+}
+
+function updateBalance() {
+    fetch('/api/get-balance/', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('current-balance').textContent = `$${data.balance.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+        }
+    })
+    .catch(error => {
+        console.error('Error updating balance:', error);
     });
 }
 
@@ -106,10 +125,6 @@ function generateTickets(quantity) {
     return tickets;
 }
 
-function closeModal() {
-    document.getElementById('bulkModal').style.display = 'none';
-}
-
 window.confirmBulk = function() {
     const tickets = [];
     const bulkNumbersDiv = document.getElementById('bulkNumbers').children;
@@ -134,6 +149,7 @@ window.confirmBulk = function() {
         if (data.success) {
             alert(data.success);
             updateCartCount();
+            updateBalance();
             document.getElementById('bulkNumbersFrame').style.display = 'none';
         } else if (data.error) {
             alert(data.error);
@@ -144,9 +160,8 @@ window.confirmBulk = function() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', updateCartCount);
-
 document.addEventListener('DOMContentLoaded', function() {
+    updateCartCount();
     const numberLabels = document.querySelectorAll('.number-label, .bonus-label');
     
     numberLabels.forEach(label => {

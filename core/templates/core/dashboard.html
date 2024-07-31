@@ -12,6 +12,10 @@
     {% block header %}
     <header>
         <h1>Cyber Lotto Bank</h1>
+        <div class="user-info">
+            <span>Welcome, {{ request.user.username }}</span> | 
+            <span>Balance: $<span id="user-balance">{{ account.balance|floatformat:2|intcomma }}</span></span>
+        </div>
     </header>
     {% endblock %}
     <script src="{% static 'core/js/base_generic.js' %}"></script>

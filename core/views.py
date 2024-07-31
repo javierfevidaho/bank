@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
 from django.contrib import messages
-from .models import Account, Ticket, Cart, CartItem, WinningNumbers, Jackpot
+from .models import Account, Ticket, Cart, CartItem, WinningNumbers, Jackpot, Payment
 from decimal import Decimal
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponseServerError
 from django.conf import settings
@@ -20,6 +20,15 @@ from datetime import datetime, timedelta
 import random
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
+@login_required
+def get_balance(request):
+    try:
+        account, created = Account.objects.get_or_create(user=request.user)
+        balance = account.balance
+        return JsonResponse({'success': True, 'balance': balance})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
 
 def error_404(request, exception):
     return render(request, '404.html', status=404)
@@ -147,32 +156,23 @@ def create_checkout_session(request):
                 cancel_url=request.build_absolute_uri('/cancel/'),
                 client_reference_id=str(request.user.id)
             )
+            
+            Payment.objects.create(
+                user=request.user,
+                amount=amount / 100,
+                stripe_charge_id=checkout_session.payment_intent,
+                status='pending'
+            )
+
             return HttpResponseRedirect(checkout_session.url)
         except Exception as e:
             return JsonResponse({'error': str(e)})
-
-@login_required
-def dashboard(request):
-    try:
-        tickets = Ticket.objects.filter(user=request.user, is_purchased=True)
-        account, created = Account.objects.get_or_create(user=request.user)
-        winning_numbers = WinningNumbers.objects.latest('draw_date')
-        winning_numbers_list = winning_numbers.numbers.split(",") if winning_numbers and winning_numbers.numbers else []
-        
-        return render(request, 'core/dashboard.html', {
-            'tickets': tickets,
-            'account': account,
-            'winning_numbers': winning_numbers,
-            'winning_numbers_list': winning_numbers_list,
-        })
-    except Exception as e:
-        return HttpResponseServerError(f"An error occurred: {e}")
-
 
 @csrf_exempt
 def stripe_webhook(request):
     payload = request.body
     sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
+    endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
 
     if sig_header is None:
         return JsonResponse({'status': 'signature missing'}, status=400)
@@ -180,7 +180,7 @@ def stripe_webhook(request):
     event = None
     try:
         event = stripe.Webhook.construct_event(
-            payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
+            payload, sig_header, endpoint_secret
         )
     except ValueError as e:
         return JsonResponse({'status': 'invalid payload'}, status=400)
@@ -202,8 +202,29 @@ def handle_checkout_session(session):
             account, created = Account.objects.get_or_create(user=user)
             account.balance += amount
             account.save()
+
+            payment = Payment.objects.get(stripe_charge_id=session.payment_intent)
+            payment.status = 'succeeded'
+            payment.save()
     except Exception as e:
         print(f"Error handling checkout session: {e}")
+
+@login_required
+def dashboard(request):
+    try:
+        tickets = Ticket.objects.filter(user=request.user, is_purchased=True)
+        account, created = Account.objects.get_or_create(user=request.user)
+        winning_numbers = WinningNumbers.objects.latest('draw_date')
+        winning_numbers_list = winning_numbers.numbers.split(",") if winning_numbers and winning_numbers.numbers else []
+        
+        return render(request, 'core/dashboard.html', {
+            'tickets': tickets,
+            'account': account,
+            'winning_numbers': winning_numbers,
+            'winning_numbers_list': winning_numbers_list,
+        })
+    except Exception as e:
+        return HttpResponseServerError(f"An error occurred: {e}")
 
 @login_required
 def success(request):
