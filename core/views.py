@@ -211,11 +211,14 @@ def handle_checkout_session(session):
     except Exception as e:
         logging.error(f"Error handling checkout session: {e}")
 
-# @login_required
 def dashboard(request):
     try:
-        tickets = Ticket.objects.filter(user=request.user, is_purchased=True)
-        account, created = Account.objects.get_or_create(user=request.user)
+        if request.user.is_authenticated:
+            tickets = Ticket.objects.filter(user=request.user, is_purchased=True)
+            account, created = Account.objects.get_or_create(user=request.user)
+        else:
+            tickets = []
+            account = None
         winning_numbers = WinningNumbers.objects.latest('draw_date')
         winning_numbers_list = winning_numbers.numbers.split(",") if winning_numbers and winning_numbers.numbers else []
 
@@ -227,7 +230,6 @@ def dashboard(request):
         })
     except Exception as e:
         return HttpResponseServerError(f"An error occurred: {e}")
-
 
 @login_required
 def success(request):
@@ -258,7 +260,6 @@ def deposit(request):
         return redirect('dashboard')
     return render(request, 'core/deposit.html')
 
-# @login_required
 def winners(request):
     try:
         winning_tickets = Ticket.objects.filter(is_winner=True)
@@ -266,7 +267,6 @@ def winners(request):
     except Exception as e:
         return HttpResponseServerError(f"An error occurred: {e}")
 
-# @login_required
 def winning_numbers(request):
     try:
         winning_numbers = WinningNumbers.objects.all().order_by('-draw_date')
@@ -295,9 +295,8 @@ def logout(request):
     auth_logout(request)
     return redirect('/accounts/login/')
 
-# @login_required
 def purchase_ticket(request):
-    if request.user.username == 'guest':
+    if not request.user.is_authenticated:
         return redirect('login')
     account, created = Account.objects.get_or_create(user=request.user)
     context = {
@@ -357,9 +356,10 @@ def purchase_ticket(request):
                 return JsonResponse({'error': str(e)}, status=500)
     return render(request, 'core/purchase_ticket.html', context)
 
-# @login_required
 def view_cart(request):
     try:
+        if not request.user.is_authenticated:
+            return redirect('login')
         cart, _ = Cart.objects.get_or_create(user=request.user)
         cart_items = CartItem.objects.filter(cart=cart)
         total_cost = sum(item.ticket.price for item in cart_items)
@@ -371,9 +371,10 @@ def view_cart(request):
     except Exception as e:
         return HttpResponseServerError(f"An error occurred: {e}")
 
-# @login_required
 def remove_from_cart(request, item_id):
     try:
+        if not request.user.is_authenticated:
+            return redirect('login')
         cart_item = CartItem.objects.get(id=item_id, cart__user=request.user)
         cart_item.delete()
         messages.success(request, 'Item removed from cart.')
@@ -432,7 +433,6 @@ def coinbase_payment(request):
     except Exception as e:
         logging.error(f"An error occurred while creating Coinbase charge: {str(e)}")
         return HttpResponseServerError(f"An error occurred: {e}")
-
 
 @login_required
 def payment(request):

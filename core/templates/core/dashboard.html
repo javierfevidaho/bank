@@ -1,6 +1,6 @@
+{% extends "base_generic.html" %}
 {% load static %}
 {% load humanize %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,8 +15,12 @@
     <header>
         <h1>Cyber Lotto Bank</h1>
         <div class="user-info">
-            <span>Welcome, {{ request.user.username }}</span> | 
-            <span>Balance: $<span id="user-balance">{{ account.balance|floatformat:2|intcomma }}</span></span>
+            {% if user.is_authenticated %}
+                <span>Welcome, {{ request.user.username }}</span> | 
+                <span>Balance: $<span id="user-balance">{{ account.balance|floatformat:2|intcomma }}</span></span>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a> | <a href="{% url 'signup' %}">Signup</a>
+            {% endif %}
         </div>
     </header>
     {% endblock %}
@@ -45,7 +49,9 @@
                 {% for number in winning_numbers_list %}
                 <span class="number">{{ number }}</span>
                 {% endfor %}
-                <span class="bonus">{{ winning_numbers.bonus }}</span>
+            </div>
+            <div class="bonus">
+                <span class="number bonus-number">{{ winning_numbers.bonus }}</span>
             </div>
         </div>
         <div class="frame">
@@ -75,7 +81,7 @@
                 {% if winning_numbers.jackpot == 0 %}
                     <p style="color: red;">None</p>
                 {% else %}
-                    <p>{{ winning_numbers.jackpot }}</p>
+                    <p>{{ winning_numbers.jackpot|floatformat:2|intcomma }}</p>
                 {% endif %}
             </div>
         </div>
