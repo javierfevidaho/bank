@@ -1,11 +1,12 @@
-{% extends "base_generic.html" %}
-{% load static %}
-
-{% block content %}
-<div class="container mt-5">
-    <link rel="stylesheet" href="{% static 'core/css/common.css' %}">
-    <h2>Pay with Coinbase</h2>
-    <p>Click the button below to complete your payment:</p>
-    <a href="{{ charge.hosted_url }}" class="btn btn-primary">Complete Payment</a>
-</div>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Coinbase Payment</title>
+</head>
+<body>
+    <h1>Proceed with Payment</h1>
+    <p>To complete your purchase, please proceed with the payment using Coinbase Commerce.</p>
+    <a href="{{ charge.hosted_url }}" target="_blank">Pay with Coinbase</a>
+</body>
+</html>

@@ -18,6 +18,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from coinbase_commerce.client import Client
 from datetime import datetime, timedelta
 import random
+import logging
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -160,7 +161,7 @@ def create_checkout_session(request):
             Payment.objects.create(
                 user=request.user,
                 amount=amount / 100,
-                stripe_charge_id=checkout_session.payment_intent,
+                stripe_charge_id=checkout_session.id,  # Almacenar el ID de la sesión de checkout
                 status='pending'
             )
 
@@ -192,6 +193,23 @@ def stripe_webhook(request):
         handle_checkout_session(session)
 
     return JsonResponse({'status': 'success'})
+
+def handle_checkout_session(session):
+    try:
+        user_id = session.get('client_reference_id')
+        if user_id:
+            user = get_object_or_404(User, id=int(user_id))
+            amount = Decimal(session['amount_total']) / 100
+            account, created = Account.objects.get_or_create(user=user)
+            account.balance += amount
+            account.save()
+
+            payment = Payment.objects.get(stripe_charge_id=session.id)
+            payment.status = 'succeeded'
+            payment.stripe_charge_id = session.payment_intent
+            payment.save()
+    except Exception as e:
+        print(f"Error handling checkout session: {e}")
 
 def handle_checkout_session(session):
     try:
@@ -418,6 +436,7 @@ def coinbase_payment(request):
         charge = client.charge.create(**product)
         return render(request, 'core/coinbase_payment.html', {'charge': charge})
     except Exception as e:
+        logging.error(f"An error occurred while creating Coinbase charge: {str(e)}")
         return HttpResponseServerError(f"An error occurred: {e}")
 
 @login_required

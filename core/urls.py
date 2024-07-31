@@ -32,6 +32,4 @@ urlpatterns = [
     path('winning_numbers/', views.winning_numbers, name='winning_numbers'),
     re_path(r'^robots\.txt$', TemplateView.as_view(template_name="static/robots.txt", content_type="text/plain")),
     path('api/get-balance/', views.get_balance, name='get_balance'),
-
-
 ]
