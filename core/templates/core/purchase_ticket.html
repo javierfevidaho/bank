@@ -4,6 +4,7 @@
 {% load humanize %}
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'core/css/purchase_ticket.css' %}">
+<script type="text/javascript" src="{% static 'core/js/purchase_ticket.js' %}"></script>
 <div class="frame p-3">
     <h2>Purchase Tickets</h2>
     <p>Your current balance is: ${{ balance|floatformat:2|intcomma }}</p>
@@ -25,7 +26,7 @@
                 </div>
                 <div class="form-group">
                     <label for="bonus">Select 1 bonus number:</label>
-                    <div id="bonus" class="bonus-grid">
+                    <div id="bonus" class="number-grid">
                         {% for i in bonus_range %}
                             <label class="bonus-label">
                                 <input type="radio" name="bonus" value="{{ i }}">
