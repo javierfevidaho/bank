@@ -165,3 +165,30 @@ h1 {
     gap: 5px;
     padding: 10px;
 }
+/* Estilos del contenedor de los números 
+.numbers {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+/* Estilos para los números 
+.number, .bonus {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary-light);
+    color: var(--text-dark);
+    font-weight: bold;
+}
+
+Estilo específico para el número adicional */
+.bonus {
+    background-color: var(--accent-1);
+    color: var(--accent-2);
+}

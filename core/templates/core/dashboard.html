@@ -1,6 +1,4 @@
 {% load static %}
-{% load l10n %}
-{% load humanize %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,6 +43,7 @@
                 {% for number in winning_numbers_list %}
                 <span class="number">{{ number }}</span>
                 {% endfor %}
+                <span class="bonus">{{ winning_numbers.bonus }}</span>
             </div>
         </div>
         <div class="frame">

@@ -204,28 +204,12 @@ def handle_checkout_session(session):
             account.balance += amount
             account.save()
 
-            payment = Payment.objects.get(stripe_charge_id=session.id)
-            payment.status = 'succeeded'
-            payment.stripe_charge_id = session.payment_intent
-            payment.save()
-    except Exception as e:
-        print(f"Error handling checkout session: {e}")
-
-def handle_checkout_session(session):
-    try:
-        user_id = session.get('client_reference_id')
-        if user_id:
-            user = get_object_or_404(User, id=int(user_id))
-            amount = Decimal(session['amount_total']) / 100
-            account, created = Account.objects.get_or_create(user=user)
-            account.balance += amount
-            account.save()
-
-            payment = Payment.objects.get(stripe_charge_id=session.payment_intent)
+            # Update the payment status
+            payment = Payment.objects.get(stripe_charge_id=session['id'])
             payment.status = 'succeeded'
             payment.save()
     except Exception as e:
-        print(f"Error handling checkout session: {e}")
+        logging.error(f"Error handling checkout session: {e}")
 
 @login_required
 def dashboard(request):
@@ -234,7 +218,7 @@ def dashboard(request):
         account, created = Account.objects.get_or_create(user=request.user)
         winning_numbers = WinningNumbers.objects.latest('draw_date')
         winning_numbers_list = winning_numbers.numbers.split(",") if winning_numbers and winning_numbers.numbers else []
-        
+
         return render(request, 'core/dashboard.html', {
             'tickets': tickets,
             'account': account,
@@ -244,9 +228,11 @@ def dashboard(request):
     except Exception as e:
         return HttpResponseServerError(f"An error occurred: {e}")
 
+
 @login_required
 def success(request):
-    return render(request, 'core/success.html')
+    account, created = Account.objects.get_or_create(user=request.user)
+    return render(request, 'core/success.html', {'balance': account.balance})
 
 @login_required
 def cancel(request):
@@ -446,6 +432,7 @@ def coinbase_payment(request):
     except Exception as e:
         logging.error(f"An error occurred while creating Coinbase charge: {str(e)}")
         return HttpResponseServerError(f"An error occurred: {e}")
+
 
 @login_required
 def payment(request):
