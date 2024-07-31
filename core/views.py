@@ -420,7 +420,15 @@ def checkout(request):
 @login_required
 def coinbase_payment(request):
     try:
-        client = Client(api_key=settings.COINBASE_COMMERCE_API_KEY)
+        api_key = settings.COINBASE_COMMERCE_API_KEY
+        private_key_path = settings.COINBASE_COMMERCE_PRIVATE_KEY_PATH
+        logging.debug(f"Using Coinbase API Key: {api_key} and Private Key Path: {private_key_path}")
+
+        # Utiliza la clave privada si es necesario (esto depende de cómo Coinbase gestione la autenticación)
+        with open(private_key_path, 'r') as key_file:
+            private_key = key_file.read()
+
+        client = Client(api_key=api_key)
         domain_url = request.build_absolute_uri('/')  # Actualiza esto para que sea dinámico
         product = {
             'name': 'Lottery Ticket',
@@ -441,7 +449,11 @@ def coinbase_payment(request):
 
 @login_required
 def payment(request):
-    return render(request, 'core/payment.html', {'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY})
+    payments = Payment.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'core/payment.html', {
+        'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY,
+        'payments': payments
+    })
 
 def signup(request):
     try:
