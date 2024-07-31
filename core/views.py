@@ -154,7 +154,7 @@ def create_checkout_session(request):
                 }],
                 mode='payment',
                 success_url=request.build_absolute_uri('/success/'),
-                cancel_url=request.build_absolute_uri('/cancel/'),
+                cancel_url=request.build_absolute_uri('/cancel/'),  # Asegúrate de que esta URL sea correcta
                 client_reference_id=str(request.user.id)
             )
             
