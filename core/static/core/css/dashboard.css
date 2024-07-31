@@ -1,7 +1,7 @@
 @import url('common.css');
 body {
     font-family: 'Roboto', Arial, sans-serif;
-    background: radial-gradient(circle, #000000, #4AA6FB);
+    background: linear-gradient(to bottom right, #000000, #4AA6FB);
     color: #FFFFFF;
     margin: 0;
     padding: 0;

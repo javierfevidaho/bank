@@ -14,7 +14,7 @@
         </thead>
         <tbody>
             {% for payment in payments %}
-                <tr>
+                <tr class="{% cycle 'row-white' 'row-gray' %}">
                     <td>{{ payment.user.username }}</td>
                     <td>{{ payment.amount }}</td>
                     <td>{{ payment.stripe_charge_id }}</td>

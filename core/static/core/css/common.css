@@ -1,21 +1,9 @@
-/* Variables de color */
-:root {
-    --primary-dark: #000000;
-    --primary-light: #F2F2F2;
-    --accent-1: #E31D1A;
-    --accent-2: #FFFFFF;
-    --text-light: #FFFFFF;
-    --text-dark: #000000;
-    --background-blue: #4AA6FB;
-    --border-gray: #bdbdbd;
-    --background-hover: #f5f5f5;
-}
+@import url('common.css');
 
-/* Estilos globales */
 body {
     font-family: 'Roboto', Arial, sans-serif;
-    background: radial-gradient(closest-side, var(--primary-dark), var(--background-blue));
-    color: var(--text-dark); /* Changed to dark text for better contrast */
+    background: linear-gradient(to bottom right, #000000, #4AA6FB);
+    color: #FFFFFF;
     margin: 0;
     padding: 0;
     display: flex;
@@ -23,51 +11,26 @@ body {
     min-height: 100vh;
 }
 
-/* Estilos de encabezado */
 .header-container {
     background-color: var(--primary-light);
     padding: 20px;
     text-align: center;
 }
 
-.user-info {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #f9f9f9;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 14px;
-    color: var(--text-dark); /* Ensures readability */
-}
-
-.user-info span {
-    margin-right: 10px;
-}
-
 h1 {
     color: var(--text-dark);
-}
-
-/* Estilos de navegación */
-.navbar-container {
-    background-color: var(--primary-light);
-    padding: 10px 0;
-    position: relative;
 }
 
 .navbar {
     list-style-type: none;
     padding: 0;
-    margin: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
 }
 
 .navbar li {
-    position: relative;
-}
-
-.navbar > li {
-    float: left;
+    display: inline;
 }
 
 .navbar a {
@@ -75,8 +38,8 @@ h1 {
     text-decoration: none;
     font-weight: bold;
     padding: 10px 20px;
-    display: block;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
 
 .navbar a:hover {
@@ -84,27 +47,6 @@ h1 {
     color: var(--accent-2);
 }
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: var(--primary-light);
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    top: 100%;
-    left: 0;
-    right: 0;
-}
-
-.dropdown-content a {
-    padding: 12px 16px;
-    color: var(--text-dark); /* Ensures readability */
-}
-
-.navbar li:hover .dropdown-content {
-    display: block;
-}
-
-/* Estilos del pie de página */
 .footer {
     background-color: var(--primary-light);
     color: var(--text-dark);
@@ -115,27 +57,72 @@ h1 {
     width: 100%;
 }
 
-/* Contenedores flexibles */
-.d-flex {
+.dashboard {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    flex-wrap: wrap;
 }
 
-/* Estilos del contador */
+.frame {
+    background: linear-gradient(to bottom, gray, white);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    color: var(--text-dark);
+    text-align: center;
+    width: 300px;
+    box-sizing: border-box;
+}
+
+.numbers {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.bonus {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-color: var(--accent-1);
+    border-radius: 50%;
+    line-height: 40px;
+    text-align: center;
+    color: var(--text-dark);
+    font-weight: bold;
+    font-size: 1.2em; 
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+.number {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-color: var(--accent-2);
+    border-radius: 50%;
+    line-height: 40px;
+    text-align: center;
+    color: var(--text-dark);
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
 .countdown-container {
     display: flex;
     justify-content: center;
-    gap: 5px;
+    gap: 10px;
     margin-top: 10px;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .countdown-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 5px;
+    padding: 10px;
     background-color: var(--primary-light);
     border-radius: 10px;
     color: var(--text-dark);
@@ -146,49 +133,34 @@ h1 {
     font-weight: bold;
 }
 
-/* Estilos de los frames */
-.frame {
-    background: linear-gradient(to bottom, var(--primary-light) 0%, var(--accent-2) 100%);
-    border-radius: 10px;
-    padding: 5px;
-    margin: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    flex: 1;
-    color: var(--text-dark); /* Ensures readability */
-}
-
-/* Contenedor principal de dashboard */
-.dashboard-container {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 5px;
+.winners {
+    text-align: left;
     padding: 10px;
 }
-/* Estilos del contenedor de los números 
-.numbers {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
-    font-size: 18px;
+
+/* common.css */
+
+/* Estilos para la tabla */
+.table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-/* Estilos para los números 
-.number, .bonus {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+.table th, .table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.table th {
     background-color: var(--primary-light);
     color: var(--text-dark);
-    font-weight: bold;
 }
 
-Estilo específico para el número adicional */
-.bonus {
-    background-color: var(--accent-1);
-    color: var(--accent-2);
+.row-white {
+    background-color: #ffffff;
+}
+
+.row-gray {
+    background-color: #f9f9f9;
 }

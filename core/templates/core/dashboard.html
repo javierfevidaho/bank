@@ -42,7 +42,7 @@
     </nav>
 
     {% block content %}
-    <div class="dashboard">
+    <div class="dashboard-container">
         <div class="frame">
             <h2>Winning Numbers</h2>
             <div class="numbers">
@@ -51,7 +51,7 @@
                 {% endfor %}
             </div>
             <div class="bonus">
-                <span class="number bonus-number">{{ winning_numbers.bonus }}</span>
+                <span class="number bonus-number" style="background-color: red;">{{ winning_numbers.bonus }}</span>
             </div>
         </div>
         <div class="frame">
