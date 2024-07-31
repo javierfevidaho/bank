@@ -1,4 +1,5 @@
 @import url('common.css');
+
 /* Variables de color */
 :root {
     --primary-dark: #000000;
@@ -38,6 +39,12 @@
 }
 
 .number-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.bonus-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
