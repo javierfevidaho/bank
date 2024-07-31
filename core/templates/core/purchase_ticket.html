@@ -3,6 +3,7 @@
 {% load l10n %}
 {% load humanize %}
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'core/css/purchase_ticket.css' %}">
 <div class="frame p-3">
     <h2>Purchase Tickets</h2>
     <p>Your current balance is: ${{ balance|floatformat:2|intcomma }}</p>
