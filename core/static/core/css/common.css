@@ -15,7 +15,7 @@
 body {
     font-family: 'Roboto', Arial, sans-serif;
     background: radial-gradient(closest-side, var(--primary-dark), var(--background-blue));
-    color: var(--text-light);
+    color: var(--text-dark); /* Changed to dark text for better contrast */
     margin: 0;
     padding: 0;
     display: flex;
@@ -38,12 +38,12 @@ body {
     padding: 10px;
     border-radius: 5px;
     font-size: 14px;
+    color: var(--text-dark); /* Ensures readability */
 }
 
 .user-info span {
     margin-right: 10px;
 }
-
 
 h1 {
     color: var(--text-dark);
@@ -97,6 +97,7 @@ h1 {
 
 .dropdown-content a {
     padding: 12px 16px;
+    color: var(--text-dark); /* Ensures readability */
 }
 
 .navbar li:hover .dropdown-content {
@@ -153,6 +154,7 @@ h1 {
     margin: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     flex: 1;
+    color: var(--text-dark); /* Ensures readability */
 }
 
 /* Contenedor principal de dashboard */
