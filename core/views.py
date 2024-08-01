@@ -40,14 +40,12 @@ def publish_winners(request):
         today = datetime.today()
         last_saturday = today - timedelta(days=today.weekday() + 2)
         winning_numbers, created = WinningNumbers.objects.get_or_create(draw_date=last_saturday)
-
         if created:
             winning_numbers.numbers = ','.join(map(str, random.sample(range(1, 36), 5)))
             winning_numbers.bonus = random.randint(1, 14)
             winning_numbers.jackpot = calculate_jackpot()
             winning_numbers.save()
             update_winners(winning_numbers)
-
         return render(request, 'core/winners.html', {'winning_numbers': winning_numbers})
     except Exception as e:
         return HttpResponseServerError(f"An error occurred: {e}")
@@ -70,7 +68,6 @@ def update_winners(winning_numbers):
             match_count = len(user_numbers & winning_set)
             win_amount = 0
             win_type = "No Win"
-            
             if match_count == 5 and ticket.bonus == winning_numbers.bonus:
                 win_amount = winning_numbers.jackpot
                 win_type = "Jackpot"
@@ -89,7 +86,6 @@ def update_winners(winning_numbers):
             elif match_count == 3:
                 win_amount = 1.34
                 win_type = "3 Numbers"
-            
             if win_amount > 0:
                 ticket.is_winner = True
                 ticket.win_amount = win_amount
@@ -137,9 +133,7 @@ def create_checkout_session(request):
                 data = json.loads(request.body)
             else:
                 data = request.POST
-
             amount = Decimal(data.get('amount', 0)) * 100  # Convertir a centavos
-
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
                 line_items=[{
@@ -157,14 +151,12 @@ def create_checkout_session(request):
                 cancel_url=request.build_absolute_uri('/cancel/'),  # Asegúrate de que esta URL sea correcta
                 client_reference_id=str(request.user.id)
             )
-            
             Payment.objects.create(
                 user=request.user,
                 amount=amount / 100,
                 stripe_charge_id=checkout_session.id,  # Almacenar el ID de la sesión de checkout
                 status='pending'
             )
-
             return HttpResponseRedirect(checkout_session.url)
         except Exception as e:
             return JsonResponse({'error': str(e)})
@@ -174,10 +166,8 @@ def stripe_webhook(request):
     payload = request.body
     sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
     endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
-
     if sig_header is None:
         return JsonResponse({'status': 'signature missing'}, status=400)
-
     event = None
     try:
         event = stripe.Webhook.construct_event(
@@ -191,7 +181,6 @@ def stripe_webhook(request):
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
         handle_checkout_session(session)
-
     return JsonResponse({'status': 'success'})
 
 def handle_checkout_session(session):
@@ -203,7 +192,6 @@ def handle_checkout_session(session):
             account, created = Account.objects.get_or_create(user=user)
             account.balance += amount
             account.save()
-
             # Update the payment status
             payment = Payment.objects.get(stripe_charge_id=session['id'])
             payment.status = 'succeeded'
@@ -221,7 +209,6 @@ def dashboard(request):
             account = None
         winning_numbers = WinningNumbers.objects.latest('draw_date')
         winning_numbers_list = winning_numbers.numbers.split(",") if winning_numbers and winning_numbers.numbers else []
-
         return render(request, 'core/dashboard.html', {
             'tickets': tickets,
             'account': account,
@@ -252,7 +239,6 @@ def deposit(request):
         except (InvalidOperation, ValueError):
             messages.error(request, 'Invalid amount entered.')
             return redirect('deposit')
-        
         account, created = Account.objects.get_or_create(user=request.user)
         account.balance += amount
         account.save()
@@ -333,10 +319,8 @@ def purchase_ticket(request):
             if len(numbers) != 5 or not bonus_number:
                 messages.error(request, 'Please select 5 numbers and 1 bonus number.')
                 return JsonResponse({'error': 'Please select 5 numbers and 1 bonus number.'}, status=400)
-
             if Ticket.objects.filter(user=request.user, numbers=','.join(numbers), bonus=int(bonus_number)).exists():
                 return JsonResponse({'error': 'Duplicate ticket not allowed.'}, status=400)
-
             try:
                 cart, _ = Cart.objects.get_or_create(user=request.user)
                 tickets = []
@@ -363,10 +347,8 @@ def view_cart(request):
         cart, _ = Cart.objects.get_or_create(user=request.user)
         cart_items = CartItem.objects.filter(cart=cart)
         total_cost = sum(item.ticket.price for item in cart_items)
-
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({'cart_items_count': cart_items.count()})
-        
         return render(request, 'core/cart.html', {'cart_items': cart_items, 'total_cost': total_cost})
     except Exception as e:
         return HttpResponseServerError(f"An error occurred: {e}")
@@ -411,7 +393,7 @@ def coinbase_payment(request):
         private_key_path = settings.COINBASE_COMMERCE_PRIVATE_KEY_PATH
         logging.debug(f"Using Coinbase API Key: {api_key} and Private Key Path: {private_key_path}")
 
-        # Utiliza la clave privada si es necesario (esto depende de cómo Coinbase gestione la autenticación)
+        # Leer la clave privada desde el archivo
         with open(private_key_path, 'r') as key_file:
             private_key = key_file.read()
 

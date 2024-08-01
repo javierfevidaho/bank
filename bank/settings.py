@@ -3,6 +3,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
 import logging
+from decouple import config, Csv
 
 # Load environment variables from .env file
 load_dotenv()
@@ -10,31 +11,29 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
-SECRET_KEY = os.getenv('SECRET_KEY')
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+DEBUG = config('DEBUG', default=False, cast=bool)
+SECRET_KEY = config('SECRET_KEY')
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 ALLOWED_HOSTS.extend([
     '0.0.0.0',
-    'localhost',
-    '127.0.0.1',
     'uneven-idalina-cyberlotto-62107c4f.koyeb.app',
     'ltd-brandea-cyberlottobank-7684fb46.koyeb.app'
 ])
 
 # Static files settings
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'core/static')]  # Asegúrate de que esta ruta sea correcta
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [BASE_DIR / 'core' / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Locale paths
 LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale'),
-    os.path.join(BASE_DIR, 'core/locale'),
+    BASE_DIR / 'locale',
+    BASE_DIR / 'core' / 'locale',
 ]
 
 # Application definition
@@ -58,12 +57,12 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'bank.urls'
@@ -71,7 +70,7 @@ ROOT_URLCONF = 'bank.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'core/templates')],
+        'DIRS': [BASE_DIR / 'core' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -86,9 +85,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bank.wsgi.application'
 
-# Database configuration for production
+# Database configuration
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    'default': dj_database_url.config(default=config('DATABASE_URL'))
 }
 
 # REST framework settings
@@ -122,33 +121,55 @@ LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'
 
 # Security settings for production
-SECURE_SSL_REDIRECT = True
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-SECURE_BROWSER_XSS_FILTER = True
-X_FRAME_OPTIONS = 'DENY'
-SECURE_CONTENT_TYPE_NOSNIFF = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_BROWSER_XSS_FILTER = True
+    X_FRAME_OPTIONS = 'DENY'
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 # Stripe settings
-STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
-STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
-STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
+STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
+STRIPE_WEBHOOK_SECRET = config('STRIPE_WEBHOOK_SECRET')
 
 # Coinbase settings
-COINBASE_COMMERCE_API_KEY = os.getenv('COINBASE_COMMERCE_API_KEY')
-COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET = os.getenv('COINBASE_COMMERCE_API_SECRET')
-COINBASE_PRIVATE_KEY_PATH = '/mnt/data/cdp_api_key.json'
+COINBASE_COMMERCE_API_KEY = config('COINBASE_COMMERCE_API_KEY')
+COINBASE_COMMERCE_PRIVATE_KEY_PATH = config('COINBASE_PRIVATE_KEY_PATH', default=str(BASE_DIR / 'cdp_api_key.json'))
 
 # Custom error view configuration
 handler404 = 'core.views.error_404'
 
 # Disable collectstatic during deployment if specified
-if os.getenv('DISABLE_COLLECTSTATIC'):
-    COLLECTSTATIC = False
+DISABLE_COLLECTSTATIC = config('DISABLE_COLLECTSTATIC', default=False, cast=bool)
+
+# Logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': config('DJANGO_LOG_LEVEL', default='INFO'),
+            'propagate': False,
+        },
+    },
+}
 
 # Debug log database configuration
-logging.basicConfig(level=logging.DEBUG)
-logging.debug("Database configuration: %s", DATABASES['default'])
+if DEBUG:
+    logging.basicConfig(level=logging.DEBUG)
+    logging.debug("Database configuration: %s", DATABASES['default'])

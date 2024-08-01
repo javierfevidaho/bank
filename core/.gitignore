@@ -82,3 +82,4 @@ coverage.xml
 .mypy_cache/
 .dmypy.json
 dmypy.json
+cdp_api_key.json
