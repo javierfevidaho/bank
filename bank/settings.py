@@ -173,3 +173,4 @@ LOGGING = {
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
     logging.debug("Database configuration: %s", DATABASES['default'])
+#update_line
