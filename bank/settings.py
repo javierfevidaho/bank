@@ -23,7 +23,7 @@ ALLOWED_HOSTS.extend([
 
 # Static files settings
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'core/static')]  # Asegúrate de que esta ruta sea correcta
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -140,7 +140,6 @@ STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
 # Coinbase settings
 COINBASE_COMMERCE_API_KEY = os.getenv('COINBASE_COMMERCE_API_KEY')
 COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET = os.getenv('COINBASE_COMMERCE_API_SECRET')
-COINBASE_COMMERCE_PRIVATE_KEY_PATH = os.getenv('COINBASE_COMMERCE_PRIVATE_KEY_PATH')
 
 # Custom error view configuration
 handler404 = 'core.views.error_404'
