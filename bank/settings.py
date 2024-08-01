@@ -140,6 +140,7 @@ STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
 # Coinbase settings
 COINBASE_COMMERCE_API_KEY = os.getenv('COINBASE_COMMERCE_API_KEY')
 COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET = os.getenv('COINBASE_COMMERCE_API_SECRET')
+COINBASE_PRIVATE_KEY_PATH = '/mnt/data/cdp_api_key.json'
 
 # Custom error view configuration
 handler404 = 'core.views.error_404'
