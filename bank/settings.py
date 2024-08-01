@@ -16,8 +16,7 @@ SECRET_KEY = config('SECRET_KEY')
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 ALLOWED_HOSTS.extend([
     '0.0.0.0',
-    'uneven-idalina-cyberlotto-62107c4f.koyeb.app',
-    'ltd-brandea-cyberlottobank-7684fb46.koyeb.app'
+    'your-koyeb-instance-url'
 ])
 
 # Static files settings
@@ -173,4 +172,3 @@ LOGGING = {
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
     logging.debug("Database configuration: %s", DATABASES['default'])
-#update_line
