@@ -1,8 +1,21 @@
-@import url('common.css');
+/* Variables de color */
+:root {
+    --primary-dark: #000000;
+    --primary-light: #F2F2F2;
+    --accent-1: #E31D1A;
+    --accent-2: #FFFFFF;
+    --text-light: #FFFFFF;
+    --text-dark: #000000;
+    --background-blue: #4AA6FB;
+    --border-gray: #bdbdbd;
+    --background-hover: #f5f5f5;
+}
+
+/* Estilos globales */
 body {
     font-family: 'Roboto', Arial, sans-serif;
     background: linear-gradient(to bottom right, #000000, #4AA6FB);
-    color: #FFFFFF;
+    color: var(--text-light);
     margin: 0;
     padding: 0;
     display: flex;
@@ -10,6 +23,7 @@ body {
     min-height: 100vh;
 }
 
+/* Estilos de encabezado */
 .header-container {
     background-color: var(--primary-light);
     padding: 20px;
@@ -20,6 +34,7 @@ h1 {
     color: var(--text-dark);
 }
 
+/* Estilos de navegación */
 .navbar {
     list-style-type: none;
     padding: 0;
@@ -46,6 +61,7 @@ h1 {
     color: var(--accent-2);
 }
 
+/* Estilos del pie de página */
 .footer {
     background-color: var(--primary-light);
     color: var(--text-dark);
@@ -56,50 +72,36 @@ h1 {
     width: 100%;
 }
 
-.dashboard {
+/* dashboard.css */
+.dashboard-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     gap: 20px;
     padding: 20px;
+    flex-wrap: wrap;
 }
 
 .frame {
-    background: linear-gradient(to bottom, gray, white);
-    border-radius: 0 15px 15px 0;
+    background-color: var(--primary-light);
+    border-radius: 15px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     padding: 20px;
+    margin: 10px;
     color: var(--text-dark);
     text-align: center;
-    width: 300px;
+    flex: 1;
+    min-width: 300px;
     box-sizing: border-box;
-}
-
-.frame:first-child {
-    border-radius: 15px 0 0 15px;
 }
 
 .numbers {
     display: flex;
     gap: 10px;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
-.bonus {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    background-color: var(--accent-1);
-    border-radius: 50%;
-    line-height: 40px;
-    text-align: center;
-    color: var(--text-dark);
-    font-weight: bold;
-    font-size: 1.2em; 
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-}
-.number {
+.bonus, .number {
     display: inline-block;
     width: 40px;
     height: 40px;
@@ -110,6 +112,11 @@ h1 {
     color: var(--text-dark);
     font-weight: bold;
     font-size: 1.2em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.bonus {
+    background-color: var(--accent-1);
 }
 
 .countdown-container {

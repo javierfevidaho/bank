@@ -1,0 +1,98 @@
+@import url("common.52d8724f5525.css");
+/* Variables de color */
+:root {
+    --primary-dark: #000000;
+    --primary-light: #F2F2F2;
+    --accent-1: #E31D1A;
+    --accent-2: #FFFFFF;
+    --text-light: #FFFFFF;
+    --text-dark: #000000;
+    --success: #27AE60;
+    --warning: #F1C40F;
+    --table-row-odd: #FFFFFF;
+    --table-row-even: #F2F2F2;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.frame {
+    background-color: var(--primary-light);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    color: var(--text-dark);
+    width: 100%;
+    max-width: 1000px;
+    margin: 50px auto;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--primary-light);
+}
+
+.table tr:nth-child(odd) {
+    background-color: var(--table-row-odd);
+}
+
+.table tr:nth-child(even) {
+    background-color: var(--table-row-even);
+}
+
+.btn {
+    background-color: var(--accent-2);
+    color: var(--text-dark);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: var(--accent-1);
+}
+
+.btn-danger {
+    background-color: #E31D1A;
+    color: var(--text-light);
+}
+
+.btn-danger:hover {
+    background-color: darken(#E31D1A, 10%);
+}
+
+.btn-success {
+    background-color: var(--success);
+    color: var(--text-light);
+}
+
+.btn-success:hover {
+    background-color: darken(var(--success), 10%);
+}
+
+.alert {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    color: var(--text-light);
+    background-color: var(--warning);
+}
+
+.alert-danger {
+    background-color: #E31D1A;
+}
