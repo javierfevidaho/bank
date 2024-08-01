@@ -1,3 +1,5 @@
+@import url('common.css');
+
 /* Variables de color */
 :root {
     --primary-dark: #000000;
@@ -10,6 +12,8 @@
     --warning: #F1C40F;
     --table-row-odd: #FFFFFF;
     --table-row-even: #F2F2F2;
+    --highlight: #4AA6FB; /* Color de resalte */
+    --highlight-border: #E31D1A; /* Color del borde de resalte */
 }
 
 /* Estilos del contenedor principal */
@@ -37,8 +41,14 @@
 }
 
 .number-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.bonus-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
     gap: 5px;
 }
 
@@ -70,8 +80,22 @@
 }
 
 .number-label input:checked + span, .bonus-label input:checked + span {
-    background-color: var(--accent-2);
+    background-color: var(--highlight);
     color: var(--text-light);
+    border: 2px solid var(--highlight-border);
+    animation: pulse 0.3s ease;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 .btn {

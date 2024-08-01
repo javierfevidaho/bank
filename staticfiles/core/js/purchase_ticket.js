@@ -40,7 +40,7 @@ window.autoSelectNumbers = function(button) {
 window.addToCart = function() {
     const form = document.getElementById('ticket-form');
     const formData = new FormData(form);
-    fetch("{% url 'purchase_ticket' %}", {
+    fetch(form.action, {
         method: 'POST',
         body: formData,
         headers: {
@@ -52,6 +52,7 @@ window.addToCart = function() {
         if (data.success) {
             alert(data.success);
             updateCartCount();
+            updateBalance();
             form.reset();
         } else if (data.error) {
             alert(data.error);
@@ -63,7 +64,7 @@ window.addToCart = function() {
 }
 
 function updateCartCount() {
-    fetch("{% url 'view_cart' %}", {
+    fetch("/view-cart/", {
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
         }
@@ -74,6 +75,24 @@ function updateCartCount() {
     })
     .catch(error => {
         console.error('Error:', error);
+    });
+}
+
+function updateBalance() {
+    fetch('/api/get-balance/', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('current-balance').textContent = `$${data.balance.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+        }
+    })
+    .catch(error => {
+        console.error('Error updating balance:', error);
     });
 }
 
@@ -106,10 +125,6 @@ function generateTickets(quantity) {
     return tickets;
 }
 
-function closeModal() {
-    document.getElementById('bulkModal').style.display = 'none';
-}
-
 window.confirmBulk = function() {
     const tickets = [];
     const bulkNumbersDiv = document.getElementById('bulkNumbers').children;
@@ -122,11 +137,11 @@ window.confirmBulk = function() {
 
     const formData = new FormData();
     formData.append('bulk_tickets', JSON.stringify(tickets));
-    fetch("{% url 'purchase_ticket' %}", {
+    fetch("/purchase-ticket/", {
         method: 'POST',
         body: formData,
         headers: {
-            'X-CSRFToken': '{{ csrf_token }}',
+            'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value,
         },
     })
     .then(response => response.json())
@@ -134,6 +149,7 @@ window.confirmBulk = function() {
         if (data.success) {
             alert(data.success);
             updateCartCount();
+            updateBalance();
             document.getElementById('bulkNumbersFrame').style.display = 'none';
         } else if (data.error) {
             alert(data.error);
@@ -144,4 +160,27 @@ window.confirmBulk = function() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', updateCartCount);
+document.addEventListener('DOMContentLoaded', function() {
+    updateCartCount();
+    const numberLabels = document.querySelectorAll('.number-label, .bonus-label');
+    
+    numberLabels.forEach(label => {
+        label.addEventListener('click', function() {
+            label.classList.add('selected');
+            setTimeout(() => {
+                label.classList.remove('selected');
+            }, 300);
+        });
+    });
+
+    const menuItems = document.querySelectorAll('.menu-item');
+    
+    menuItems.forEach(item => {
+        item.addEventListener('mouseover', function() {
+            item.classList.add('hovered');
+        });
+        item.addEventListener('mouseout', function() {
+            item.classList.remove('hovered');
+        });
+    });
+});

@@ -1,62 +1,141 @@
-/* Variables de color */
-:root {
-    --primary-dark: #000000;
-    --primary-light: #F2F2F2;
-    --accent-1: #E31D1A;
-    --accent-2: #FFFFFF;
-    --text-light: #FFFFFF;
-    --text-dark: #000000;
-    --success: #27AE60;
-    --warning: #F1C40F;
-    --table-row-odd: #FFFFFF;
-    --table-row-even: #F2F2F2;
+@import url('common.css');
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background: linear-gradient(to bottom right, #000000, #4AA6FB);
+    color: #FFFFFF;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-/* Estilos generales del contenedor */
-.frame {
+.header-container {
     background-color: var(--primary-light);
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     padding: 20px;
-    color: var(--text-dark);
-    width: 100%;
-    max-width: 1000px;
-    margin: 50px auto;
-    box-sizing: border-box;
     text-align: center;
 }
 
-/* Tabla de boletos */
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-}
-
-.table th, .table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid var(--primary-dark);
-}
-
-.table-striped tbody tr:nth-child(odd) {
-    background-color: var(--table-row-odd);
-}
-
-.table-striped tbody tr:nth-child(even) {
-    background-color: var(--table-row-even);
-}
-
-.btn {
-    background-color: var(--accent-2);
+h1 {
     color: var(--text-dark);
-    border: none;
+}
+
+.navbar {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.navbar li {
+    display: inline;
+}
+
+.navbar a {
+    color: var(--text-dark);
+    text-decoration: none;
+    font-weight: bold;
     padding: 10px 20px;
     border-radius: 5px;
-    cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.btn:hover {
+.navbar a:hover {
     background-color: var(--accent-1);
+    color: var(--accent-2);
+}
+
+.footer {
+    background-color: var(--primary-light);
+    color: var(--text-dark);
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.dashboard {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.frame {
+    background: linear-gradient(to bottom, gray, white);
+    border-radius: 0 15px 15px 0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    color: var(--text-dark);
+    text-align: center;
+    width: 300px;
+    box-sizing: border-box;
+}
+
+.frame:first-child {
+    border-radius: 15px 0 0 15px;
+}
+
+.numbers {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.bonus {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-color: var(--accent-1);
+    border-radius: 50%;
+    line-height: 40px;
+    text-align: center;
+    color: var(--text-dark);
+    font-weight: bold;
+    font-size: 1.2em; 
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+.number {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-color: var(--accent-2);
+    border-radius: 50%;
+    line-height: 40px;
+    text-align: center;
+    color: var(--text-dark);
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.countdown-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background-color: var(--primary-light);
+    border-radius: 10px;
+    color: var(--text-dark);
+}
+
+.countdown-item span {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.winners {
+    text-align: left;
+    padding: 10px;
 }
