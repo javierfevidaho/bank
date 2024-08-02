@@ -16,7 +16,8 @@ SECRET_KEY = config('SECRET_KEY')
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 ALLOWED_HOSTS.extend([
     '0.0.0.0',
-    'your-koyeb-instance-url'
+    'ltd-brandea-cyberlottobank-7684fb46.koyeb.app',
+    'adequate-madelene-cyberlottobank-2d586515.koyeb.app'
 ])
 
 # Static files settings
