@@ -388,33 +388,38 @@ def checkout(request):
 
 @login_required
 def coinbase_payment(request):
-    try:
-        api_key = settings.COINBASE_COMMERCE_API_KEY
-        private_key_path = settings.COINBASE_COMMERCE_PRIVATE_KEY_PATH
-        logging.debug(f"Using Coinbase API Key: {api_key} and Private Key Path: {private_key_path}")
+    if request.method == 'POST':
+        amount = request.POST.get('amount')
+        
+        try:
+            api_key = settings.COINBASE_COMMERCE_API_KEY
+            private_key_path = settings.COINBASE_COMMERCE_PRIVATE_KEY_PATH
+            logging.debug(f"Using Coinbase API Key: {api_key} and Private Key Path: {private_key_path}")
 
-        # Leer la clave privada desde el archivo
-        with open(private_key_path, 'r') as key_file:
-            private_key = key_file.read()
+            # Leer la clave privada desde el archivo
+            with open(private_key_path, 'r') as key_file:
+                private_key = key_file.read()
 
-        client = Client(api_key=api_key)
-        domain_url = request.build_absolute_uri('/')  # Actualiza esto para que sea dinámico
-        product = {
-            'name': 'Lottery Ticket',
-            'description': 'Purchase a lottery ticket',
-            'local_price': {
-                'amount': '1.34',
-                'currency': 'USD'
-            },
-            'pricing_type': 'fixed_price',
-            'redirect_url': domain_url + 'success/',
-            'cancel_url': domain_url + 'cancel/',
-        }
-        charge = client.charge.create(**product)
-        return render(request, 'core/coinbase_payment.html', {'charge': charge})
-    except Exception as e:
-        logging.error(f"An error occurred while creating Coinbase charge: {str(e)}")
-        return HttpResponseServerError(f"An error occurred: {e}")
+            client = Client(api_key=api_key)
+            domain_url = request.build_absolute_uri('/')  # Actualiza esto para que sea dinámico
+            product = {
+                'name': 'Lottery Ticket',
+                'description': 'Purchase a lottery ticket',
+                'local_price': {
+                    'amount': amount,
+                    'currency': 'USD'
+                },
+                'pricing_type': 'fixed_price',
+                'redirect_url': domain_url + 'success/',
+                'cancel_url': domain_url + 'cancel/',
+            }
+            charge = client.charge.create(**product)
+            return render(request, 'core/coinbase_payment.html', {'charge': charge})
+        except Exception as e:
+            logging.error(f"An error occurred while creating Coinbase charge: {str(e)}")
+            return HttpResponseServerError(f"An error occurred: {e}")
+    else:
+        return render(request, 'core/coinbase_payment.html')
 
 @login_required
 def payment(request):

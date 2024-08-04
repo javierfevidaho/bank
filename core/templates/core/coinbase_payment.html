@@ -3,10 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Coinbase Payment</title>
+    <link rel="stylesheet" href="{% static 'css/coinbase_payment.css' %}">
 </head>
 <body>
-    <h1>Proceed with Payment</h1>
-    <p>To complete your purchase, please proceed with the payment using Coinbase Commerce.</p>
-    <a href="{{ charge.hosted_url }}" target="_blank">Pay with Coinbase</a>
+    <div class="coinbase-payment-container">
+        <h1>Proceed with Payment</h1>
+        <p>To complete your purchase, please proceed with the payment using Coinbase Commerce.</p>
+        
+        <form action="{% url 'coinbase_payment' %}" method="POST">
+            {% csrf_token %}
+            <label for="amount">Enter amount (USD):</label>
+            <input type="number" id="amount" name="amount" step="0.01" min="0" required>
+            <button type="submit">Proceed with Payment</button>
+        </form>
+        
+        {% if charge %}
+        <a href="{{ charge.hosted_url }}" target="_blank">Pay with Coinbase</a>
+        {% endif %}
+    </div>
 </body>
 </html>
