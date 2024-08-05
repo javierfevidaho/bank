@@ -8,11 +8,12 @@
     <title>{% block title %}Cyber Lotto Bank{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'core/css/common.css' %}">
     <link rel="stylesheet" href="{% static 'core/css/login.css' %}">
+    <link rel="icon" href="{% static 'core/images/favicon.ico' %}" type="image/x-icon">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
     {% block header %}
-    <header>
+    <header class="header-container">
         <h1>Cyber Lotto Bank</h1>
     </header>
     {% endblock %}
@@ -42,9 +43,11 @@
     </main>
 
     {% block footer %}
-    <footer>
+    <footer class="footer">
         <p>&copy; 2024 Cyber Lotto Bank</p>
     </footer>
     {% endblock %}
+
+    <script src="{% static 'core/js/base_generic.js' %}"></script>
 </body>
 </html>

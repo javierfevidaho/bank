@@ -29,14 +29,14 @@ document.addEventListener('DOMContentLoaded', function() {
     updateCountdown();
 
     // Dropdown menu functionality
-    const dropdown = document.querySelector('.navbar-container');
+    const dropdown = document.querySelector('.dropdown');
+    const content = dropdown.querySelector('.dropdown-content');
+
     dropdown.addEventListener('mouseover', () => {
-        const content = dropdown.querySelector('.navbar');
         content.style.display = 'block';
     });
 
     dropdown.addEventListener('mouseout', () => {
-        const content = dropdown.querySelector('.navbar');
         content.style.display = 'none';
     });
 });

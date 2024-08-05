@@ -139,7 +139,7 @@ STRIPE_WEBHOOK_SECRET = config('STRIPE_WEBHOOK_SECRET')
 
 # Coinbase settings
 COINBASE_COMMERCE_API_KEY = config('COINBASE_COMMERCE_API_KEY')
-COINBASE_COMMERCE_PRIVATE_KEY_PATH = config('COINBASE_PRIVATE_KEY_PATH', default=str(BASE_DIR / 'cdp_api_key.json'))
+COINBASE_COMMERCE_PRIVATE_KEY_PATH = config('COINBASE_COMMERCE_PRIVATE_KEY_PATH', default=str(BASE_DIR / 'cdp_api_key.json'))
 
 # Custom error view configuration
 handler404 = 'core.views.error_404'

@@ -1,5 +1,17 @@
-@import url('common.css');
+/* Variables de color */
+:root {
+    --primary-dark: #000000;
+    --primary-light: #F2F2F2;
+    --accent-1: #E31D1A;
+    --accent-2: #FFFFFF;
+    --text-light: #FFFFFF;
+    --text-dark: #000000;
+    --background-blue: #4AA6FB;
+    --border-gray: #bdbdbd;
+    --background-hover: #f5f5f5;
+}
 
+/* Estilos globales */
 body {
     font-family: 'Roboto', Arial, sans-serif;
     background: linear-gradient(to bottom right, #000000, #4AA6FB);
@@ -59,12 +71,12 @@ h1 {
     width: 100%;
 }
 
-.dashboard {
+.dashboard-container {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
     padding: 20px;
-    flex-wrap: wrap;
 }
 
 .frame {
