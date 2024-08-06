@@ -5,13 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Coinbase Payment{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'core/css/common.css' %}">
-    <link rel="stylesheet" href="{% static 'core/css/coinbase_payment.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/coinbase_payment/coinbase_payment.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
     {% block header %}
-    <header>
+    <header class="header-container">
         <h1>Cyber Lotto Bank</h1>
     </header>
     {% endblock %}
@@ -25,17 +24,17 @@
             {% csrf_token %}
             <label for="amount">Enter amount (USD):</label>
             <input type="number" id="amount" name="amount" step="0.01" min="0" required>
-            <button type="submit">Proceed with Payment</button>
+            <button type="submit" class="btn btn-primary">Proceed with Payment</button>
         </form>
         
         {% if charge %}
-        <a href="{{ charge.hosted_url }}" target="_blank">Pay with Coinbase</a>
+        <a href="{{ charge.hosted_url }}" target="_blank" class="coinbase-link">Pay with Coinbase</a>
         {% endif %}
     </div>
     {% endblock %}
 
     {% block footer %}
-    <footer>
+    <footer class="footer">
         <p>&copy; 2024 Cyber Lotto Bank</p>
     </footer>
     {% endblock %}

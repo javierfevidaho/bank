@@ -1,0 +1,99 @@
+/* Variables de color */
+:root {
+    --primary-dark: #000000;
+    --primary-light: #F2F2F2;
+    --accent-1: #E31D1A;
+    --accent-2: #FFFFFF;
+    --text-light: #FFFFFF;
+    --text-dark: #000000;
+    --background-blue: #4AA6FB;
+    --border-gray: #bdbdbd;
+    --background-hover: #f5f5f5;
+}
+
+/* Estilos específicos para la página de pago con Coinbase */
+.coinbase-payment-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    background-color: var(--primary-light);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 500px;
+}
+
+.coinbase-payment-container h1 {
+    color: var(--text-dark);
+    margin-bottom: 20px;
+}
+
+.coinbase-payment-container p {
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.coinbase-payment-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.coinbase-payment-container label {
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.coinbase-payment-container input[type="number"] {
+    padding: 10px;
+    border: 1px solid var(--primary-dark);
+    border-radius: 10px; /* Cambiado a 10px para esquinas más redondeadas */
+    margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.coinbase-payment-container button {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: var(--background-blue);
+    color: var(--text-light);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.coinbase-payment-container button:hover {
+    background-color: var(--accent-1);
+    color: var(--text-light);
+}
+
+.coinbase-payment-container .coinbase-link {
+    background-color: var(--background-blue);
+    color: var(--text-light);
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.coinbase-payment-container .coinbase-link:hover {
+    background-color: var(--accent-1);
+    color: var(--text-light);
+}
+
+.footer {
+    background-color: var(--primary-dark);
+    color: var(--text-light);
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+}

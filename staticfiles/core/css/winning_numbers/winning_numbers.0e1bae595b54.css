@@ -1,0 +1,86 @@
+:root {
+    --primary-dark: #1F3A93; /* Deep Navy Blue */
+    --primary-light: #DCEFFA; /* Soft Light Blue */
+    --accent-1: #E74C3C; /* Bright Red */
+    --accent-2: #F39C12; /* Vibrant Orange */
+    --text-light: #FFFFFF; /* Pure White */
+    --text-dark: #2C3E50; /* Charcoal */
+    --success: #27AE60; /* Bright Green */
+    --warning: #F1C40F; /* Amber */
+    --table-row-odd: #FFFFFF; /* Pure White */
+    --table-row-even: #ECF0F1; /* Light Grey */
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background: linear-gradient(to bottom right, #000000, #4AA6FB);
+    color: var(--text-light);
+    margin: 0;
+    padding: 0;
+}
+
+.frame {
+    background-color: var(--primary-light);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 1200px;
+    box-sizing: border-box;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--primary-dark);
+}
+
+table tr:nth-child(odd) {
+    background-color: var(--table-row-odd);
+}
+
+table tr:nth-child(even) {
+    background-color: var(--table-row-even);
+}
+
+.numbers {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.number {
+    width: 50px;
+    height: 50px;
+    background-color: var(--accent-2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--text-dark);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bonus-number {
+    background-color: var(--accent-1);
+    color: var(--text-light);
+}
+
+.numbers .number {
+    background-color: var(--text-light);
+    color: var(--text-dark);
+}
+
+.numbers .number:last-child {
+    background-color: var(--accent-1);
+    color: var(--text-light);
+}

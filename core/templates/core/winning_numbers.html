@@ -5,31 +5,50 @@
 <head>
     <meta charset="UTF-8">
     <title>Winning Numbers</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'core/css/winning_numbers.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/winning_numbers/winning_numbers.css' %}">
 </head>
 <body>
-    <h1>Winning Numbers</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Draw Date</th>
-                <th>Numbers</th>
-                <th>Bonus</th>
-                <th>Jackpot</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for winning_number in winning_numbers %}
+    {% block content %}
+    <div class="frame">
+        <h1>Winning Numbers</h1>
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ winning_number.draw_date }}</td>
-                    <td>{{ winning_number.numbers }}</td>
-                    <td>{{ winning_number.bonus }}</td>
-                    <td>${{ winning_number.jackpot }}</td>
+                    <th>Draw Date</th>
+                    <th>Numbers</th>
+                    <th>Bonus</th>
+                    <th>Jackpot</th>
+                    <th>Winner</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <script src="{% static 'core/js/winning_numbers.js' %}"></script>
+            </thead>
+            <tbody>
+                {% for winning_number in winning_numbers %}
+                    <tr>
+                        <td>{{ winning_number.draw_date }}</td>
+                        <td>
+                            <div class="numbers">
+                                {% for number in winning_number.number_list %}
+                                    <div class="number">{{ number }}</div>
+                                {% endfor %}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="number bonus-number">{{ winning_number.bonus }}</div>
+                        </td>
+                        <td>${{ winning_number.jackpot }}</td>
+                        <td>
+                            {% if winning_number.jackpot == 0 %}
+                                No Winner
+                            {% else %}
+                                {{ winning_number.winner.username }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endblock %}
+    <script src="{% static 'core/js/winning_numbers/winning_numbers.js' %}"></script>
 </body>
 </html>

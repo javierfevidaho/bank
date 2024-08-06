@@ -1,13 +1,12 @@
-{% extends "base_generic.html" %}
 {% load static %}
 {% load humanize %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Dashboard{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'core/css/common.css' %}">
-    <link rel="stylesheet" href="{% static 'core/css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/dashboard/dashboard.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -24,34 +23,41 @@
         </div>
     </header>
     {% endblock %}
-    <script src="{% static 'core/js/base_generic.js' %}"></script>
-
-    <nav class="navbar-container">
-        <ul class="navbar">
-            <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-            <li><a href="{% url 'deposit' %}">Deposit</a></li>
-            <li><a href="{% url 'profile' %}">Profile</a></li>
-            <li><a href="{% url 'logout' %}">Logout</a></li>
-            <li><a href="{% url 'purchase_ticket' %}">Purchase Ticket</a></li>
-            <li><a href="{% url 'view_cart' %}">Cart</a></li>
-            <li><a href="{% url 'coinbase_payment' %}">Coinbase Payment</a></li>
-            <li><a href="{% url 'payment' %}">Payment</a></li>
-            <li><a href="{% url 'winners' %}">Winners</a></li>
-            <li><a href="{% url 'winning_numbers' %}">Winning Numbers</a></li>
-        </ul>
-    </nav>
 
     {% block content %}
+    <div class="menu-frame">
+        <nav class="navbar-container">
+            <ul class="navbar">
+                <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li>|</li>
+                <li><a href="{% url 'deposit' %}">Deposit</a></li>
+                <li>|</li>
+                <li><a href="{% url 'profile' %}">Profile</a></li>
+                <li>|</li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+                <li>|</li>
+                <li><a href="{% url 'purchase_ticket' %}">Purchase Ticket</a></li>
+                <li>|</li>
+                <li><a href="{% url 'view_cart' %}">Cart</a></li>
+                <li>|</li>
+                <li><a href="{% url 'coinbase_payment' %}">Coinbase Payment</a></li>
+                <li>|</li>
+                <li><a href="{% url 'payment' %}">Payment</a></li>
+                <li>|</li>
+                <li><a href="{% url 'winners' %}">Winners</a></li>
+                <li>|</li>
+                <li><a href="{% url 'winning_numbers' %}">Winning Numbers</a></li>
+            </ul>
+        </nav>
+    </div>
+
     <div class="dashboard-container">
         <div class="frame">
             <h2>Winning Numbers</h2>
             <div class="numbers">
                 {% for number in winning_numbers_list %}
-                <span class="number">{{ number }}</span>
+                <div class="number{% if forloop.last %} bonus-number{% endif %}">{{ number }}</div>
                 {% endfor %}
-            </div>
-            <div class="bonus">
-                <span class="number bonus-number">{{ winning_numbers.bonus }}</span>
             </div>
         </div>
         <div class="frame">
@@ -86,7 +92,7 @@
             </div>
         </div>
     </div>
-    <script src="{% static 'core/js/dashboard.js' %}"></script>
+    <script src="{% static 'core/js/dashboard/dashboard.js' %}"></script>
     {% endblock %}
 
     {% block footer %}

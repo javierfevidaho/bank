@@ -3,9 +3,13 @@
 
 {% block title %}Login{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'core/css/login/login.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="login-container">
-    <div class="frame p-3">
+
+    <div class="frame">
         <div class="login-header">
             <img src="{% static 'core/images/lock-icon.png' %}" alt="Lock Icon" class="lock-icon">
         </div>
@@ -31,5 +35,5 @@
         <a href="{% url 'signup' %}" class="signup">Don't have an account?</a>
     </div>
 </div>
-<script src="{% static 'core/js/login.js' %}"></script>
+<script src="{% static 'core/js/login/login.js' %}"></script>
 {% endblock %}

@@ -1,5 +1,10 @@
 {% extends "base_generic.html" %}
 {% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'core/css/deposit/deposit.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="row text-center mt-5 deposit-container">
     <div class="col-md-3">

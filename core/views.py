@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
 from django.contrib import messages
-from .models import Account, Ticket, Cart, CartItem, WinningNumbers, Jackpot, Payment
+from .models import Account, Ticket, Cart, CartItem, WinningNumbers, Payment
 from decimal import Decimal
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponseServerError
 from django.conf import settings
@@ -19,6 +19,7 @@ from coinbase_commerce.client import Client
 from datetime import datetime, timedelta
 import random
 import logging
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -255,16 +256,34 @@ def winners(request):
 
 def winning_numbers(request):
     try:
-        winning_numbers = WinningNumbers.objects.all().order_by('-draw_date')
-        return render(request, 'core/winning_numbers.html', {'winning_numbers': winning_numbers})
+        winning_numbers_list = WinningNumbers.objects.all().order_by('-draw_date')
+        
+        # Procesamos los números ganadores y los separamos en listas
+        for winning in winning_numbers_list:
+            winning.number_list = winning.numbers.split(',')
+
+        return render(request, 'core/winning_numbers.html', {'winning_numbers': winning_numbers_list})
     except Exception as e:
         return HttpResponseServerError(f"An error occurred: {e}")
+
 
 @login_required
 def profile(request):
     try:
         account, created = Account.objects.get_or_create(user=request.user)
         tickets = Ticket.objects.filter(user=request.user, is_purchased=True)
+
+        # Paginación
+        records_per_page = request.GET.get('records_per_page', 20)
+        paginator = Paginator(tickets, records_per_page)
+        page = request.GET.get('page', 1)
+        try:
+            tickets = paginator.page(page)
+        except PageNotAnInteger:
+            tickets = paginator.page(1)
+        except EmptyPage:
+            tickets = paginator.page(paginator.num_pages)
+
         if request.method == 'POST':
             user = request.user
             user.first_name = request.POST.get('first_name')
@@ -272,7 +291,15 @@ def profile(request):
             user.save()
             messages.success(request, 'Profile updated successfully')
             return redirect('profile')
-        return render(request, 'core/profile.html', {'account': account, 'tickets': tickets})
+
+        context = {
+            'account': account,
+            'tickets': tickets,
+            'page_obj': tickets,  # El objeto de paginación para usar en el template
+            'records_per_page': records_per_page
+        }
+
+        return render(request, 'core/profile.html', context)
     except Exception as e:
         return HttpResponseServerError(f"An error occurred: {e}")
 

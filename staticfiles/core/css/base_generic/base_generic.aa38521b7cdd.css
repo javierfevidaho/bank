@@ -1,0 +1,142 @@
+:root {
+    --primary-dark: #000000;
+    --primary-light: #F2F2F2;
+    --accent-1: #E31D1A;
+    --accent-2: #FFFFFF;
+    --text-light: #FFFFFF;
+    --text-dark: #000000;
+    --background-blue: #4AA6FB;
+    --border-gray: #bdbdbd;
+    --background-hover: #f5f5f5;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--primary-light);
+    color: var(--text-dark);
+    margin: 0;
+    padding: 0;
+}
+
+.header-container {
+    background-color: var(--primary-dark);
+    color: var(--text-light);
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-info {
+    font-size: 14px;
+}
+
+.navbar-container {
+    background-color: var(--background-blue);
+}
+
+.navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.navbar li {
+    position: relative;
+}
+
+.navbar a {
+    display: block;
+    color: var(--text-light);
+    padding: 14px 20px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.navbar a:hover {
+    background-color: var(--background-hover);
+    color: var(--text-dark);
+}
+
+.navbar li:hover .dropdown {
+    display: block;
+}
+
+.dropdown {
+    display: none;
+    position: absolute;
+    background-color: var(--background-blue);
+    min-width: 160px;
+    z-index: 1;
+}
+
+.dropdown a {
+    padding: 12px 16px;
+}
+
+.dashboard-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.frame {
+    background-color: var(--accent-2);
+    border: 1px solid var(--border-gray);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    flex: 1;
+    margin: 10px;
+    box-sizing: border-box;
+}
+
+.numbers, .bonus {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.number {
+    width: 50px;
+    height: 50px;
+    background-color: var(--accent-2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.bonus-number {
+    background-color: var(--accent-1);
+    color: var(--text-light);
+}
+
+.countdown-container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.countdown-item {
+    text-align: center;
+}
+
+.winners p {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.footer {
+    background-color: var(--primary-dark);
+    color: var(--text-light);
+    text-align: center;
+    padding: 20px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

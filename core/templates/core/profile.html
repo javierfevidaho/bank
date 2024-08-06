@@ -3,7 +3,7 @@
 {% load qr_code %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="{% static 'core/css/profile.css' %}">
+<link rel="stylesheet" href="{% static 'core/css/profile/profile.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -34,6 +34,15 @@
     <div class="frame">
         <h3>Your Purchase History</h3>
         {% if tickets %}
+            <div class="pagination-controls">
+                <label for="records-per-page">Records per page:</label>
+                <select id="records-per-page" name="records-per-page" onchange="changeRecordsPerPage()">
+                    <option value="10">10</option>
+                    <option value="20" selected>20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
             <table class="table">
                 <thead>
                     <tr>
@@ -60,6 +69,21 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <div class="pagination">
+                <div class="pagination-text">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </div>
+                <div class="pagination-buttons">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </div>
+            </div>
         {% else %}
             <p>You haven't purchased any tickets yet.</p>
         {% endif %}
@@ -68,5 +92,11 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'core/js/profile.js' %}"></script>
+<script src="{% static 'core/js/profile/profile.js' %}"></script>
+<script>
+    function changeRecordsPerPage() {
+        const recordsPerPage = document.getElementById('records-per-page').value;
+        window.location.href = '?records_per_page=' + recordsPerPage;
+    }
+</script>
 {% endblock %}
