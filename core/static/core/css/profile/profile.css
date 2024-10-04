@@ -15,7 +15,7 @@
 /* Estilos del cuerpo */
 body {
     font-family: Arial, sans-serif;
-    background: radial-gradient(circle, var(--primary-dark) 0%, var(--background-blue) 100%);
+    background: linear-gradient(to bottom right, var(--primary-dark), var(--background-blue));
     color: var(--text-dark);
     margin: 0;
     padding: 0;
@@ -176,7 +176,7 @@ body {
     background-color: var(--background-hover);
     color: var(--text-dark);
     border-radius: 5px;
-
+}
 /* Estilos responsivos */
 @media (max-width: 768px) {
     .navbar {

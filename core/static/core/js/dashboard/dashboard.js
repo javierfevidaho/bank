@@ -1,10 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Código JavaScript común para todas las páginas
-
-    // Ejemplo: mostrar un mensaje de bienvenida
+    // Mostrar mensaje de bienvenida
     console.log('Bienvenido a Cyberloto Bank');
 
-    // Función para actualizar el contador
+    // Función para actualizar el contador de cuenta regresiva
     function updateCountdown() {
         const eventDate = new Date('September 7, 2024 00:00:00').getTime();
         const now = new Date().getTime();
@@ -25,10 +23,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Ejecutar la función de cuenta regresiva cada segundo
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // Dropdown menu functionality
+    // Funcionalidad del menú desplegable
     const dropdown = document.querySelector('.dropdown');
     const content = dropdown.querySelector('.dropdown-content');
 
@@ -38,5 +37,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     dropdown.addEventListener('mouseout', () => {
         content.style.display = 'none';
+    });
+
+    // Animación escalonada de números ganadores
+    const numbers = document.querySelectorAll(".number");
+    numbers.forEach((number, index) => {
+        setTimeout(() => {
+            number.style.animationDelay = `${index * 0.2}s`;
+            number.classList.add('animate');
+        }, index * 200);
     });
 });

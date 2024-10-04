@@ -4,32 +4,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Winners</title>
     <link rel="stylesheet" href="{% static 'core/css/winner/winners.css' %}">
 </head>
 <body>
-    <h1>Winners</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>User</th>
-                <th>Numbers</th>
-                <th>Additional Number</th>
-                <th>Win Amount</th>
-                <th>Win Type</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for ticket in winners %}
-                <tr>
-                    <td>{{ ticket.user.username }}</td>
-                    <td>{{ ticket.numbers }}</td>
-                    <td>{{ ticket.bonus }}</td>
-                    <td>${{ ticket.win_amount }}</td>
-                    <td>{{ ticket.win_type }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="container">
+        <h1>Winners</h1>
+
+        {% if winners %}
+            <table class="winners-table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Numbers</th>
+                        <th>Bonus Number</th>
+                        <th>Win Amount</th>
+                        <th>Win Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in winners %}
+                        <tr>
+                            <td>{{ ticket.user.username }}</td>
+                            <td>{{ ticket.numbers }}</td>
+                            <td>{{ ticket.bonus }}</td>
+                            <td>${{ ticket.win_amount }}</td>
+                            <td>{{ ticket.win_type }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-winners">No winners for this draw.</p>
+        {% endif %}
+
+        <a href="{% url 'dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
+    </div>
+
+    <script src="{% static 'core/js/scripts.js' %}"></script> <!-- Si necesitas algún script adicional -->
 </body>
 </html>

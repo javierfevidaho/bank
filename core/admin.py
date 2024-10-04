@@ -10,12 +10,12 @@ class AccountAdmin(admin.ModelAdmin):
     readonly_fields = ('user',)
 
 class TicketAdmin(admin.ModelAdmin):
-    list_display = ('user', 'ticket_number', 'numbers', 'bonus', 'purchase_date', 'price', 'is_purchased', 'is_winner', 'win_amount', 'win_type', 'draw_date')
-    search_fields = ('user__username', 'ticket_number', 'numbers')
+    list_display = ('user', 'id', 'numbers', 'bonus', 'purchase_date', 'price', 'is_purchased', 'is_winner', 'win_amount', 'win_type', 'draw_date')
+    search_fields = ('user__username', 'id', 'numbers')
     list_filter = ('user', 'purchase_date', 'is_purchased', 'is_winner', 'draw_date')
     ordering = ('purchase_date', 'user')
-    fields = ('user', 'ticket_number', 'numbers', 'bonus', 'purchase_date', 'price', 'is_purchased', 'is_winner', 'win_amount', 'win_type', 'draw_date')
-    readonly_fields = ('ticket_number', 'purchase_date')
+    fields = ('user', 'id', 'numbers', 'bonus', 'purchase_date', 'price', 'is_purchased', 'is_winner', 'win_amount', 'win_type', 'draw_date')
+    readonly_fields = ('id', 'purchase_date')
 
 class CartAdmin(admin.ModelAdmin):
     list_display = ('user',)

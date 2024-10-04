@@ -1,12 +1,7 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.views.generic import TemplateView
 from . import views
-from .views import guest_login
-from django.urls import re_path
-from django.views.generic.base import TemplateView
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
@@ -27,9 +22,10 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('signup/', views.signup, name='signup'),
     path('accounts/', include('django.contrib.auth.urls')),  # Incluye las rutas de autenticación de Django, incluyendo restablecimiento de contraseña
-    path('guest-login/', guest_login, name='guest_login'),
+    path('guest-login/', views.guest_login, name='guest_login'),
     path('winners/', views.winners, name='winners'),
     path('winning_numbers/', views.winning_numbers, name='winning_numbers'),
     re_path(r'^robots\.txt$', TemplateView.as_view(template_name="static/robots.txt", content_type="text/plain")),
     path('api/get-balance/', views.get_balance, name='get_balance'),
+    path('realizar-sorteo/', views.realizar_sorteo, name='realizar_sorteo'),
 ]

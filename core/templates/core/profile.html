@@ -50,25 +50,28 @@
                         <th>Numbers</th>
                         <th>Bonus Number</th>
                         <th>Purchase Date</th>
+                        <th>Draw Date</th>
                         <th>Price</th>
                         <th>QR Code</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for ticket in tickets %}
-                        <tr>
-                            <td>{{ ticket.ticket_number }}</td>
-                            <td>{{ ticket.numbers }}</td>
-                            <td>{{ ticket.bonus }}</td>
-                            <td>{{ ticket.purchase_date }}</td>
-                            <td>${{ ticket.price }}</td>
-                            <td>
-                                {% qr_from_text ticket.ticket_number size="T" %}
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>{{ ticket.id }}</td>  <!-- Cambiado a ticket.id -->
+                        <td>{{ ticket.numbers }}</td>
+                        <td>{{ ticket.bonus }}</td>
+                        <td>{{ ticket.purchase_date|date:"Y-m-d H:i" }}</td>
+                        <td>{{ ticket.draw_date|date:"Y-m-d" }}</td>
+                        <td>${{ ticket.price }}</td>
+                        <td>
+                            {% qr_from_text ticket.id size="T" %}  <!-- Cambiado a ticket.id -->
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
+            
             <div class="pagination">
                 <div class="pagination-text">
                     Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.

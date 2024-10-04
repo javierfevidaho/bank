@@ -22,6 +22,7 @@ body {
     background: linear-gradient(to bottom right, var(--primary-dark), var(--background-blue));
 }
 
+
 .header-container {
     display: flex;
     justify-content: center;

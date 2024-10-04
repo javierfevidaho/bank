@@ -1,18 +1,18 @@
-
 /* Variables de color */
 :root {
-    --primary-dark: #000000;
-    --primary-light: #F2F2F2;
-    --accent-1: #E31D1A;
-    --accent-2: #FFFFFF;
-    --text-light: #FFFFFF;
-    --text-dark: #000000;
-    --success: #27AE60;
-    --warning: #F1C40F;
-    --table-row-odd: #FFFFFF;
-    --table-row-even: #F2F2F2;
-    --highlight: #4AA6FB;
-    --highlight-border: #E31D1A;
+    --primary-dark: #000000; /* Color principal oscuro */
+    --primary-light: #F2F2F2; /* Color principal claro */
+    --accent-1: #E31D1A; /* Color de acento 1 (rojo) */
+    --accent-2: #FFFFFF; /* Color de acento 2 (blanco) */
+    --text-light: #FFFFFF; /* Color de texto claro */
+    --text-dark: #000000; /* Color de texto oscuro */
+    --success: #27AE60; /* Color para el éxito (verde) */
+    --warning: #F1C40F; /* Color para advertencias (ámbar) */
+    --table-row-odd: #FFFFFF; /* Color para filas impares */
+    --table-row-even: #F2F2F2; /* Color para filas pares */
+    --highlight: #4AA6FB; /* Color para resaltar */
+    --highlight-border: #E31D1A; /* Color para el borde resaltado */
+    --highlight-border2: #3f3e3e; /* Color para el borde secundario */
 }
 
 /* Estilos del contenedor principal */
@@ -29,7 +29,7 @@
     box-sizing: border-box;
 }
 
-/* Estilos del formulario */
+/* Estilos del formulario de boletos y cantidad */
 .ticket-frame, .quantity-frame {
     flex: 1;
     margin: 10px;
@@ -37,32 +37,30 @@
     border-radius: 10px;
     padding: 15px;
     background-color: var(--primary-light);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.number-grid {
+/* Diseño de la cuadrícula de números y bonus */
+.number-grid, .bonus-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
+    gap: 10px;
 }
 
-.bonus-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-}
-
+/* Estilos para etiquetas de número y bonus */
 .number-label, .bonus-label {
     display: inline-block;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     margin: 5px;
-    line-height: 40px;
+    line-height: 50px;
     text-align: center;
-    border: 1px solid var(--accent-2);
+    border: 2px solid var(--highlight-border2);
     border-radius: 50%;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     transition: all 0.3s ease;
+    background-color: var(--primary-light);
 }
 
 .number-label input, .bonus-label input {
@@ -73,11 +71,13 @@
     display: inline-block;
     width: 100%;
     height: 100%;
-    line-height: 40px;
+    line-height: 50px;
     text-align: center;
     border-radius: 50%;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+/* Cuando el número o bonus es seleccionado */
 .number-label input:checked + span, .bonus-label input:checked + span {
     background-color: var(--highlight);
     color: var(--text-light);
@@ -85,6 +85,13 @@
     animation: pulse 0.3s ease;
 }
 
+/* Efecto al hacer hover sobre números o bonus */
+.number-label:hover, .bonus-label:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 5px var(--highlight-border);
+}
+
+/* Efecto de pulsación para los números seleccionados */
 @keyframes pulse {
     0% {
         transform: scale(1);
@@ -97,21 +104,26 @@
     }
 }
 
+/* Botones del formulario */
 .btn {
     background-color: var(--accent-2);
     color: var(--text-dark);
-    border: none;
+    border: 2px solid var(--highlight-border2);
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
     margin: 10px;
 }
 
 .btn:hover {
     background-color: var(--accent-1);
+    border-color: var(--highlight-border2);
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Estilo del ícono del carrito de compras */
 .cart-icon-container {
     position: fixed;
     top: 20px;
@@ -121,14 +133,14 @@
     justify-content: center;
     background-color: #f0f0f0;
     border-radius: 50%;
-    padding: 5px;
+    padding: 10px;
     width: 80px;
     height: 80px;
     text-align: center;
     color: #333;
     font-size: 16px;
     font-weight: bold;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .cart-icon {
@@ -150,13 +162,14 @@
     position: absolute;
     top: 5px;
     right: 5px;
-    background-color: var(--accent-2);
+    background-color: var(--accent-1);
     color: var(--text-light);
     border-radius: 50%;
-    padding: 2px 6px;
-    font-size: 12px;
+    padding: 5px 8px;
+    font-size: 14px;
 }
 
+/* Estilo de grupo de formularios */
 .form-group {
     margin-bottom: 15px;
 }
@@ -165,13 +178,21 @@
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
+    color: var(--text-dark);
 }
 
 .form-group input, .form-group select {
     width: 100%;
     padding: 10px;
     border-radius: 5px;
-    border: 1px solid var(--accent-1);
+    border: 1px solid var(--highlight-border);
     background-color: var(--primary-dark);
     color: var(--text-light);
+}
+
+/* Estilos para los elementos deshabilitados */
+.number-label.disabled, .bonus-label.disabled {
+    background-color: var(--table-row-even);
+    cursor: not-allowed;
+    opacity: 0.6;
 }

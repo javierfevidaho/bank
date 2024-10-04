@@ -3,7 +3,7 @@
     max-width: 400px;
     margin: 0 auto;
     padding: 20px;
-    background: var(--primary-light);
+    background: linear-gradient(to bottom right, var(--primary-dark), var(--background-blue));
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }

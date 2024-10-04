@@ -13,28 +13,79 @@
 
 body {
     font-family: 'Roboto', Arial, sans-serif;
-    background: linear-gradient(to bottom right, #000000, #4AA6FB);
+    background: linear-gradient(to bottom right, var(--primary-dark), var(--primary-light));
     color: var(--text-light);
     margin: 0;
     padding: 0;
 }
 
-table {
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+    color: var(--text-dark);
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+}
+
+.winners-table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
 }
 
-table th, table td {
+.winners-table th, .winners-table td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid var(--primary-light);
 }
 
-table tr:nth-child(odd) {
+.winners-table th {
+    background-color: var(--primary-dark);
+    color: var(--text-light);
+    text-align: center;
+}
+
+.winners-table tr:nth-child(odd) {
     background-color: var(--table-row-odd);
 }
 
-table tr:nth-child(even) {
+.winners-table tr:nth-child(even) {
     background-color: var(--table-row-even);
+}
+
+.no-winners {
+    text-align: center;
+    font-size: 1.2em;
+    color: var(--accent-1);
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 20px;
+    background-color: var(--primary-dark);
+    color: var(--text-light);
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: var(--accent-2);
+}
+
+.btn-primary {
+    background-color: var(--primary-dark);
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-2);
 }

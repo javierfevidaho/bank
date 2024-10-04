@@ -109,11 +109,36 @@ body {
     font-size: 18px;
     font-weight: bold;
     margin: 5px;
+    position: relative;
+    animation: bounce 1s ease;
+    animation-fill-mode: both;
+    border: 2px solid var(--border-gray);
+    box-sizing: border-box;
 }
 
 .bonus-number {
     background-color: var(--accent-1);
     color: var(--text-light);
+    border: 2px solid var(--border-gray);
+    box-sizing: border-box;
+}
+
+@keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+    30% {
+        transform: translateY(-30px);
+    }
+    50% {
+        transform: translateY(0);
+    }
+    70% {
+        transform: translateY(-15px);
+    }
+    100% {
+        transform: translateY(0);
+    }
 }
 
 .countdown-container {
@@ -140,4 +165,43 @@ body {
     position: fixed;
     bottom: 0;
     width: 100%;
+}
+/* Estilos generales para la cabecera */
+.header-container {
+    background-color: #000; /* Fondo oscuro */
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff; /* Texto blanco */
+}
+
+/* Estilos para la información del usuario */
+.user-info {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+/* Estilos para los enlaces de Login y Signup */
+.user-info a {
+    color: #e31d1a; /* Color rojo para los enlaces */
+    background-color: #fff; /* Fondo blanco para los enlaces */
+    padding: 5px 10px; /* Espaciado interno */
+    margin-left: 10px; /* Espacio entre los enlaces y otros elementos */
+    border-radius: 5px; /* Bordes redondeados */
+    text-decoration: none; /* Sin subrayado */
+    font-weight: bold; /* Texto en negrita */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transiciones suaves */
+}
+
+.user-info a:hover {
+    background-color: #e31d1a; /* Fondo rojo al pasar el mouse */
+    color: #fff; /* Texto blanco al pasar el mouse */
+}
+
+/* Estilos para el texto de bienvenida y balance */
+.user-info span {
+    color: #fff; /* Texto blanco */
+    margin-right: 10px; /* Espacio a la derecha del texto */
 }

@@ -13,7 +13,7 @@
 
 body {
     font-family: 'Roboto', Arial, sans-serif;
-    background: linear-gradient(to bottom right, #000000, #4AA6FB);
+    background: linear-gradient(to bottom right, var(--primary-dark), var(--background-blue));
     color: var(--text-light);
     margin: 0;
     padding: 0;

@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" href="{% static 'core/images/favicon.ico' %}" type="image/x-icon">
     <meta charset="UTF-8">
     <title>{% block title %}Dashboard{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'core/css/dashboard/dashboard.css' %}">
@@ -18,7 +19,7 @@
                 <span>Welcome, {{ request.user.username }}</span> | 
                 <span>Balance: $<span id="user-balance">{{ account.balance|floatformat:2|intcomma }}</span></span>
             {% else %}
-                <a href="{% url 'login' %}">Login</a> | <a href="{% url 'signup' %}">Signup</a>
+                <a href="{% url 'login' %}">Login</a>  <a href="{% url 'signup' %}">Signup</a>
             {% endif %}
         </div>
     </header>

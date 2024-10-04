@@ -20,8 +20,16 @@ from datetime import datetime, timedelta
 import random
 import logging
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import render
+from django.http import JsonResponse
 
-stripe.api_key = settings.STRIPE_SECRET_KEY
+
+logger = logging.getLogger(__name__)
+
+def realizar_sorteo(request):
+    # Lógica para realizar el sorteo
+    # Aquí puedes escribir el código para generar los números ganadores y guardar los resultados en la base de datos
+    return JsonResponse({'success': True, 'message': 'Sorteo realizado correctamente.'})
 
 @login_required
 def get_balance(request):
@@ -270,13 +278,19 @@ def winning_numbers(request):
 @login_required
 def profile(request):
     try:
-        account, created = Account.objects.get_or_create(user=request.user)
-        tickets = Ticket.objects.filter(user=request.user, is_purchased=True)
+        logger.debug("Rendering profile for user: %s", request.user.username)
+
+        user = request.user
+        account, created = Account.objects.get_or_create(user=user)
+
+        # Obtener tickets comprados
+        tickets = Ticket.objects.filter(user=user, is_purchased=True).order_by('-purchase_date')
 
         # Paginación
         records_per_page = request.GET.get('records_per_page', 20)
         paginator = Paginator(tickets, records_per_page)
         page = request.GET.get('page', 1)
+
         try:
             tickets = paginator.page(page)
         except PageNotAnInteger:
@@ -284,8 +298,8 @@ def profile(request):
         except EmptyPage:
             tickets = paginator.page(paginator.num_pages)
 
+        # Procesar actualización del perfil
         if request.method == 'POST':
-            user = request.user
             user.first_name = request.POST.get('first_name')
             user.last_name = request.POST.get('last_name')
             user.save()
@@ -301,6 +315,7 @@ def profile(request):
 
         return render(request, 'core/profile.html', context)
     except Exception as e:
+        logger.error("An error occurred in profile view: %s", str(e))  # Log error
         return HttpResponseServerError(f"An error occurred: {e}")
 
 @login_required
@@ -308,16 +323,28 @@ def logout(request):
     auth_logout(request)
     return redirect('/accounts/login/')
 
+from decimal import Decimal
+import json
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.contrib import messages
+from core.models import Ticket, Account, Cart, CartItem
+
 def purchase_ticket(request):
+    # Verificar si el usuario está autenticado
     if not request.user.is_authenticated:
         return redirect('login')
+
+    # Obtener o crear la cuenta del usuario
     account, created = Account.objects.get_or_create(user=request.user)
     context = {
         'balance': account.balance if account else 0,
         'number_range': range(1, 36),
         'bonus_range': range(1, 15),
     }
+
     if request.method == 'POST':
+        # Manejo de la compra de boletos en lote
         if 'bulk_tickets' in request.POST:
             bulk_tickets = json.loads(request.POST['bulk_tickets'])
             try:
@@ -339,15 +366,23 @@ def purchase_ticket(request):
                 return JsonResponse({'success': f'{len(tickets)} ticket(s) added to cart successfully.', 'tickets': [t.id for t in tickets]})
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=500)
+
+        # Manejo de la compra de un solo boleto o múltiples boletos con la misma selección
         else:
             numbers = request.POST.getlist('numbers')
             bonus_number = request.POST.get('bonus')
             quantity = int(request.POST.get('quantity', 1))
+            draw_count = int(request.POST.get('draw_count', 1))
+            price_per_draw = Decimal('1.34')
+            total_price = price_per_draw * draw_count
+
             if len(numbers) != 5 or not bonus_number:
                 messages.error(request, 'Please select 5 numbers and 1 bonus number.')
                 return JsonResponse({'error': 'Please select 5 numbers and 1 bonus number.'}, status=400)
+
             if Ticket.objects.filter(user=request.user, numbers=','.join(numbers), bonus=int(bonus_number)).exists():
                 return JsonResponse({'error': 'Duplicate ticket not allowed.'}, status=400)
+
             try:
                 cart, _ = Cart.objects.get_or_create(user=request.user)
                 tickets = []
@@ -356,7 +391,8 @@ def purchase_ticket(request):
                         user=request.user,
                         numbers=','.join(numbers),
                         bonus=int(bonus_number),
-                        price=Decimal('1.34')
+                        draw_count=draw_count,
+                        price=total_price
                     )
                     ticket.save()
                     tickets.append(ticket)
@@ -365,20 +401,24 @@ def purchase_ticket(request):
                 return JsonResponse({'success': f'{quantity} ticket(s) added to cart successfully.', 'tickets': [t.id for t in tickets]})
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=500)
+
     return render(request, 'core/purchase_ticket.html', context)
 
+
+@login_required
 def view_cart(request):
     try:
-        if not request.user.is_authenticated:
-            return redirect('login')
         cart, _ = Cart.objects.get_or_create(user=request.user)
         cart_items = CartItem.objects.filter(cart=cart)
         total_cost = sum(item.ticket.price for item in cart_items)
+
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({'cart_items_count': cart_items.count()})
+
         return render(request, 'core/cart.html', {'cart_items': cart_items, 'total_cost': total_cost})
     except Exception as e:
         return HttpResponseServerError(f"An error occurred: {e}")
+
 
 def remove_from_cart(request, item_id):
     try:
@@ -428,7 +468,7 @@ def coinbase_payment(request):
                 private_key = key_file.read()
 
             client = Client(api_key=api_key)
-            domain_url = request.build_absolute_uri('/')  # Actualiza esto para que sea dinámico
+            domain_url = request.build_absolute_uri('/')
             product = {
                 'name': 'Lottery Ticket',
                 'description': 'Purchase a lottery ticket',
