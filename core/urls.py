@@ -5,7 +5,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.views.generic import RedirectView
 from django.conf.urls.static import static
 from django.http import HttpResponse
+from django.contrib.sitemaps.views import sitemap
+from core.sitemaps import StaticViewSitemap
 
+sitemaps = {
+    'static': StaticViewSitemap,
+}
 
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
@@ -34,5 +39,6 @@ urlpatterns = [
     path('realizar-sorteo/', views.realizar_sorteo, name='realizar_sorteo'),
     path('favicon.ico', RedirectView.as_view(url=static('path/to/your/favicon.ico'), permanent=True)),
     path("robots.txt", views.robots_txt, name="robots_txt"),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 
 ]
