@@ -1,10 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Mostrar mensaje de bienvenida
-    console.log('Bienvenido a Cyberloto Bank');
+    console.log('Bienvenido a Cyber Lotto Bank');
 
     // Función para actualizar el contador de cuenta regresiva
     function updateCountdown() {
-        const eventDate = new Date('September 7, 2024 00:00:00').getTime();
+        // Cambia esta fecha a la próxima fecha de sorteo
+        const eventDate = new Date('2024-10-07T00:00:00').getTime();
         const now = new Date().getTime();
         const distance = eventDate - now;
 
@@ -20,24 +21,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (distance < 0) {
             document.querySelector('.countdown-container').innerHTML = "Draw has ended!";
+            clearInterval(countdownInterval);
         }
     }
 
     // Ejecutar la función de cuenta regresiva cada segundo
-    setInterval(updateCountdown, 1000);
+    const countdownInterval = setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // Funcionalidad del menú desplegable
+    // Funcionalidad del menú desplegable (si es necesario)
     const dropdown = document.querySelector('.dropdown');
-    const content = dropdown.querySelector('.dropdown-content');
+    if (dropdown) {
+        const content = dropdown.querySelector('.dropdown-content');
 
-    dropdown.addEventListener('mouseover', () => {
-        content.style.display = 'block';
-    });
+        dropdown.addEventListener('mouseover', () => {
+            content.style.display = 'block';
+        });
 
-    dropdown.addEventListener('mouseout', () => {
-        content.style.display = 'none';
-    });
+        dropdown.addEventListener('mouseout', () => {
+            content.style.display = 'none';
+        });
+    }
 
     // Animación escalonada de números ganadores
     const numbers = document.querySelectorAll(".number");

@@ -22,6 +22,8 @@ import logging
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.utils import timezone
+
 
 
 logger = logging.getLogger(__name__)
@@ -207,6 +209,7 @@ def handle_checkout_session(session):
             payment.save()
     except Exception as e:
         logging.error(f"Error handling checkout session: {e}")
+        
 
 def dashboard(request):
     try:
@@ -216,16 +219,35 @@ def dashboard(request):
         else:
             tickets = []
             account = None
+        
         winning_numbers = WinningNumbers.objects.latest('draw_date')
         winning_numbers_list = winning_numbers.numbers.split(",") if winning_numbers and winning_numbers.numbers else []
+        
+        # Obtener el siguiente sorteo
+        ticket = Ticket.objects.first()  # Ajusta según tu lógica
+        next_drawing_time = ticket.next_drawing if ticket else None
+        
+        if next_drawing_time:
+            time_remaining = next_drawing_time - timezone.now()
+            days = time_remaining.days
+            hours, seconds = divmod(time_remaining.seconds, 3600)
+            minutes, seconds = divmod(seconds, 60)
+        else:
+            days, hours, minutes, seconds = None, None, None, None
+        
         return render(request, 'core/dashboard.html', {
             'tickets': tickets,
             'account': account,
             'winning_numbers': winning_numbers,
             'winning_numbers_list': winning_numbers_list,
+            'days': days,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds,
         })
     except Exception as e:
         return HttpResponseServerError(f"An error occurred: {e}")
+
 
 @login_required
 def success(request):

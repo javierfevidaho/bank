@@ -1,9 +1,8 @@
-
+import uuid  # Asegúrate de importar el módulo uuid si lo vas a usar
 from django.db import models
 from django.contrib.auth.models import User
 from decimal import Decimal
 from django.utils import timezone
-
 
 # Account model to track user's balance and details
 class Account(models.Model):
@@ -32,21 +31,24 @@ class Ticket(models.Model):
     bonus = models.IntegerField()
     price = models.DecimalField(max_digits=6, decimal_places=2, default=Decimal('1.34'))
     is_purchased = models.BooleanField(default=False)
+    draw_date = models.DateTimeField()
+    purchase_date = models.DateTimeField()
+    ticket_number = models.CharField(max_length=36, unique=True, blank=True, null=True)
+    price_per_draw = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    
+    # Campos adicionales
     is_winner = models.BooleanField(default=False)
-    win_amount = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal('0.00'))
-    win_type = models.CharField(max_length=50, default="No Win")
-    draw_date = models.DateTimeField(default=timezone.now)
-    purchase_date = models.DateTimeField(default=timezone.now)
-    draw_count = models.IntegerField(default=1)
-    price_per_draw = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('1.34'))  # Correctly defined
+    win_amount = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
+    win_type = models.CharField(max_length=50, blank=True, null=True)
+    next_drawing = models.DateTimeField()
+    next_drawing = models.DateTimeField(null=True, blank=True)  # Asegúrate de agregar este campo
+    
 
-    @property
-    def total_price(self):
-        return self.price_per_draw * self.draw_count
-
-    def __str__(self):
-        return f"Ticket by {self.user.username} - Numbers: {self.numbers} - Bonus: {self.bonus}"
-
+    def save(self, *args, **kwargs):
+        if not self.ticket_number:
+            self.ticket_number = str(uuid.uuid4())
+        super().save(*args, **kwargs)
+    
 # Model to store the winning numbers of each lottery draw
 class WinningNumbers(models.Model):
     draw_date = models.DateField(unique=True)
@@ -83,12 +85,10 @@ class Payment(models.Model):
     def __str__(self):
         return f"Payment by {self.user.username} - Amount: {self.amount} - Status: {self.status}"
 
-from django.db import models
-
+# Jackpot model to represent jackpot amounts
 class Jackpot(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     last_won = models.DateTimeField(null=False, blank=False, default=timezone.now)
 
     def __str__(self):
         return f"Jackpot of {self.amount} last won on {self.last_won}"
-    
