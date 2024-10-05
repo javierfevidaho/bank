@@ -23,7 +23,14 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.utils import timezone
+from django.http import HttpResponse
 
+def robots_txt(request):
+    lines = [
+        "User-Agent: *",
+        "Disallow:",
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")
 
 
 logger = logging.getLogger(__name__)

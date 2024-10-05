@@ -2,6 +2,10 @@ from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from . import views
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.views.generic import RedirectView
+from django.conf.urls.static import static
+from django.http import HttpResponse
+
 
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
@@ -28,4 +32,7 @@ urlpatterns = [
     re_path(r'^robots\.txt$', TemplateView.as_view(template_name="static/robots.txt", content_type="text/plain")),
     path('api/get-balance/', views.get_balance, name='get_balance'),
     path('realizar-sorteo/', views.realizar_sorteo, name='realizar_sorteo'),
+    path('favicon.ico', RedirectView.as_view(url=static('path/to/your/favicon.ico'), permanent=True)),
+    path("robots.txt", views.robots_txt, name="robots_txt"),
+
 ]
